@@ -84,4 +84,41 @@ public class Monster : MonoBehaviour
         // 3. Tiêu hủy cái xác
         Destroy(gameObject);
     }
+
+    // Vẽ thanh máu nổi bồng bềnh trên đỉnh đầu con quái vật
+    void OnGUI()
+    {
+        // Nhờ Camera dịch tọa độ 2D của quái vật thành tọa độ thực trên màn hình máy tính
+        Camera cam = Camera.main;
+        if (cam != null)
+        {
+            Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
+
+            // Phải đảm bảo quái vật đang nằm trong khung hình thì mới vẽ
+            if (screenPos.z > 0 && currentHealth > 0)
+            {
+                // Màn hình giao diện GUI lộn ngược trục Y so với game, nên phải trừ đi
+                float screenY = Screen.height - screenPos.y;
+
+                // Kích thước thanh máu: ngang 60, dọc 8 (Nhỏ ríu). Cách đỉnh đầu 50 đơn vị.
+                float barWidth = 60f;
+                float barHeight = 8f;
+                float yOffset = 50f; 
+                float startX = screenPos.x - (barWidth / 2);
+                float startY = screenY - yOffset;
+
+                // 1. Vẽ Viền/Đáy đen
+                GUI.color = Color.black;
+                GUI.DrawTexture(new Rect(startX, startY, barWidth, barHeight), Texture2D.whiteTexture);
+
+                // 2. Vẽ Lõi đỏ
+                GUI.color = Color.red;
+                float heathRatio = (float)currentHealth / maxHealth;
+                GUI.DrawTexture(new Rect(startX, startY, barWidth * heathRatio, barHeight), Texture2D.whiteTexture);
+                
+                // Khôi phục màu gốc để không dính sang UI khác
+                GUI.color = Color.white;
+            }
+        }
+    }
 }
