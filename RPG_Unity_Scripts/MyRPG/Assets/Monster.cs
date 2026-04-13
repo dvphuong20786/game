@@ -14,6 +14,7 @@ public class Monster : MonoBehaviour
     public int attackDamage = 15; // Sức mạnh cắn
     public float attackRange = 1.5f; // Bán kính vòng tròn nó có thể với tới
     public float attackSpeed = 1.2f; // Giãn cách giữa 2 cú cắn (giây)
+    public float moveSpeed = 1.5f; // Tốc độ chạy xé gió rượt theo bạn
     private float attackTimer = 0f;
 
     [Header("Phần thưởng")]
@@ -31,14 +32,21 @@ public class Monster : MonoBehaviour
         attackTimer += Time.deltaTime;
 
         // 1. Dò la tìm tung tích Người chơi
-        PlayerStats player = FindObjectOfType<PlayerStats>();
+        PlayerStats player = FindAnyObjectByType<PlayerStats>();
         if (player != null)
         {
             // Đo khoảng cách giữa mình (Quái) và chữ Player
             float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
+            // TÍNH NĂNG MỚI: NẾU CHƯA CẮN ĐƯỢC THÌ RƯỢT THEO!
+            if (distanceToPlayer > attackRange)
+            {
+                // Vẽ đường thẳng hướng thẳng tới vị trí người chơi và chạy tới
+                Vector3 huongDi = (player.transform.position - transform.position).normalized;
+                transform.Translate(huongDi * moveSpeed * Time.deltaTime);
+            }
             // 2. Nếu con mồi lọt vào tầm đánh & Đã chờ đủ thời gian thì CẮN
-            if (distanceToPlayer <= attackRange && attackTimer >= attackSpeed)
+            else if (attackTimer >= attackSpeed)
             {
                 player.TakeDamage(attackDamage);
                 

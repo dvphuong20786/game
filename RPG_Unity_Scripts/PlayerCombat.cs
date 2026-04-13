@@ -33,6 +33,14 @@ public class PlayerCombat : MonoBehaviour
     {
         Debug.Log("Người chơi vung kiếm!");
 
+        // Lấy thông tin Trang bị đang mặc để cộng dồn TỔNG LƯC CHIẾN
+        int tongSatThuongThucTe = attackDamage;
+        PlayerStats stats = GetComponent<PlayerStats>();
+        if (stats != null) 
+        {
+            tongSatThuongThucTe += stats.bonusDamage;
+        }
+
         // Tìm MỌI quái vật đang có trên màn hình (để đơn giản)
         Monster[] allMonsters = FindObjectsOfType<Monster>();
 
@@ -44,7 +52,7 @@ public class PlayerCombat : MonoBehaviour
             // Nếu quái vật nằm TRONG tầm đánh
             if (distanceToMonster <= attackRange)
             {
-                monster.TakeDamage(attackDamage);
+                monster.TakeDamage(tongSatThuongThucTe); // Phóng dame sấm sét ra nè!
             }
         }
     }
