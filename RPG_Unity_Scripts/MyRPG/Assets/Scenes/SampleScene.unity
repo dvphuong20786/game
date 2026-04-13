@@ -473,7 +473,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawner
   monsterPrefab: {fileID: 5803218288227669120, guid: 1ae5b0d539a2cad4aa44cc19698cd249, type: 3}
+  bossPrefab: {fileID: 0}
   thoiGianChuyenDa: 4
+  tongSoQuaiMoiWave: 10
 --- !u!114 &2033580382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,7 +489,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawner
   monsterPrefab: {fileID: 4708578877595547749, guid: d3e9408c91e2dd747851f39ccc985eb3, type: 3}
+  bossPrefab: {fileID: 0}
   thoiGianChuyenDa: 4
+  tongSoQuaiMoiWave: 10
 --- !u!1001 &166386847204494874
 PrefabInstance:
   m_ObjectHideFlags: 0

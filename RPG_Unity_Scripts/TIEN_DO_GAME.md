@@ -22,3 +22,5 @@
 - Áp dụng các tính năng đồ họa trên vào Unity theo từng bước nhỏ đan xen.
 - Thêm Thương Nhân NPC.
 - Hoàn thiện âm thanh nền và âm thanh chém.
+- Thêm ảnh cho từng Item
+- hoạt ảnh animation quá nhanh
