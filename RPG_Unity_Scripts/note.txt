@@ -110,3 +110,14 @@ BƯỚC 12: TẠO CỬA SỔ THĂNG CẤP (LEVEL UP WINDOW)
 10. Bấm nút PLAY. Nhấn phím Space để đánh quái. Khi đủ EXP, bạn sẽ thấy cái khung hiện lên và chữ nhảy số. (Lưu ý: Hiện tại nó đang bị khóa, lát nữa ta sẽ mở khóa nó).
 
 
+Để sử dụng chúng tạo thành "ảnh động" trong Unity, bạn chỉ cần làm theo các bước sau:
+
+1. Đưa các bức ảnh này vào thư mục project Unity của bạn.
+2. Chọn bức ảnh, ở trong bảng Inspector, đổi Sprite Mode từ Single sang Multiple.
+3. Bấm vào nút Sprite Editor và chọn Slice để Unity tự động cắt bức ảnh ra thành các khung hình nhỏ riêng biệt.
+4. Chọn tất cả các khung hình nhỏ vừa cắt, kéo thẳng vào công cụ Animation của Unity để tạo thành ảnh động của hiệp sĩ và slime nhé.
+Các hình mình đã tạo bao gồm:
+
+Hiệp sĩ chém quái: Bảng sprite sheet mô tả hành động vung kiếm chém.
+Quái vật Slime: (Mình hiểu chữ "smile" của bạn là con quái vật chất lỏng Slime) - Bảng hoạt ảnh mô tả cách nó nảy lên di chuyển và tấn công.
+Lò đẻ quái vật: Concept nghệ thuật về một kiến trúc tà ác phát sáng, dùng làm điểm spawn quái thù.
