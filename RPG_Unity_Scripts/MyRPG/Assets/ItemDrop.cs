@@ -1,38 +1,55 @@
 using UnityEngine;
 
-// Gắn cái này vô cục vàng. Nó sẽ tự biến đổi thành Vàng, Kiếm Gỗ hoặc Huyết Kiếm!
+// Gắn cái này vô cục vàng.
 public class ItemDrop : MonoBehaviour
 {
-    private string itemName = "Khoai Lang";
-    private bool isWeapon = false;
+    private string itemName = "Kẹo Kinh Nghiệm";
+    private bool isItem = false; // Phân biệt Ăn Liền vs Đồ Bỏ Túi
 
     void Start()
     {
-        // Tung xúc xắc ngẫu nhiên từ 0 đến 100
-        int tyLeRuy = Random.Range(0, 100);
-        
-        // Cố gắng tìm chức năng tô màu của Unity để đổi màu sắc vật phẩm cho ngầu
+        int luc = Random.Range(0, 100);
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
 
-        if (tyLeRuy <= 70) // 70% cơ hội rớt Kinh Nghiệm
+        if (luc <= 50) 
         {
             itemName = "Kẹo Kinh Nghiệm";
-            isWeapon = false;
-            // Ép màu vàng cho quen thuộc
+            isItem = false;
             if (sr != null) sr.color = Color.yellow; 
         }
-        else if (tyLeRuy <= 90) // 20% rớt Kiếm Cùi
+        else if (luc <= 60)
         {
-            itemName = "Kiếm Gỗ Cùn";
-            isWeapon = true;
-            // Ép màu Nâu Đất cho kiếm gỗ
+            itemName = "Kiếm Gỗ Cùn"; isItem = true;
             if (sr != null) sr.color = new Color(0.6f, 0.3f, 0f); 
         }
-        else // 10% cực hiếm rớt Đồ Siêu Khủng
+        else if (luc <= 70)
         {
-            itemName = "Huyết Kiếm";
-            isWeapon = true;
-            // Ép đồ hiếm màu Cam rực rỡ
+            itemName = "Mũ Sắt"; isItem = true;
+            if (sr != null) sr.color = Color.gray; 
+        }
+        else if (luc <= 80)
+        {
+            itemName = "Áo Da Lộn"; isItem = true;
+            if (sr != null) sr.color = new Color(0.8f, 0.5f, 0.2f); 
+        }
+        else if (luc <= 85)
+        {
+            itemName = "Giày Siêu Tốc"; isItem = true;
+            if (sr != null) sr.color = Color.blue; 
+        }
+        else if (luc <= 90)
+        {
+            itemName = "Nhẫn Kim Cương"; isItem = true;
+            if (sr != null) sr.color = Color.cyan; 
+        }
+        else if (luc <= 95)
+        {
+            itemName = "Dây Chuyền Bạc"; isItem = true;
+            if (sr != null) sr.color = Color.white; 
+        }
+        else 
+        {
+            itemName = "Huyết Kiếm"; isItem = true;
             if (sr != null) sr.color = new Color(1f, 0.5f, 0f); 
         }
     }
@@ -44,19 +61,16 @@ public class ItemDrop : MonoBehaviour
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
 
-            // Bán kính nhặt đồ: Đứng đè lên là nhặt
-            if (distance <= 1.5f)
+            if (distance <= 1.0f)
             {
-                if (isWeapon == false)
+                if (isItem == false)
                 {
-                    player.AddExp(30); // Nhai Kẹo tăng thẳng 30 EXP
+                    player.AddExp(30);
                 }
                 else
                 {
-                    player.PickUpWeapon(itemName); // Cất kiếm vào Túi Đồ
+                    player.PickUpItem(itemName);
                 }
-                
-                // Thu gom rác
                 Destroy(gameObject);
             }
         }
