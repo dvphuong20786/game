@@ -13,8 +13,12 @@ public class PlayerStats : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    [Header("Kho đồ (Inventory)")]
+    [Header("Kho đồ (Inventory) V.IP")]
     public List<string> inventory = new List<string>();
+    
+    [Header("Trang bị Đang Mặc")]
+    public string equippedWeapon = "Tay Không";
+    public int bonusDamage = 0; // Sức mạnh cộng thêm từ Trang bị
 
     void Start()
     {
@@ -58,10 +62,26 @@ public class PlayerStats : MonoBehaviour
         Debug.Log("CHÚC MỪNG BẠN ĐÃ THĂNG CẤP LÊN CẤP " + level + "!");
     }
 
-    // Nhặt đồ vào túi
-    public void PickUpItem(string itemName)
+    // Nhặt vũ khí vào túi đồ
+    public void PickUpWeapon(string weaponName)
     {
-        inventory.Add(itemName);
-        Debug.Log("Đã nhặt được: " + itemName + ". Số đồ trong túi: " + inventory.Count);
+        inventory.Add(weaponName);
+        Debug.Log("🧰 BẠN VỪA NHẶT ĐƯỢC: " + weaponName);
+    }
+
+    // Cơ chế ấn nút Mặc Đồ
+    public void EquipWeapon(int indexViTriTrongTui)
+    {
+        if (inventory.Count > indexViTriTrongTui)
+        {
+            equippedWeapon = inventory[indexViTriTrongTui];
+            
+            // Soi tên vũ khí để truyền sức mạnh
+            if (equippedWeapon == "Kiếm Gỗ Cùn") bonusDamage = 15;
+            else if (equippedWeapon == "Huyết Kiếm") bonusDamage = 100;
+            else bonusDamage = 0;
+
+            Debug.Log("⚔️ ĐÃ TRANG BỊ: " + equippedWeapon + " (Sức mạnh được Buff: +" + bonusDamage + ")");
+        }
     }
 }
