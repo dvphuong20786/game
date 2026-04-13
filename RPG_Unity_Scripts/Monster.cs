@@ -5,6 +5,7 @@ using UnityEngine;
 // Gắn script này vào các cục hình học đại diện cho Quái vật
 public class Monster : MonoBehaviour
 {
+    Animator anim;
     [Header("Chỉ số Quái vật")]
     public string monsterName = "Slime Nhỏ";
     public int maxHealth = 50;
@@ -24,6 +25,7 @@ public class Monster : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -54,6 +56,7 @@ public class Monster : MonoBehaviour
             // 2. Nếu con mồi lọt vào tầm đánh & Đã chờ đủ thời gian thì CẮN
             else if (attackTimer >= attackSpeed)
             {
+                if (anim != null) anim.SetTrigger("Attack");
                 player.TakeDamage(attackDamage);
                 
                 // Mở lại bảng Console ở dưới để xem chữ này nhé
