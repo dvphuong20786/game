@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7777555422576540592}
   - component: {fileID: 6630592787885440718}
+  - component: {fileID: -4027704355261345953}
   m_Layer: 0
   m_Name: Vang
   m_TagString: Untagged
@@ -91,3 +92,16 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &-4027704355261345953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6652645105541156233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222e3d7362cae0646b9de3fc6c60886d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDrop
+  itemName: "B\xE9 Tinh Linh (EXP Item)"
