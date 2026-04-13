@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 736d9cf7fee345241ada83aad6b9f916
+guid: c7ba2fe22a697f84a9867ea346abe289
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4987443017686163807
-    second: HiepSi2_0
+      213: 7056968672206580821
+    second: HiepSi1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HiepSi2_0
+      name: HiepSi1_0
       rect:
         serializedVersion: 2
-        x: 6
-        y: 6
-        width: 413
-        height: 515
+        x: 0
+        y: 0
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f51afaefff4f63540800000000000000
-      internalID: 4987443017686163807
+      spriteID: 55ceee13e936fe160800000000000000
+      internalID: 7056968672206580821
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HiepSi2_0: 4987443017686163807
+      HiepSi1_0: 7056968672206580821
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

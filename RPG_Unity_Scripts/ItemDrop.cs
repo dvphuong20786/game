@@ -45,7 +45,7 @@ public class ItemDrop : MonoBehaviour
             float distance = Vector2.Distance(transform.position, player.transform.position);
 
             // Bán kính nhặt đồ: Đứng đè lên là nhặt
-            if (distance <= 1.5f)
+            if (distance <= 1.0f)
             {
                 if (isWeapon == false)
                 {

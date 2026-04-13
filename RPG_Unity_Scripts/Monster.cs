@@ -44,6 +44,12 @@ public class Monster : MonoBehaviour
                 // Vẽ đường thẳng hướng thẳng tới vị trí người chơi và chạy tới
                 Vector3 huongDi = (player.transform.position - transform.position).normalized;
                 transform.Translate(huongDi * moveSpeed * Time.deltaTime);
+
+                // Lật mặt quái vật hướng về phía người chơi
+                if (huongDi.x > 0)
+                    GetComponent<SpriteRenderer>().flipX = true; // Quay phải
+                else if (huongDi.x < 0)
+                    GetComponent<SpriteRenderer>().flipX = false; // Quay trái
             }
             // 2. Nếu con mồi lọt vào tầm đánh & Đã chờ đủ thời gian thì CẮN
             else if (attackTimer >= attackSpeed)
