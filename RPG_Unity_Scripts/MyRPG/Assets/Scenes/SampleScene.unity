@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 233096975}
   - component: {fileID: 233096974}
   m_Layer: 0
-  m_Name: HiepSi2_0
+  m_Name: HiepSi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 1044619211}
   - component: {fileID: 1044619210}
   m_Layer: 0
-  m_Name: QuaiVat2_0
+  m_Name: QuaiVat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
