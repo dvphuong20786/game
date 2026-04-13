@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Gắn script này vào nhân vật của bạn (Player)
 public class PlayerStats : MonoBehaviour
 {
-    // Bản thể duy nhất để mang sang Map mới
     public static PlayerStats instance;
 
     void Awake()
@@ -13,11 +10,10 @@ public class PlayerStats : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Phép thuật Bất tử khi trôi qua Cổng Map
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
-            // Khi quay lại map cũ, diệt bản sao lậu
             Destroy(gameObject);
         }
     }
@@ -29,6 +25,12 @@ public class PlayerStats : MonoBehaviour
     
     public int maxHealth = 100;
     public int currentHealth;
+
+    [Header("Điểm Tiềm Năng (MỚI)")]
+    public int statPoints = 0;
+    public int STR = 5; 
+    public int VIT = 5; 
+    public int AGI = 5; 
 
     [Header("Kho đồ (Inventory) V.IP")]
     public List<string> inventory = new List<string>();
@@ -53,26 +55,19 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        // Sử dụng bonusDefense để cản đòn, tối thiểu là mất 1 máu
-        int thucTeBiTru = damage - bonusDefense;
+        int thucTeBiTru = damage - bonusDefense - (VIT * 2);
         if (thucTeBiTru < 1) thucTeBiTru = 1;
 
         currentHealth -= thucTeBiTru;
-        Debug.Log("🛡 Ai da! Bị đánh mất " + thucTeBiTru + " HP, Còn: " + currentHealth);
+        Debug.Log("🛡 Bị đánh mất " + thucTeBiTru + " HP, Còn: " + currentHealth);
 
-        if (currentHealth <= 0)
-        {
-            Debug.Log("CHẾT MẤT RỒI! GAME OVER!");
-        }
+        if (currentHealth <= 0) Debug.Log("CHẾT MẤT RỒI! GAME OVER!");
     }
 
     public void AddExp(int amount)
     {
         currentExp += amount;
-        if (currentExp >= expToNextLevel)
-        {
-            LevelUp();
-        }
+        if (currentExp >= expToNextLevel) LevelUp();
     }
 
     void LevelUp()
@@ -80,6 +75,7 @@ public class PlayerStats : MonoBehaviour
         currentExp -= expToNextLevel; 
         level++;
         expToNextLevel += 50; 
+        statPoints += 5; 
         maxHealth += 20;      
         currentHealth = maxHealth; 
     }
@@ -87,10 +83,8 @@ public class PlayerStats : MonoBehaviour
     public void PickUpItem(string itemName)
     {
         inventory.Add(itemName);
-        Debug.Log("🧰 BẠN VỪA NHẶT ĐƯỢC: " + itemName);
     }
 
-    // Logic Tự Động Định Ví Trí Mặc Đồ
     public void EquipItem(int index)
     {
         if (inventory.Count <= index) return;
@@ -101,27 +95,77 @@ public class PlayerStats : MonoBehaviour
         else if (itemName.Contains("Giày")) eqLegs = itemName;
         else if (itemName.Contains("Nhẫn")) eqRing = itemName;
         else if (itemName.Contains("Dây")) eqNecklace = itemName;
-        else eqWeapon = itemName; // Mặc định là vũ khí
+        else eqWeapon = itemName; 
 
         CalculateBonus();
     }
 
     public void CalculateBonus()
     {
-        bonusDamage = 0;
+        bonusDamage = (STR * 3); 
         bonusDefense = 0;
-
-        // Tính Vũ Khí
+        maxHealth = 100 + (VIT * 10);
+        
         if (eqWeapon == "Kiếm Gỗ Cùn") bonusDamage += 15;
         else if (eqWeapon == "Huyết Kiếm") bonusDamage += 100;
         
-        // Tính Giáp
         if (eqHead == "Mũ Sắt") bonusDefense += 10;
         if (eqBody == "Áo Da Lộn") bonusDefense += 25;
-        if (eqLegs == "Giày Siêu Tốc") bonusDefense += 5;
+        if (eqLegs == "Giày Siêu Tốc") bonusDefense += 5; 
 
-        // Tính Trang sức
         if (eqRing == "Nhẫn Kim Cương") { bonusDamage += 10; bonusDefense += 10; }
-        if (eqNecklace == "Dây Chuyền Bạc") { maxHealth += 50; currentHealth += 50; } 
+        if (eqNecklace == "Dây Chuyền Bạc") { maxHealth += 50; } 
+        
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+    }
+
+    public void SaveGame()
+    {
+        PlayerPrefs.SetInt("Level", level);
+        PlayerPrefs.SetInt("Exp", currentExp);
+        PlayerPrefs.SetInt("Points", statPoints);
+        PlayerPrefs.SetInt("STR", STR);
+        PlayerPrefs.SetInt("VIT", VIT);
+        PlayerPrefs.SetInt("AGI", AGI);
+        PlayerPrefs.SetString("Wep", eqWeapon);
+        PlayerPrefs.SetString("Head", eqHead);
+        PlayerPrefs.SetString("Body", eqBody);
+        PlayerPrefs.SetString("Legs", eqLegs);
+        PlayerPrefs.SetString("Ring", eqRing);
+        PlayerPrefs.SetString("Necklace", eqNecklace);
+
+        string invStr = string.Join(",", inventory);
+        PlayerPrefs.SetString("Inv", invStr);
+        PlayerPrefs.Save();
+        Debug.Log("💾 ĐÃ LƯU GAME!");
+    }
+
+    public void LoadGame()
+    {
+        if (PlayerPrefs.HasKey("Level"))
+        {
+            level = PlayerPrefs.GetInt("Level");
+            currentExp = PlayerPrefs.GetInt("Exp");
+            statPoints = PlayerPrefs.GetInt("Points");
+            STR = PlayerPrefs.GetInt("STR");
+            VIT = PlayerPrefs.GetInt("VIT");
+            AGI = PlayerPrefs.GetInt("AGI");
+            
+            eqWeapon = PlayerPrefs.GetString("Wep");
+            eqHead = PlayerPrefs.GetString("Head");
+            eqBody = PlayerPrefs.GetString("Body");
+            eqLegs = PlayerPrefs.GetString("Legs");
+            eqRing = PlayerPrefs.GetString("Ring");
+            eqNecklace = PlayerPrefs.GetString("Necklace");
+
+            string invStr = PlayerPrefs.GetString("Inv");
+            inventory = new List<string>(invStr.Split(','));
+            if(inventory.Count == 1 && inventory[0] == "") inventory.Clear();
+
+            expToNextLevel = 100 + (level - 1) * 50;
+            CalculateBonus();
+            currentHealth = maxHealth;
+            Debug.Log("📂 ĐÃ LOAD GAME!");
+        }
     }
 }
