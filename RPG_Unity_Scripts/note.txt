@@ -1,0 +1,115 @@
+BƯỚC 2: TẠO VẬT THỂ RA MÀN HÌNH
+Hãy nhìn sang chiếc cột dọc ở bên tay trái màn hình Unity của bạn (Cột có chữ Hierarchy. Nó đang chứa dòng Main Camera).
+
+1. Bấm chuột phải vào một vùng trống trong cột Hierarchy đó.
+2. Chọn 2D Object -> Sprites -> Square (Hình vuông).
+3. Đổi tên cái hình vuông vừa tạo thành: Player (Đại diện cho bạn).
+4. Tiếp tục bấm chuột phải vào khoảng trống ở đó -> Chọn 2D Object -> Sprites -> Circle (Hình tròn). Đổi tên nó thành: Monster.
+5. Lúc này trên màn hình xám ở giữa, hình tròn đang đè lên hình vuông (vì chúng bị sinh ra cùng 1 chỗ). Bạn hãy bấm vào con Monster, dùng chuột kéo nó ra xa một chút cho hai con khỏi đè lên nhau nhé.
+
+BƯỚC 3: TRUYỀN LINH HỒN (Gắn Code)
+Đây là bước quyết định!
+
+1. Bạn dùng chuột nhấp 1 lần vào dòng chữ Player (ở cột bên trái). Đảm bảo rằng ở cột ngoài cùng bên phải (cột có chữ Inspector) đã hiện ra các thông tin của Player.
+2. Bây giờ bạn kéo chuột xuống dưới cùng (chỗ 4 file C# lúc nãy). Nhấp giữ chuột vào file chữ xanh PlayerStats, Kéo thẳng nó sang thả vào vùng trống ở cột đặc tính Inspector bên phải kia (hoặc thả thẳng lên chữ Player bên trái cũng được).
+3. Làm y hệt như thế, nắm đầu file PlayerCombat kéo thả vào cột Inspector của Player. (Lúc này nếu làm đúng, ở bên phải của chữ Player sẽ xuất hiện phần cấu hình Máu (Max Health), Cấp độ (Level), Lực đánh (Attack Damage) do chính chúng ta code ra lúc trước!)
+4. Tiếp theo, nhấp 1 lần vào chữ Monster bên tay trái. Sau đó nắm đầu file code Monster ở dưới cùng và kéo thả vào cột đặc tính Inspector bên phải.
+
+
+BƯỚC 4: TẠO VẬT PHẨM (Cục Vàng)
+1. Lại làm như cũ: Bấm chuột phải bên cột trái (Hierarchy) -> 2D Object -> Sprites -> Square. Đổi tên nó thành Vang.
+2. Nhìn sang cột phải (Inspector) của Vang, ở mục Sprite Renderer có dòng Color, bạn bấm vào ô màu trắng và chọn màu Vàng nhé.
+3. Cầm file code ItemDrop ở bảng dưới cùng kéo thả vào cột phải của Vang.
+4. THAO TÁC QUAN TRỌNG NHẤT (Tạo Bản mẫu - Prefab): Bạn dùng chuột bấm giữ chữ Vang ở cột bên trái (Hierarchy), kéo ngược và thả nó xuống ô trống ở dưới cùng (bảng Project, nơi đang chứa mấy file code C#). -> Lúc này ở dưới cùng sẽ xuất hiện một cục màu xanh dương tên là Vang.
+5. Giờ thì bạn bấm phím Delete trên bàn phím để xóa bộ chữ Vang ở cột bên trái đi (Vì ta đã có bản mẫu ở bảng dưới rồi, không cần nó rác màn hình nữa).
+
+
+BƯỚC 5: LẮP RÁP & CHƠI THỬ!
+1. Bấm lại vào con Monster ở cột trái.
+2. Nắm đầu cục Vang (màu xanh dương) ở bảng dưới cùng, kéo và thả tọt vào ô trống Item Drop Prefab bên cột phải của Monster.
+3. CHƠI THỬ NÀO: Nhìn lên trên cùng chính giữa màn hình Unity, có một nút PLAY (Hình tam giác ▶️). Hãy bấm vào đó!
+4. Nhìn xuống bảng dưới cùng, kế bên tab Project có một tab tên là Console, hãy bấm sang tab Console để xem thông báo.
+5. Cuối cùng, nhấp chuột vào màn hình trò chơi ở giữa và nhấn phím Space (Dấu cách) vài lần.
+
+
+
+BƯỚC 6: TẠO CỖ MÁY SINH QUÁI (Monster Spawner)
+1. Bấm chuột phải vào khoảng trống ở cột trái (Hierarchy) -> Chọn 2D Object -> Square. Đổi tên nó thành: Spawner.
+2. Nhìn sang cột phải (Inspector) của Spawner. Ở mục Transform, bạn hãy chỉnh các số X, Y, Z sao cho nó nằm ở ngoài rìa màn hình (ví dụ: X = -10, Y = 0, Z = 0).
+3. Kéo file code MonsterSpawner từ dưới cùng thả vào cột Inspector của Spawner.
+4. Nhìn xuống dưới cùng, trong bảng Project, bạn thấy cục Monster màu xanh dương (bản mẫu). Hãy nắm đầu cục Monster đó, kéo và thả nó vào ô trống có chữ None (Object) bên trong phần Monster Prefab của Spawner.
+5. CHƠI THỬ: Bấm nút PLAY. Bạn sẽ thấy quái vật tự động bò ra từ rìa màn hình để tấn công bạn! (Nếu quái quá mạnh hoặc quá yếu, bạn có thể chỉnh số trong ô Spawn Interval hoặc Monster Health ở cột phải của Spawner nhé).
+
+
+
+BƯỚC 7: TẠO GIAO DIỆN BẢNG THÔNG TIN (HUD)
+1. Nhìn lên thanh công cụ phía trên cùng của Unity, tìm chữ Canvas (nó thường nằm trong menu Image hoặc UI). Bấm vào đó -> Chọn UI -> Text - TextMeshPro.
+2. Unity sẽ hỏi bạn có muốn Import TMP Essentials không, hãy bấm Yes Import.
+3. Một cái khung chữ màu vàng sẽ hiện ra giữa màn hình. Hãy nhìn sang cột phải (Inspector), tìm mục TextMeshPro - Text (UI).
+4. Ở mục Text, bạn hãy gõ vào đó: HP: 100 / 100.
+5. Ở mục Rect Transform (ngay trên Text), bạn hãy chỉnh các số Pos X, Pos Y sao cho nó nằm ở góc trên bên trái màn hình (Ví dụ: X = 50, Y = -50).
+6. Để cho chữ to và rõ, bạn nhìn xuống mục Font Size, gõ số 24.
+7. Kéo file code PlayerStats từ dưới cùng thả vào cột Inspector của cái Text vừa tạo. (Lúc này chữ HP sẽ tự động nhảy theo đúng số máu hiện tại của bạn).
+8. Lặp lại các bước trên để tạo thêm một dòng chữ nữa, nhưng lần này gõ nội dung: ATK: 10 | DEF: 5 | LVL: 1. Kéo nó xuống dưới dòng HP một chút.
+
+
+
+BƯỚC 8: TẠO GIAO DIỆN KHO ĐỒ (INVENTORY) - PHẦN 1
+1. Bấm chuột phải vào chữ Canvas (trên cùng) -> Chọn UI -> Panel. (Nó sẽ tạo ra một cái khung nền màu xám).
+2. Đổi tên cái khung đó thành: InventoryPanel.
+3. Nhìn sang cột phải (Inspector), ở mục Rect Transform, bạn hãy chỉnh các số Pos X, Pos Y sao cho nó nằm ở giữa màn hình (X = 0, Y = 0).
+4. Để cho cái khung này to ra, bạn nhìn xuống mục Width và Height, gõ số: Width = 600, Height = 400.
+5. Để cho cái khung này trong suốt một chút cho đẹp, bạn nhìn xuống mục Image (Script), ở dòng Color, bấm vào ô màu trắng và kéo thanh Alpha (A) xuống khoảng 150 (nhìn mờ mờ là được).
+6. Kéo file code InventoryManager từ dưới cùng thả vào cột Inspector của cái InventoryPanel này.
+7. Bấm vào dấu mũi tên nhỏ bên trái chữ InventoryPanel để mở rộng nó ra, bạn sẽ thấy bên trong có chữ Text (TMP). Bấm vào chữ Text đó, nhìn sang phải, ở mục Text, bạn hãy gõ vào đó: KHO ĐỒ.
+8. Chỉnh Font Size của chữ KHO ĐỒ to lên khoảng 24 cho dễ đọc.
+
+
+
+BƯỚC 9: TẠO KHUNG TRANG BỊ (EQUIPMENT SLOTS) - PHẦN 2
+1. Vẫn đang ở trong cái khung InventoryPanel (bên cột trái), bạn lại bấm chuột phải vào InventoryPanel -> Chọn UI -> Image. Đổi tên nó thành: Slot_Weapon.
+2. Nhìn sang cột phải (Inspector), ở mục Rect Transform, bạn hãy chỉnh các số Pos X, Pos Y sao cho nó nằm ở bên trong khung InventoryPanel, lệch về phía tay phải một chút (Ví dụ: X = 100, Y = -50).
+3. Để cho cái khung này vuông vức và trong suốt, bạn chỉnh Width = 80, Height = 80, và kéo Alpha (A) xuống 100.
+4. Kéo file code InventorySlot từ dưới cùng thả vào cột Inspector của cái Slot_Weapon này.
+5. THAO TÁC QUAN TRỌNG (Tạo Bản Mẫu): Giống như lúc nãy, bạn bấm giữ chuột vào chữ Slot_Weapon (cột trái), kéo ngược xuống dưới cùng (bảng Project) và thả nó vào đó để tạo ra một bản sao màu xanh dương tên là Slot_Weapon.
+6. Bấm Delete để xóa cái Slot_Weapon ở cột trái đi (giữ lại bản mẫu ở dưới).
+7. Lặp lại bước 1 đến bước 6 thêm 2 lần nữa, đổi tên thành Slot_Armor và Slot_Accessory. Chỉnh vị trí (Pos X, Pos Y) của chúng nằm ngang hàng với Slot_Weapon nhưng lệch sang phải thêm một chút (Ví dụ: Slot_Armor ở X = 200, Slot_Accessory ở X = 300).
+
+
+
+BƯỚC 10: TẠO KHUNG DANH SÁCH ĐỒ (ITEM SLOTS)
+1. Vẫn đang ở trong cái khung InventoryPanel, bấm chuột phải vào InventoryPanel -> Chọn UI -> Image. Đổi tên nó thành: Slot_Item.
+2. Nhìn sang cột phải (Inspector), ở mục Rect Transform, bạn hãy chỉnh các số Pos X, Pos Y sao cho nó nằm ở bên trong khung InventoryPanel, lệch xuống phía dưới một chút (Ví dụ: X = -200, Y = -100).
+3. Để cho cái khung này vuông vức và trong suốt, bạn chỉnh Width = 80, Height = 80, và kéo Alpha (A) xuống 100.
+4. Kéo file code InventorySlot từ dưới cùng thả vào cột Inspector của cái Slot_Item này.
+5. THAO TÁC QUAN TRỌNG (Tạo Bản Mẫu): Bấm giữ chuột vào chữ Slot_Item (cột trái), kéo ngược xuống dưới cùng (bảng Project) và thả nó vào đó để tạo ra một bản sao màu xanh dương tên là Slot_Item.
+6. Bấm Delete để xóa cái Slot_Item ở cột trái đi.
+7. Lặp lại bước 1 đến bước 6 thêm 9 lần nữa (tổng cộng 10 ô). Chỉnh vị trí (Pos X, Pos Y) của chúng nằm ngang hàng nhau và xếp thành 2 hàng (Mỗi hàng 5 ô) bên trong khung InventoryPanel.
+
+
+
+BƯỚC 11: KẾT NỐI KHO ĐỒ VỚI NHÂN VẬT
+1. Nhìn sang cột trái (Hierarchy), tìm chữ Player. Bấm vào đó.
+2. Nhìn sang cột phải (Inspector), bạn sẽ thấy mục Inventory Manager (Script) có một ô trống tên là Item Slots List. Hãy bấm vào dấu ba chấm (•••) bên cạnh ô đó và chọn 10.
+3. Bây giờ, hãy kéo lần lượt 10 cái khung Slot_Item (mà bạn vừa tạo ở Bước 10) từ cột trái thả vào 10 ô trống vừa hiện ra trong bảng Inspector.
+4. Kéo file code ItemDatabase từ dưới cùng thả vào cột Inspector của chữ Player.
+5. Bấm vào dấu mũi tên nhỏ bên trái chữ Player để mở rộng nó ra, bạn sẽ thấy mục Item Database (Script) có các ô trống. Hãy kéo file code ItemData từ dưới cùng thả vào ô trống Item Data List.
+6. Bấm vào dấu mũi tên nhỏ bên trái chữ Item Data List, chọn 3 ô trống hiện ra.
+7. Kéo lần lượt 3 file code: Item_Candy, Item_WoodSword, Item_LegendarySword từ dưới cùng thả vào 3 ô trống đó (Thứ tự không quan trọng).
+8. Bấm nút PLAY để thử nghiệm. Nhấn phím B để mở Ba Lô. Nhấn phím Space để nhặt đồ. Nếu thấy chữ "Đã trang bị Kiếm Gỗ Cùn" và Lực Chiến tăng lên thì bạn đã thành công!
+
+
+
+BƯỚC 12: TẠO CỬA SỔ THĂNG CẤP (LEVEL UP WINDOW)
+1. Bấm chuột phải vào chữ Canvas (trên cùng) -> Chọn UI -> Panel. Đổi tên nó thành: LevelUpPanel.
+2. Nhìn sang cột phải (Inspector), ở mục Rect Transform, bạn hãy chỉnh các số Pos X, Pos Y sao cho nó nằm ở giữa màn hình (X = 0, Y = 0).
+3. Để cho cái khung này to ra, bạn chỉnh Width = 500, Height = 300.
+4. Để cho cái khung này trong suốt một chút, bạn chỉnh Alpha (A) xuống 200.
+5. Kéo file code LevelUpPanel từ dưới cùng thả vào cột Inspector của cái LevelUpPanel này.
+6. Bấm vào dấu mũi tên nhỏ bên trái chữ LevelUpPanel để mở rộng nó ra. Bấm chuột phải vào LevelUpPanel -> Chọn UI -> Text - TextMeshPro. Đổi tên nó thành: Title_LevelUp.
+7. Nhìn sang cột phải (Inspector) của Title_LevelUp, ở mục Text, bạn hãy gõ vào đó: CHÚC MỪNG BẠN ĐÃ LÊN CẤP!
+8. Chỉnh Font Size to lên khoảng 32 và kéo nó lên phía trên cùng của cái khung Panel.
+9. Lặp lại bước 6 thêm 3 lần nữa, tạo ra các dòng chữ: "Tăng 10 HP", "Tăng 5 ATK", "Tăng 3 DEF". Kéo chúng xuống dưới dòng Title một chút, xếp thành hàng dọc.
+10. Bấm nút PLAY. Nhấn phím Space để đánh quái. Khi đủ EXP, bạn sẽ thấy cái khung hiện lên và chữ nhảy số. (Lưu ý: Hiện tại nó đang bị khóa, lát nữa ta sẽ mở khóa nó).
+
+
