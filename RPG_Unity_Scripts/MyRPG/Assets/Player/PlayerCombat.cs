@@ -10,50 +10,71 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("Thông số sức mạnh")]
     public int attackDamage = 25;
-    public float attackRange = 2f; // Tầm đánh xa hay gần
+    public float attackRange = 2f; 
+
+    private Animator anim;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
+
 
     // Update được gọi mỗi khung hình
     void Update()
     {
         // Nhận diện phím theo hệ thống Input mới của Unity 6
 #if ENABLE_INPUT_SYSTEM
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current != null)
         {
-            Attack();
+            if (Keyboard.current.spaceKey.wasPressedThisFrame) Attack();
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) CastSkill();
         }
 #else
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Attack();
-        }
+        if (Input.GetKeyDown(KeyCode.Space)) Attack();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) CastSkill();
 #endif
+    }
+
+    void CastSkill()
+    {
+        PlayerStats stats = GetComponent<PlayerStats>();
+        if (stats == null || !stats.unlockedSkills.Contains("Chém Gió (Lv3)")) 
+        {
+            Debug.Log("Bạn chưa học kỹ năng này!");
+            return;
+        }
+
+        Debug.Log("🔥 TUYỆT CHIÊU: CHÉM GIÓ!");
+        if (anim != null) anim.SetTrigger("Attack");
+
+        // Gây sát thương X2
+        int skillDamage = (attackDamage + stats.bonusDamage) * 2;
+        HitMonsters(skillDamage, attackRange + 1f); // Tầm đánh xa hơn chiêu thường
     }
 
     void Attack()
     {
         Debug.Log("Người chơi vung kiếm!");
+        if (anim != null) anim.SetTrigger("Attack");
 
-        // Lấy thông tin Trang bị đang mặc để cộng dồn TỔNG LƯC CHIẾN
         int tongSatThuongThucTe = attackDamage;
         PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats != null) 
-        {
-            tongSatThuongThucTe += stats.bonusDamage;
-        }
+        if (stats != null) tongSatThuongThucTe += stats.bonusDamage;
 
-        // Tìm MỌI quái vật đang có trên màn hình (để đơn giản)
+        HitMonsters(tongSatThuongThucTe, attackRange);
+    }
+
+    void HitMonsters(int damage, float range)
+    {
         Monster[] allMonsters = FindObjectsOfType<Monster>();
-
         foreach (Monster monster in allMonsters)
         {
-            // Tính toán khoảng cách
-            float distanceToMonster = Vector2.Distance(transform.position, monster.transform.position);
-
-            // Nếu quái vật nằm TRONG tầm đánh
-            if (distanceToMonster <= attackRange)
+            if (Vector2.Distance(transform.position, monster.transform.position) <= range)
             {
-                monster.TakeDamage(tongSatThuongThucTe); // Phóng dame sấm sét ra nè!
+                monster.TakeDamage(damage);
             }
         }
     }
+
 }

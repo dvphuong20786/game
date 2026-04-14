@@ -9,7 +9,7 @@ public class Monster : MonoBehaviour
     [Header("Chỉ số Quái vật")]
     public string monsterName = "Slime Nhỏ";
     public int maxHealth = 50;
-    int currentHealth;
+    public int currentHealth;
 
     [Header("Chỉ số Tấn Công (Mới Thêm)")]
     public int attackDamage = 15; // Sức mạnh cắn
@@ -72,6 +72,10 @@ public class Monster : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        
+        // Hiện số máu bị trừ bay lên trên đầu Quái
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "-" + damage, Color.white);
+
         Debug.Log(monsterName + " bị chém " + damage + " máu! Còn lại: " + currentHealth);
 
         if (currentHealth <= 0)

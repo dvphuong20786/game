@@ -1,26 +1,60 @@
-# NHẬT KÝ KIẾN TRÚC & TIẾN ĐỘ GAME RPG 2D
-*(Cập nhật hệ thống Bất tử, Save/Load và Đệ Tử)*
+# 📜 NHẬT KÝ TIẾN ĐỘ PHÁT TRIỂN RPG 2D (TỔNG HỢP TOÀN DIỆN)
 
-## 1. CÁC TÍNH NĂNG MÃ LỆNH ĐÃ HOÀN TẤT (AI ĐÃ CODE XONG)
-- **Hệ thống Lưu/Tải:** File `PlayerStats.cs` và `GameUI.cs` đã full logic ghi/đọc ổ cứng. Hệ thống Tooltip (soi đồ), Cộng Điểm (Tiềm năng) đã chạy tốt trên nền móng lệnh.
-- **Thế Giới Bất Tử:** `DontDestroyOnLoad` đã chèn vào PlayerStats và GameUI để qua Map không bị reset.
-- **Cổng Chuyển Map:** Code `Portal.cs` tải bản đồ mới.
-- **AI Boss Thông Minh:** `SmartBoss.cs` trạng thái Lướt Đỏ và Điên cuồng màu Tím.
-- **Đệ Tử Lính Đánh Thuê:** `CompanionAI.cs` đã sinh ra thuật toán đi theo và chém quái bảo vệ chủ.
-- **Lò Đẻ Biến Biến:** `MonsterSpawner.cs` rặn 10 quái xuất Boss.
+Đây là file ghi chép tất cả các cột mốc quan trọng của dự án. **Không xóa bất kỳ mục nào**, chỉ bổ sung thêm để bạn và tôi theo dõi toàn bộ quá trình.
 
-## 2. NHỮNG TÍNH NĂNG CHƯA ĐƯA VÀO UNITY (USER CHƯA GẮN BẰNG TAY)
-*Đây là khối lượng đồ họa User cần thực hiện trên Editor để Code thực sự sống dậy:*
-- Chưa chia Map (Chưa có File Làng và File Rừng, chưa Add Build Settings).
-- Chưa kéo `Portal.cs` vào Cục dịch chuyển.
-- Cục Lò Đẻ Quái vẫn chưa gán `bossPrefab` vào ô trống của bảng `MonsterSpawner`.
-- Cục Boss bự ngoài cảnh chưa có file `SmartBoss.cs` gắn vào mông.
-- Chưa tạo cục Gạch Xanh `CompanionAI` để làm Đệ Tử.
-- Hoạt ảnh (Hiệp sĩ) còn dang dở chưa ráp.
+---
 
-## 3. LỊCH TRÌNH THI CÔNG TRONG TƯƠNG LAI
-- Áp dụng các tính năng đồ họa trên vào Unity theo từng bước nhỏ đan xen.
-- Thêm Thương Nhân NPC.
-- Hoàn thiện âm thanh nền và âm thanh chém.
-- Thêm ảnh cho từng Item
-- hoạt ảnh animation quá nhanh
+## ✅ 1. LỊCH SỬ NHỮNG GÌ TÔI ĐÃ CODE XONG (SOFTWARE CORE)
+
+### 💎 Giai đoạn Mới nhất: Hệ thống RPG Cao cấp
+- **9 Ô Trang bị (9 slots):** Hỗ trợ đầy đủ: Đầu, Áo, Giày, Dây chuyền, Nhẫn 1, Nhẫn 2, Vàng cổ, Vũ khí chính, Khiên/Vũ khí phụ.
+- **Logic 1 Tay & 2 Tay (1H/2H):**
+    - Cầm vũ khí "Đại" hoặc "2 Tay" -> Tự động tháo Khiên.
+    - Cầm vũ khí "1 Tay" -> Cho phép dùng Khiên tăng thủ.
+- **Hệ thống Khảm Ngọc (Socket System):** Tự động nhận diện Ngọc trong tên đồ để cộng chỉ số mạnh mẽ (Ngọc Đỏ: +ATK, Ngọc Xanh: +DEF, Ngọc Tím: +HP).
+- **Tuyệt Chiêu Theo Cấp Độ (Skill Tree):**
+    - Hệ thống học kỹ năng mỗi 3 Level.
+    - Chiêu **Chém Gió (Lv3)**: Nhấn phím **số 1** để tung đòn sát thương x2.
+- **Giao diện Tab (UI Tabs):** Bảng nhân vật chuyên nghiệp với 2 Tab: **[TRANG BỊ]** và **[KỸ NĂNG]**.
+- **Hệ thống "An toàn & Chống lỗi":** Đã fix lỗi đứng game (ArgumentOutOfRange) khi bạn mặc hoặc bán đồ quá nhanh.
+
+### 🛡️ Giai đoạn Trước: Giao diện & Hiệu ứng
+- **Chữ nhảy số (Damage Text):** Hiện số đỏ khi bạn bị đánh, số trắng/vàng khi bạn chém quái.
+- **Thanh cuộn (Scroll View):** Túi đồ không giới hạn, có thể kéo lên xuống.
+- **Nút tắt [X]:** Giúp đóng UI bằng chuột cực nhanh.
+- **Cải thiện độ rõ nét:** Chữ VÀNG và EXP đã được thêm bóng đổ (Shadow) để nhìn rõ trên mọi địa hình.
+- **Camera Follow:** Script camera bám đuổi nhân vật mượt mà.
+
+### ⚔️ Giai đoạn Khởi đầu: Gameplay Cơ bản
+- **Di chuyển & Chiến đấu:** Chạy 8 hướng (Shift để tăng tốc), Chém thường (Space).
+- **Lò đẻ quái vô tận (Spawner):** Hệ thống Wave (10 quái -> 1 Boss). Tự động tăng độ khó theo thời gian.
+- **Rơi đồ & Vàng:** Quái chết rớt vàng (30%) hoặc đồ (10%). Tự động hút đồ khi đứng gần.
+
+---
+
+## 🛠️ 2. NHỮNG GÌ BẠN ĐANG LÀM & CẦN "KÉO THẢ" TRONG UNITY
+
+Phần này là nhiệm vụ của bạn trong phần mềm Unity để "kích hoạt" những gì tôi đã viết:
+
+### 🔹 NHỮNG VIỆC CẦN LÀM NGAY (QUAN TRỌNG):
+- [ ] **Sửa lỗi Animator:** Mở bảng Animator -> Tab Parameters -> Bấm dấu [+] tạo 1 biến **Float** tên là **`Speed`** (viết hoa chữ S). Nếu không làm bước này, nhân vật sẽ đứng im hoặc báo lỗi vàng.
+- [ ] **Gắn Camera:** Chọn **Main Camera** trong Unity -> Kéo script **`CameraFollow`** thả vào đó.
+- [ ] **Gắn Lò đẻ quái:** Bạn phải kéo 1 con Quái (Prefab) vào ô **Monster Prefab** trong script `MonsterSpawner` thì quái mới hiện ra.
+- [ ] **Cắt ảnh (Slice):** Sử dụng Sprite Editor để cắt bộ ảnh Combo (Chạy & Chém).
+
+### 🔹 NHỮNG VIỆC ĐÃ LÀM XONG TRONG UNITY (DO BẠN THỰC HIỆN):
+1. Đã đưa Map vào game (Tilemap).
+2. Đã đưa mẫu Hero Knight vào chạy thử.
+3. Đã tạo ra các cục Prefab cho quái (Slime).
+
+---
+
+## 🚩 3. CÁC VẤN ĐỀ ĐÃ GIẢI QUYẾT (HISTORY FIXES)
+- **Fix lỗi Input System:** Chuyển từ hệ cũ sang Unity 6 Input System.
+- **Fix lỗi Spawner:** Sửa lỗi quái ngừng đẻ sau khi Boss chết.
+- **Fix lỗi Transparency:** Hướng dẫn bật Alpha Is Transparency để mất nền trắng của nhân vật.
+- **Fix lỗi currentHealth:** Chuyển sang Public để Script AI bên ngoài có thể đọc được máu quái.
+
+---
+> [!IMPORTANT]
+> **Hướng dẫn sử dụng Kỹ năng:** Cày lên **Cấp 3**, mở bảng **Kỹ năng**, bấm nút **Học**, sau đó nhấn phím **số 1** trên bàn phím để chém sấm sét!

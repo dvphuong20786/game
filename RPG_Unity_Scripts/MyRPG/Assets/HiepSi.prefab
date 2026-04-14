@@ -112,9 +112,25 @@ MonoBehaviour:
   expToNextLevel: 100
   maxHealth: 100
   currentHealth: 0
+  statPoints: 0
+  skillPoints: 0
+  gold: 0
+  STR: 5
+  VIT: 5
+  AGI: 5
   inventory: []
-  equippedWeapon: "Tay Kh\xF4ng"
+  unlockedSkills: []
+  eqHead: "Tr\u1ED1ng"
+  eqBody: "Tr\u1ED1ng"
+  eqLegs: "Tr\u1ED1ng"
+  eqWeaponMain: "Tay Kh\xF4ng"
+  eqWeaponOff: "Tr\u1ED1ng"
+  eqRing1: "Tr\u1ED1ng"
+  eqRing2: "Tr\u1ED1ng"
+  eqNecklace: "Tr\u1ED1ng"
+  eqAncientGold: "Tr\u1ED1ng"
   bonusDamage: 0
+  bonusDefense: 0
 --- !u!114 &3422245050085005075
 MonoBehaviour:
   m_ObjectHideFlags: 0

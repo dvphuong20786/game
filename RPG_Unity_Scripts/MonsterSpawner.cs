@@ -13,12 +13,13 @@ public class MonsterSpawner : MonoBehaviour
     [Header("Quản lý lượng quái")]
     public int tongSoQuaiMoiWave = 10;
     private int soQuaiDaDe = 0;
-    private bool daXuatBoss = false;
+
+    [Header("Độ khó tăng dần")]
+    public float multiplier = 1.1f; // Mỗi đợt quái sẽ mạnh hơn 10%
+    private int waveNumber = 1;
 
     void Update()
     {
-        if (daXuatBoss == true) return; // Đã sinh Boss thì lò đình công
-
         timerCoiGioi += Time.deltaTime;
 
         if (timerCoiGioi >= thoiGianChuyenDa)
@@ -38,35 +39,46 @@ public class MonsterSpawner : MonoBehaviour
         {
             if (monsterPrefab != null)
             {
-                Instantiate(monsterPrefab, toaDoDe, Quaternion.identity);
+                GameObject q = Instantiate(monsterPrefab, toaDoDe, Quaternion.identity);
                 soQuaiDaDe++;
-                Debug.Log($"😈 Bóng tối đẻ quái thú thứ {soQuaiDaDe} / {tongSoQuaiMoiWave}");
+                
+                // Buff quái theo số đợt (Wave)
+                Monster qStats = q.GetComponent<Monster>();
+                if (qStats != null)
+                {
+                    qStats.maxHealth = Mathf.RoundToInt(qStats.maxHealth * Mathf.Pow(multiplier, waveNumber - 1));
+                    qStats.attackDamage = Mathf.RoundToInt(qStats.attackDamage * Mathf.Pow(multiplier, waveNumber - 1));
+                }
+
+                Debug.Log($"😈 Đợt {waveNumber}: Đẻ quái thú thứ {soQuaiDaDe} / {tongSoQuaiMoiWave}");
             }
         }
         else 
         {
-            // Tràn wave, tung Boss lấp ló
+            // Xuất BOSS và bắt đầu Wave mới
             if (bossPrefab != null)
             {
                 GameObject boss = Instantiate(bossPrefab, toaDoDe, Quaternion.identity);
-                // Biến Boss thành khổng lồ x3
                 boss.transform.localScale = new Vector3(3, 3, 1);
                 
-                // Buff máu x10
                 Monster bossStats = boss.GetComponent<Monster>();
                 if (bossStats != null)
                 {
-                    bossStats.monsterName = "SIÊU BOSS ÁC MỘNG";
-                    bossStats.maxHealth *= 10;
-                    bossStats.attackDamage *= 5;
+                    bossStats.monsterName = "BOSS W" + waveNumber;
+                    bossStats.maxHealth *= (10 + waveNumber);
+                    bossStats.attackDamage *= (5 + waveNumber);
                     bossStats.expReward *= 20;
-                    // Nạp thanh máu đầy lại
                     bossStats.SendMessage("Start", SendMessageOptions.DontRequireReceiver);
                 }
 
-                Debug.Log("💀 SIÊU BOSS ĐÃ XUẤT HIỆN! SKY IS FALLING!");
+                Debug.Log($"💀 BOSS ĐỢT {waveNumber} ĐÃ XUẤT HIỆN!");
             }
-            daXuatBoss = true;
+
+            // RESET GAME ĐỂ TIẾP TỤC ĐỢT MỚI
+            soQuaiDaDe = 0;
+            waveNumber++;
+            thoiGianChuyenDa *= 0.95f; // Đẻ quái ngày càng nhanh hơn
+            if (thoiGianChuyenDa < 1f) thoiGianChuyenDa = 1f;
         }
     }
 }

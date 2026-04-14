@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -7,205 +8,195 @@ public class GameUI : MonoBehaviour
 {
     public static GameUI instance;
 
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    class DamageText { public Vector3 worldPos; public string text; public Color color; public float timer; public float alpha = 1f; }
+    private List<DamageText> damageTexts = new List<DamageText>();
+    private GUIStyle dmgStyle; private GUIStyle expStyle; private GUIStyle goldStyle;
 
     private PlayerStats player;
     private PlayerCombat combat;
     private bool isBagOpen = false;
-    private string selectedItemInfo = "";
+    private int currentTab = 0; // 0: Trang bị, 1: Kỹ năng
 
-    void Start()
+    private int selectedItemIdx = -1;
+    private string selectedSlot = "";
+    private Vector2 scrollPos;
+
+    void Awake()
     {
-        player = FindAnyObjectByType<PlayerStats>();
-        combat = FindAnyObjectByType<PlayerCombat>();
+        if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); }
+        else { Destroy(gameObject); }
     }
+
+    void Start() { player = FindAnyObjectByType<PlayerStats>(); combat = FindAnyObjectByType<PlayerCombat>(); }
+
+    public void ShowDamage(Vector3 pos, string txt, Color col) { damageTexts.Add(new DamageText { worldPos = pos, text = txt, color = col, timer = 1.0f }); }
 
     void Update()
     {
 #if ENABLE_INPUT_SYSTEM
-        if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            isBagOpen = !isBagOpen;
-        }
+        if (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame) { isBagOpen = !isBagOpen; ResetSelection(); }
 #else
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            isBagOpen = !isBagOpen;
-        }
+        if (Input.GetKeyDown(KeyCode.B)) { isBagOpen = !isBagOpen; ResetSelection(); }
 #endif
+        for (int i = damageTexts.Count - 1; i >= 0; i--) {
+            damageTexts[i].timer -= Time.deltaTime; damageTexts[i].worldPos += Vector3.up * Time.deltaTime * 0.5f;
+            damageTexts[i].alpha = damageTexts[i].timer; if (damageTexts[i].timer <= 0) damageTexts.RemoveAt(i);
+        }
     }
+
+    void ResetSelection() { selectedItemIdx = -1; selectedSlot = ""; }
 
     void OnGUI()
     {
         if (player == null || combat == null) return;
-
-        GUI.color = Color.black;
-        GUI.DrawTexture(new Rect(20, 20, 250, 30), Texture2D.whiteTexture);
-        GUI.DrawTexture(new Rect(20, 52, 250, 15), Texture2D.whiteTexture);
-
-        GUI.color = Color.red;
-        float mauDoDai = ((float)player.currentHealth / player.maxHealth) * 246f;
-        GUI.DrawTexture(new Rect(22, 22, mauDoDai, 26), Texture2D.whiteTexture);
-
-        GUI.color = Color.blue;
-        float expDoDai = ((float)player.currentExp / player.expToNextLevel) * 246f;
-        GUI.DrawTexture(new Rect(22, 54, expDoDai, 11), Texture2D.whiteTexture);
-
-        GUI.color = Color.white;
-        GUI.Label(new Rect(30, 25, 200, 30), "HP: " + player.currentHealth + " / " + player.maxHealth);
-        GUI.Label(new Rect(30, 51, 200, 30), "LV " + player.level + " - Bấm B Ký Sự");
+        DrawHUD();
 
         if (isBagOpen)
         {
             GUI.color = new Color(0.1f, 0.1f, 0.1f, 0.95f);
-            GUI.DrawTexture(new Rect(Screen.width/2 - 400, 80, 800, 480), Texture2D.whiteTexture);
+            Rect mainR = new Rect(Screen.width/2 - 425, 60, 850, 520);
+            GUI.DrawTexture(mainR, Texture2D.whiteTexture);
             
-            GUI.color = Color.yellow;
-            GUI.Label(new Rect(Screen.width/2 - 80, 90, 200, 30), "--- BẢNG NHÂN VẬT & TÚI ĐỒ ---");
+            GUI.color = Color.red; if (GUI.Button(new Rect(mainR.xMax - 40, mainR.y + 10, 30, 30), "X")) isBagOpen = false;
 
-            float pdX = Screen.width/2 - 380;
-            float pdY = 140;
+            // HỆ THỐNG TAB
+            GUI.color = currentTab == 0 ? Color.yellow : Color.gray;
+            if (GUI.Button(new Rect(mainR.x + 20, mainR.y + 15, 120, 35), "🛡 TRANG BỊ")) currentTab = 0;
+            GUI.color = currentTab == 1 ? Color.yellow : Color.gray;
+            if (GUI.Button(new Rect(mainR.x + 150, mainR.y + 15, 120, 35), "🔥 KỸ NĂNG")) currentTab = 1;
 
-            GUI.color = new Color(0.2f, 0.2f, 0.2f, 1f);
-            GUI.DrawTexture(new Rect(pdX, pdY, 200, 300), Texture2D.whiteTexture); 
-
-            GUI.color = Color.white;
-            GUI.Label(new Rect(pdX + 40, pdY + 10, 150, 30), "TRANG BỊ ĐANG MẶC");
-
-            DrawSlot(pdX + 70, pdY + 40, "Đầu\n" + player.eqHead);      
-            DrawSlot(pdX + 10, pdY + 110, "Trái\n" + player.eqWeapon);  
-            DrawSlot(pdX + 70, pdY + 110, "Áo\n" + player.eqBody);      
-            DrawSlot(pdX + 130, pdY + 110, "Dây\n" + player.eqNecklace);
-            DrawSlot(pdX + 40, pdY + 180, "Nhẫn\n" + player.eqRing);    
-            DrawSlot(pdX + 100, pdY + 180, "Giày\n" + player.eqLegs);    
-
-            int totalAtk = (combat != null ? combat.attackDamage : 0) + player.bonusDamage;
-            int totalDef = player.bonusDefense;
-
-            GUI.color = Color.green;
-            GUI.Label(new Rect(pdX + 10, pdY + 250, 200, 30), "Sức Mạnh (ATK): " + totalAtk);
-            GUI.color = Color.cyan;
-            GUI.Label(new Rect(pdX + 10, pdY + 270, 200, 30), "Phòng Thủ (DEF): " + totalDef);
-
-            float stX = Screen.width/2 - 150;
-            GUI.color = Color.white;
-            GUI.Label(new Rect(stX, 140, 200, 30), "ĐIỂM TIỀM NĂNG: " + player.statPoints);
+            if (currentTab == 0) DrawCharacterTab();
+            else DrawSkillsTab();
             
-            GUI.Label(new Rect(stX, 180, 100, 30), "Sức Mạnh: " + player.STR);
-            if (player.statPoints > 0 && GUI.Button(new Rect(stX + 100, 180, 30, 20), "+"))
-            {
-                player.STR++; player.statPoints--; player.CalculateBonus();
-            }
+            DrawFooter(mainR);
+        }
+        DrawFloatingDamage();
+    }
 
-            GUI.Label(new Rect(stX, 220, 100, 30), "Thể Lực: " + player.VIT);
-            if (player.statPoints > 0 && GUI.Button(new Rect(stX + 100, 220, 30, 20), "+"))
-            {
-                player.VIT++; player.statPoints--; player.CalculateBonus();
-            }
+    void DrawCharacterTab()
+    {
+        float pdX = Screen.width/2 - 405; float pdY = 120;
+        GUI.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+        GUI.DrawTexture(new Rect(pdX, pdY, 240, 320), Texture2D.whiteTexture);
+        GUI.color = Color.white; GUI.Label(new Rect(pdX + 60, pdY + 5, 150, 25), "THÂN PHÁP & ĐỒ");
 
-            GUI.Label(new Rect(stX, 260, 100, 30), "Nhanh Nhẹn: " + player.AGI);
-            if (player.statPoints > 0 && GUI.Button(new Rect(stX + 100, 260, 30, 20), "+"))
-            {
-                player.AGI++; player.statPoints--; player.CalculateBonus();
-            }
+        // Hàng 1: Đầu - Cổ
+        if (DrawSlot(pdX+20, pdY+35, "Đầu\n"+player.eqHead, selectedSlot=="Head")) { selectedSlot="Head"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+90, pdY+35, "Dây\n"+player.eqNecklace, selectedSlot=="Neck")) { selectedSlot="Neck"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+160, pdY+35, "Vàng Cổ\n"+player.eqAncientGold, selectedSlot=="Ancient")) { selectedSlot="Ancient"; selectedItemIdx=-1; }
 
-            float invX = Screen.width/2 + 20;
-            GUI.color = Color.white;
-            GUI.Label(new Rect(invX, 140, 150, 30), "HÒM ĐỒ (Nhấn đúp mặc)");
+        // Hàng 2: Trái (Main) - Thân - Phải (Shield)
+        if (DrawSlot(pdX+20, pdY+105, "Vũ khí\n"+player.eqWeaponMain, selectedSlot=="WepMain")) { selectedSlot="WepMain"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+90, pdY+105, "Áo\n"+player.eqBody, selectedSlot=="Body")) { selectedSlot="Body"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+160, pdY+105, "Khiên\n"+player.eqWeaponOff, selectedSlot=="WepOff")) { selectedSlot="WepOff"; selectedItemIdx=-1; }
 
-            if (player.inventory.Count == 0)
-            {
-                GUI.color = Color.gray;
-                GUI.Label(new Rect(invX, 180, 200, 30), "- Hòm rỗng bọ chét -");
-            }
-            else
-            {
-                for (int i = 0; i < player.inventory.Count; i++)
-                {
-                    GUI.color = Color.white;
-                    if (GUI.Button(new Rect(invX, 170 + (i * 35), 180, 30), player.inventory[i]))
-                    {
-                        selectedItemInfo = player.inventory[i]; 
-                        player.EquipItem(i); 
-                    }
-                }
-            }
+        // Hàng 3: Nhẫn 1 - Giày - Nhẫn 2
+        if (DrawSlot(pdX+20, pdY+175, "Nhẫn 1\n"+player.eqRing1, selectedSlot=="Ring1")) { selectedSlot="Ring1"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+90, pdY+175, "Giày\n"+player.eqLegs, selectedSlot=="Legs")) { selectedSlot="Legs"; selectedItemIdx=-1; }
+        if (DrawSlot(pdX+160, pdY+175, "Nhẫn 2\n"+player.eqRing2, selectedSlot=="Ring2")) { selectedSlot="Ring2"; selectedItemIdx=-1; }
 
-            float ttX = Screen.width/2 + 220;
-            GUI.color = new Color(0.1f, 0.2f, 0.3f, 1f);
-            GUI.DrawTexture(new Rect(ttX, 140, 160, 150), Texture2D.whiteTexture);
+        GUI.color = Color.green; GUI.Label(new Rect(pdX+10, pdY+245, 230, 25), "Lực chiến: " + (player.bonusDamage + (combat!=null?combat.attackDamage:0)));
+        GUI.color = Color.cyan; GUI.Label(new Rect(pdX+10, pdY+265, 230, 25), "Phòng thủ: " + player.bonusDefense);
+        
+        DrawInventory(Screen.width/2 - 145, pdY);
+        DrawTooltip(Screen.width/2 + 250, pdY);
+    }
+
+    void DrawSkillsTab()
+    {
+        float skX = Screen.width/2 - 405; float skY = 120;
+        GUI.color = Color.white;
+        GUI.Label(new Rect(skX, skY, 400, 30), "ĐIỂM KỸ NĂNG: " + player.skillPoints + " (Tăng 1 điểm sau mỗi 3 level)");
+        
+        string[] skills = { "Chém Gió (Lv3)", "Lôi Đình (Lv6)", "Bất Tử (Lv9)", "Thần Tiên (Lv12)" };
+        for (int i = 0; i < skills.Length; i++)
+        {
+            Rect skR = new Rect(skX, skY + 40 + (i * 60), 300, 50);
+            bool unlocked = player.unlockedSkills.Contains(skills[i]);
+            GUI.color = unlocked ? Color.green : Color.gray;
+            GUI.Box(skR, "");
+            GUI.Label(new Rect(skR.x+10, skR.y+15, 200, 30), skills[i] + (unlocked ? " [ĐÃ HỌC]" : ""));
             
-            if (selectedItemInfo != "") 
+            if (!unlocked && player.level >= (i+1)*3 && player.skillPoints > 0)
             {
                 GUI.color = Color.yellow;
-                GUI.Label(new Rect(ttX + 10, 150, 140, 50), "SOI: " + selectedItemInfo);
-                
-                string desc = "Vật phẩm cùi.\nKhông có tác dụng.";
-                if (selectedItemInfo.Contains("Kiếm")) desc = "Sinh ra để chém giết.\nTăng cực mạnh ATK";
-                if (selectedItemInfo.Contains("Áo")) desc = "Giáp dày.\nCản 25 sát thương";
-                if (selectedItemInfo.Contains("Nhẫn")) desc = "Ma thuật.\nTăng cường chỉ số.";
-                if (selectedItemInfo.Contains("Mũ")) desc = "Tránh nắng cản đòn.\nTăng 10 Giáp.";
-                if (selectedItemInfo.Contains("Giày")) desc = "Giày trượt siêu việt.\nTăng 5 Giáp, lướt.";
-                
-                GUI.color = Color.white;
-                GUI.Label(new Rect(ttX + 10, 190, 140, 100), desc);
+                if (GUI.Button(new Rect(skR.xMax - 80, skR.y + 10, 70, 30), "HỌC")) player.LearnSkill(skills[i]);
             }
-            else
-            {
-                GUI.color = Color.gray;
-                GUI.Label(new Rect(ttX + 10, 200, 140, 100), "Nhấn vào một\nmón đồ bên trái\nđể soi chỉ số.");
-            }
+        }
+    }
 
-            GUI.color = Color.green;
-            if (GUI.Button(new Rect(Screen.width/2 - 100, 520, 100, 30), "💾 LƯU GAME")) player.SaveGame();
-            
-            GUI.color = Color.cyan;
-            if (GUI.Button(new Rect(Screen.width/2 + 10, 520, 100, 30), "📂 TẢI GAME")) player.LoadGame();
+    void DrawInventory(float x, float y)
+    {
+        GUI.color = Color.white; GUI.Label(new Rect(x, y, 150, 30), "HÒM ĐỒ");
+        Rect vR = new Rect(x, y+30, 380, 320); Rect cR = new Rect(0,0, 360, Mathf.Max(320, player.inventory.Count*35));
+        scrollPos = GUI.BeginScrollView(vR, scrollPos, cR);
+        for (int i = 0; i < player.inventory.Count; i++) {
+            GUI.color = selectedItemIdx == i ? Color.yellow : Color.white;
+            if (GUI.Button(new Rect(0, i*35, 360, 30), player.inventory[i])) { selectedItemIdx = i; selectedSlot = ""; }
+        }
+        GUI.EndScrollView();
+    }
+
+    void DrawTooltip(float x, float y)
+    {
+        GUI.color = new Color(0.1f, 0.2f, 0.4f, 1f);
+        GUI.DrawTexture(new Rect(x, y, 160, 320), Texture2D.whiteTexture);
+        string n = "";
+        if (selectedItemIdx >= 0 && selectedItemIdx < player.inventory.Count) n = player.inventory[selectedItemIdx];
+        else if (selectedSlot!="") {
+            if (selectedSlot=="Head") n=player.eqHead; else if (selectedSlot=="Body") n=player.eqBody; else if (selectedSlot=="Legs") n=player.eqLegs;
+            else if (selectedSlot=="WepMain") n=player.eqWeaponMain; else if (selectedSlot=="WepOff") n=player.eqWeaponOff;
+            else if (selectedSlot=="Ring1") n=player.eqRing1; else if (selectedSlot=="Ring2") n=player.eqRing2;
+            else if (selectedSlot=="Neck") n=player.eqNecklace; else if (selectedSlot=="Ancient") n=player.eqAncientGold;
         }
 
-        DrawFloatingHealthBar();
-    }
-
-    void DrawSlot(float x, float y, string content)
-    {
-        GUI.color = Color.gray;
-        GUI.DrawTexture(new Rect(x, y, 60, 60), Texture2D.whiteTexture);
-        GUI.color = Color.black;
-        GUI.Label(new Rect(x + 5, y + 15, 60, 40), content); 
-    }
-
-    void DrawFloatingHealthBar()
-    {
-        Camera cam = Camera.main;
-        if (cam != null && player != null && player.currentHealth > 0)
-        {
-            Vector3 screenPos = cam.WorldToScreenPoint(player.transform.position);
-            if (screenPos.z > 0)
-            {
-                float screenY = Screen.height - screenPos.y;
-                float startX = screenPos.x - 30f;
-                float startY = screenY - 50f;
-
-                GUI.color = Color.black;
-                GUI.DrawTexture(new Rect(startX, startY, 60f, 8f), Texture2D.whiteTexture);
-
+        if (n != "" && n != "Trống" && n != "Tay Không") {
+            GUI.color = Color.yellow; GUI.Label(new Rect(x+10, y+10, 140, 50), "SOI: " + n);
+            GUI.color = Color.white; GUI.Label(new Rect(x+10, y+60, 140, 100), "Giá: "+player.GetItemPrice(n)+" Vàng\n(Đồ có Ngọc sẽ mạnh hơn)");
+            if (selectedItemIdx!=-1) {
                 GUI.color = Color.green;
-                float healthRatio = (float)player.currentHealth / player.maxHealth;
-                GUI.DrawTexture(new Rect(startX, startY, 60f * healthRatio, 8f), Texture2D.whiteTexture);
-                
-                GUI.color = Color.white;
+                if (n.Contains("Nhẫn")) {
+                   if (GUI.Button(new Rect(x+10, y+180, 140, 30), "MẶC Ô 1")) player.EquipItem(selectedItemIdx, "Ring1");
+                   if (GUI.Button(new Rect(x+10, y+215, 140, 30), "MẶC Ô 2")) player.EquipItem(selectedItemIdx, "Ring2");
+                } else if (GUI.Button(new Rect(x+10, y+180, 140, 40), "MẶC VÀO")) player.EquipItem(selectedItemIdx);
+                GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+260, 140, 30), "BÁN ĐI")) player.SellItem(selectedItemIdx);
+            } else {
+                GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+180, 140, 40), "GỠ RA")) player.Unequip(selectedSlot);
             }
+        }
+    }
+
+    void DrawHUD()
+    {
+        GUI.color = Color.black; GUI.DrawTexture(new Rect(20, 20, 250, 30), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(20, 52, 250, 15), Texture2D.whiteTexture);
+        GUI.color = Color.red; GUI.DrawTexture(new Rect(22, 22, ((float)player.currentHealth/player.maxHealth)*246f, 26), Texture2D.whiteTexture);
+        GUI.color = Color.blue; GUI.DrawTexture(new Rect(22, 54, ((float)player.currentExp/player.expToNextLevel)*246f, 11), Texture2D.whiteTexture);
+        GUI.color = Color.white; GUI.Label(new Rect(30, 25, 200, 30), "HP: " + player.currentHealth);
+        if (expStyle==null) expStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
+        GUI.color = Color.black; GUI.Label(new Rect(31, 51, 250, 30), "LV "+player.level+" | EXP: "+player.currentExp, expStyle);
+        GUI.color = Color.cyan; GUI.Label(new Rect(30, 50, 250, 30), "LV "+player.level+" | EXP: "+player.currentExp, expStyle);
+        if (goldStyle==null) goldStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
+        GUI.color = Color.black; GUI.Label(new Rect(31, 71, 200, 30), "VÀNG: " + player.gold, goldStyle);
+        GUI.color = Color.yellow; GUI.Label(new Rect(30, 70, 200, 30), "VÀNG: " + player.gold, goldStyle);
+    }
+
+    void DrawFooter(Rect r) {
+        GUI.color = Color.green; if (GUI.Button(new Rect(r.x+20, r.yMax-50, 100, 30), "💾 LƯU")) player.SaveGame();
+        GUI.color = Color.cyan; if (GUI.Button(new Rect(r.x+130, r.yMax-50, 100, 30), "📂 LOAD")) player.LoadGame();
+    }
+
+    bool DrawSlot(float x, float y, string c, bool s) {
+        GUI.color = s ? Color.yellow : Color.gray; GUI.DrawTexture(new Rect(x,y,60,60), Texture2D.whiteTexture);
+        GUI.color = Color.black; return GUI.Button(new Rect(x,y,60,60), c, GUIStyle.none) || GUI.Button(new Rect(x+5,y+10,50,45), c, GUI.skin.label);
+    }
+
+    void DrawFloatingDamage() {
+        if (dmgStyle == null) dmgStyle = new GUIStyle(GUI.skin.label) { fontSize = 22, fontStyle = FontStyle.Bold };
+        Camera cam = Camera.main;
+        foreach (var dt in damageTexts) {
+            Vector3 sPos = cam.WorldToScreenPoint(dt.worldPos);
+            if (sPos.z > 0) { GUI.color = new Color(dt.color.r, dt.color.g, dt.color.b, dt.alpha); GUI.Label(new Rect(sPos.x-20, Screen.height-sPos.y-25, 100, 50), dt.text, dmgStyle); }
         }
     }
 }

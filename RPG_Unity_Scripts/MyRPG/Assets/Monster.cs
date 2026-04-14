@@ -5,10 +5,11 @@ using UnityEngine;
 // Gắn script này vào các cục hình học đại diện cho Quái vật
 public class Monster : MonoBehaviour
 {
+    Animator anim;
     [Header("Chỉ số Quái vật")]
     public string monsterName = "Slime Nhỏ";
     public int maxHealth = 50;
-    int currentHealth;
+    public int currentHealth;
 
     [Header("Chỉ số Tấn Công (Mới Thêm)")]
     public int attackDamage = 15; // Sức mạnh cắn
@@ -24,6 +25,7 @@ public class Monster : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -44,10 +46,17 @@ public class Monster : MonoBehaviour
                 // Vẽ đường thẳng hướng thẳng tới vị trí người chơi và chạy tới
                 Vector3 huongDi = (player.transform.position - transform.position).normalized;
                 transform.Translate(huongDi * moveSpeed * Time.deltaTime);
+
+                // Lật mặt quái vật hướng về phía người chơi
+                if (huongDi.x > 0)
+                    GetComponent<SpriteRenderer>().flipX = true; // Quay phải
+                else if (huongDi.x < 0)
+                    GetComponent<SpriteRenderer>().flipX = false; // Quay trái
             }
             // 2. Nếu con mồi lọt vào tầm đánh & Đã chờ đủ thời gian thì CẮN
             else if (attackTimer >= attackSpeed)
             {
+                if (anim != null) anim.SetTrigger("Attack");
                 player.TakeDamage(attackDamage);
                 
                 // Mở lại bảng Console ở dưới để xem chữ này nhé
@@ -63,6 +72,10 @@ public class Monster : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        
+        // Hiện số máu bị trừ bay lên trên đầu Quái
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "-" + damage, Color.white);
+
         Debug.Log(monsterName + " bị chém " + damage + " máu! Còn lại: " + currentHealth);
 
         if (currentHealth <= 0)

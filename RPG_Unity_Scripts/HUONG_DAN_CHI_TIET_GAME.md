@@ -20,7 +20,25 @@
 - **Trang bị:** Nhấp chuột vào nút "Trang bị: [Tên Kiếm]" để tăng Lực Chiến (Attack Damage) ngay lập tức.
 - **Quy tắc rớt đồ:** Quái chết rớt đồ hên xui. Kẹo vàng (70%) cộng EXP, Kiếm (30%) chui vào túi đồ.
 
+## 5. HƯỚNG DẪN CÀI ĐẶT CAMERA (THEO CHÂN NGƯỜI CHƠI)
+Để bản đồ tự di chuyển theo nhân vật, bạn cần làm đúng các bước sau:
+- **Bước 1:** Trong cột **Hierarchy** (bên trái), hãy nhấn chọn vào đối tượng **Main Camera**.
+- **Bước 2:** Trong bảng **Project** (dưới cùng), tìm file script tên là **`CameraFollow`**.
+- **Bước 3:** Nắm kéo file script `CameraFollow` đó thả trực tiếp vào ô **Main Camera** ở bước 1 (hoặc thả vào bảng Inspector của nó).
+- **Bước 4 (Tinh chỉnh):** Sau khi gắn xong, bạn nhìn sang bảng Inspector của Camera sẽ thấy các ô:
+    - **Smooth Speed:** Độ mượt. (Để 0.125 là chuẩn mượt, số càng nhỏ càng trễ).
+    - **Offset:** Vị trí tương đối. (Mặc định là Z = -10 để camera nhìn từ xa vào).
+
+## 6. DANH SÁCH KIỂM TRA NHANH (CHECKLIST "KÉO THẢ")
+Để game chạy 100% sức mạnh mà không bị lỗi, bạn hãy dành 2 phút để kiểm tra 5 mục "quốc hồn quốc túy" này nhé:
+
+- [ ] **1. Tab Animator (Quan trọng nhất):** Phải có 2 Parameter là **`Speed`** (Float) và **`Attack`** (Trigger). Nếu thiếu, Hiệp sĩ sẽ đứng im như tượng đá.
+- [ ] **2. Script Lò Đẻ (MonsterSpawner):** Chọn lò đẻ trên Hierarchy -> Nhìn bảng Inspector -> Kéo con Quái mẫu (Prefab) vào ô **Monster Prefab**.
+- [ ] **3. Script Rơi Đồ (Monster):** Chọn con Quái (Prefab) -> Inspector -> Tìm ô **Item Drop Prefab** -> Kéo cục Vàng mẫu vào đó để khi chết nó có cái mà rớt ra.
+- [ ] **4. Script Bám Đuôi (Main Camera):** Như đã nói ở trên, phải kéo script **`CameraFollow`** vào Camera.
+- [ ] **5. Độ Trong Suốt (Sprites):** Chọn tất cả ảnh nhân vật/quái vật trong Project -> Tích vào ô **Alpha Is Transparency** -> Bấm **Apply** để xóa nền trắng.
+
 ---
-> [!TIP]
-> **Lưu ý khi đồng bộ:** 
-> Khi về nhà, bạn chỉ cần `git pull` để lấy toàn bộ code và file này về. Nếu Unity báo lỗi "Missing Script", hãy kiểm tra xem các file đã được gắn đúng vào đối tượng trong Inspector chưa nhé!
+> [!IMPORTANT]
+> **Mẹo nhỏ:** 
+> Nếu bạn thấy lỗi "Missing Script" màu vàng ở Inspector, hãy xóa component đó đi và kéo lại script từ bảng Project vào là xong!

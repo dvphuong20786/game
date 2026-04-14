@@ -1,56 +1,33 @@
 using UnityEngine;
 
-// Gắn cái này vô cục vàng.
+// Gắn cái này vô cục vàng hoặc vật phẩm rơi ra từ quái
 public class ItemDrop : MonoBehaviour
 {
-    private string itemName = "Kẹo Kinh Nghiệm";
-    private bool isItem = false; // Phân biệt Ăn Liền vs Đồ Bỏ Túi
+    private string itemName = "Vàng";
+    private bool isItem = false; // Phân biệt Ăn Liền (Vàng) vs Đồ Bỏ Túi (Trang bị)
 
     void Start()
     {
-        int luc = Random.Range(0, 100);
+        // Tỉ lệ: 10% Đồ, 30% Vàng, 60% Xịt (Xịt thì tự xóa)
+        int luc = Random.Range(1, 101); // 1 đến 100
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
 
-        if (luc <= 50) 
+        if (luc <= 10) // 10% Rớt trang bị hiếm
         {
-            itemName = "Kẹo Kinh Nghiệm";
+            string[] items = { "Huyết Kiếm", "Áo Da Lộn", "Mũ Sắt", "Giày Siêu Tốc", "Nhẫn Kim Cương", "Dây Chuyền Bạc" };
+            itemName = items[Random.Range(0, items.Length)];
+            isItem = true;
+            if (sr != null) sr.color = Color.cyan;
+        }
+        else if (luc <= 40) // 30% Rớt vàng (11 - 40)
+        {
+            itemName = "Vàng";
             isItem = false;
             if (sr != null) sr.color = Color.yellow; 
         }
-        else if (luc <= 60)
+        else // 60% Không có gì (Xịt)
         {
-            itemName = "Kiếm Gỗ Cùn"; isItem = true;
-            if (sr != null) sr.color = new Color(0.6f, 0.3f, 0f); 
-        }
-        else if (luc <= 70)
-        {
-            itemName = "Mũ Sắt"; isItem = true;
-            if (sr != null) sr.color = Color.gray; 
-        }
-        else if (luc <= 80)
-        {
-            itemName = "Áo Da Lộn"; isItem = true;
-            if (sr != null) sr.color = new Color(0.8f, 0.5f, 0.2f); 
-        }
-        else if (luc <= 85)
-        {
-            itemName = "Giày Siêu Tốc"; isItem = true;
-            if (sr != null) sr.color = Color.blue; 
-        }
-        else if (luc <= 90)
-        {
-            itemName = "Nhẫn Kim Cương"; isItem = true;
-            if (sr != null) sr.color = Color.cyan; 
-        }
-        else if (luc <= 95)
-        {
-            itemName = "Dây Chuyền Bạc"; isItem = true;
-            if (sr != null) sr.color = Color.white; 
-        }
-        else 
-        {
-            itemName = "Huyết Kiếm"; isItem = true;
-            if (sr != null) sr.color = new Color(1f, 0.5f, 0f); 
+            Destroy(gameObject);
         }
     }
 
@@ -59,13 +36,14 @@ public class ItemDrop : MonoBehaviour
         PlayerStats player = FindAnyObjectByType<PlayerStats>();
         if (player != null)
         {
+            // Tự động hút vào người chơi nếu ở gần
             float distance = Vector2.Distance(transform.position, player.transform.position);
 
             if (distance <= 1.0f)
             {
                 if (isItem == false)
                 {
-                    player.AddExp(30);
+                    player.AddGold(10); 
                 }
                 else
                 {
