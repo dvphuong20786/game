@@ -15,6 +15,14 @@
 - **Tạo Animation:** Quét chọn các miếng ảnh nhỏ đã cắt -> Kéo thả vào nhân vật -> Lưu tên File (vd: `HiepSi_Walk`).
 - **Nối dây (Animator):** Mở cửa sổ **Animator** -> Nối dây giữa các trạng thái (Idle -> Walk) -> Cài đặt tham số (Parameter) là `Speed` hoặc `Attack` để gọi lệnh từ C# code.
 
+### 3.1. HƯỚNG DẪN HOẠT ẢNH ĐỨNG YÊN (IDLE) - CHI TIẾT
+Để nhân vật đứng lại ngay lập tức khi buông phím, bạn làm như sau:
+- **Tạo File:** Quét chọn 4 khung hình đứng yên -> Thả vào Player -> Đặt tên `HiepSi_Idle`.
+- **Cài đặt dây nối (Transitions):**
+    - **Từ Idle sang Run:** Chọn dây nối -> Bảng Inspector -> Conditions: Bấm dấu [+] chọn **Speed > 0.1**.
+    - **Từ Run sang Idle:** Chọn dây nối -> Bảng Inspector -> Conditions: Bấm dấu [+] chọn **Speed < 0.1**.
+- **MẸO QUAN TRỌNG:** Ở cả 2 sợi dây trên, bạn phải **BỎ TÍCH** ô **Has Exit Time**. Nếu để tích ô này, nhân vật sẽ bị "trượt" một đoạn rồi mới đứng lại hoặc chạy.
+
 ## 4. HƯỚNG DẪN TÚI ĐỒ & TRANG BỊ
 - **Mở túi:** Nhấn phím **B** khi đang chơi để mở bảng ma thuật màu đen.
 - **Trang bị:** Nhấp chuột vào nút "Trang bị: [Tên Kiếm]" để tăng Lực Chiến (Attack Damage) ngay lập tức.
