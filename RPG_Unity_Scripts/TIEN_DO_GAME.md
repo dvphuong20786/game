@@ -4,57 +4,163 @@
 
 ---
 
-## ✅ 1. LỊCH SỬ NHỮNG GÌ TÔI ĐÃ CODE XONG (SOFTWARE CORE)
+## 🎮 DANH SÁCH VIỆC CẦN LÀM TRONG UNITY (CẬP NHẬT MỚI NHẤT)
 
-### 💎 Giai đoạn Mới nhất: Hệ thống RPG Cao cấp
-- **9 Ô Trang bị (9 slots):** Hỗ trợ đầy đủ: Đầu, Áo, Giày, Dây chuyền, Nhẫn 1, Nhẫn 2, Vàng cổ, Vũ khí chính, Khiên/Vũ khí phụ.
-- **Logic 1 Tay & 2 Tay (1H/2H):**
-    - Cầm vũ khí "Đại" hoặc "2 Tay" -> Tự động tháo Khiên.
-    - Cầm vũ khí "1 Tay" -> Cho phép dùng Khiên tăng thủ.
-- **Hệ thống Khảm Ngọc (Socket System):** Tự động nhận diện Ngọc trong tên đồ để cộng chỉ số mạnh mẽ (Ngọc Đỏ: +ATK, Ngọc Xanh: +DEF, Ngọc Tím: +HP).
-- **Tuyệt Chiêu Theo Cấp Độ (Skill Tree):**
-    - Hệ thống học kỹ năng mỗi 3 Level.
-    - Chiêu **Chém Gió (Lv3)**: Nhấn phím **số 1** để tung đòn sát thương x2.
-- **Giao diện Tab (UI Tabs):** Bảng nhân vật chuyên nghiệp với 2 Tab: **[TRANG BỊ]** và **[KỸ NĂNG]**.
-- **Hệ thống "An toàn & Chống lỗi":** Đã fix lỗi đứng game (ArgumentOutOfRange) khi bạn mặc hoặc bán đồ quá nhanh.
-
-### 🛡️ Giai đoạn Trước: Giao diện & Hiệu ứng
-- **Chữ nhảy số (Damage Text):** Hiện số đỏ khi bạn bị đánh, số trắng/vàng khi bạn chém quái.
-- **Thanh cuộn (Scroll View):** Túi đồ không giới hạn, có thể kéo lên xuống.
-- **Nút tắt [X]:** Giúp đóng UI bằng chuột cực nhanh.
-- **Cải thiện độ rõ nét:** Chữ VÀNG và EXP đã được thêm bóng đổ (Shadow) để nhìn rõ trên mọi địa hình.
-- **Camera Follow:** Script camera bám đuổi nhân vật mượt mà.
-
-### ⚔️ Giai đoạn Khởi đầu: Gameplay Cơ bản
-- **Di chuyển & Chiến đấu:** Chạy 8 hướng (Shift để tăng tốc), Chém thường (Space).
-- **Lò đẻ quái vô tận (Spawner):** Hệ thống Wave (10 quái -> 1 Boss). Tự động tăng độ khó theo thời gian.
-- **Rơi đồ & Vàng:** Quái chết rớt vàng (30%) hoặc đồ (10%). Tự động hút đồ khi đứng gần.
+> **Đây là việc của BẠN trong phần mềm Unity — Tôi không làm thay được!**
+> Đánh dấu `[x]` khi làm xong từng ô để theo dõi.
 
 ---
 
-## 🛠️ 2. NHỮNG GÌ BẠN ĐANG LÀM & CẦN "KÉO THẢ" TRONG UNITY
+### 🔴 NHÓM A — PHẢI LÀM TRƯỚC KHI CHƠI (Bắt buộc)
 
-Phần này là nhiệm vụ của bạn trong phần mềm Unity để "kích hoạt" những gì tôi đã viết:
+#### A1. Gắn Script vào Nhân Vật Chính (HeroKnight / Player)
+Chọn nhân vật trên **Hierarchy** → kéo thả từng file `.cs` từ **Project** vào **Inspector**:
+- [x] Kéo `PlayerStats.cs` → vào Player
+- [x] Kéo `PlayerMovement.cs` → vào Player
+- [x] Kéo `PlayerCombat.cs` → vào Player
 
-### 🔹 NHỮNG VIỆC CẦN LÀM NGAY (QUAN TRỌNG):
-- [ ] **Sửa lỗi Animator:** Mở bảng Animator -> Tab Parameters -> Bấm dấu [+] tạo 1 biến **Float** tên là **`Speed`** (viết hoa chữ S). Nếu không làm bước này, nhân vật sẽ đứng im hoặc báo lỗi vàng.
-- [ ] **Gắn Camera:** Chọn **Main Camera** trong Unity -> Kéo script **`CameraFollow`** thả vào đó.
-- [ ] **Gắn Lò đẻ quái:** Bạn phải kéo 1 con Quái (Prefab) vào ô **Monster Prefab** trong script `MonsterSpawner` thì quái mới hiện ra.
-- [ ] **Cắt ảnh (Slice):** Sử dụng Sprite Editor để cắt bộ ảnh Combo (Chạy & Chém).
+#### A2. Gắn Camera Theo Chân Player
+- [x] Chọn **Main Camera** trên Hierarchy
+- [x] Kéo `CameraFollow.cs` thả vào Inspector của Main Camera
+- [x] *(Tự động tìm Player, không cần kéo thêm gì)*
 
-### 🔹 NHỮNG VIỆC ĐÃ LÀM XONG TRONG UNITY (DO BẠN THỰC HIỆN):
-1. Đã đưa Map vào game (Tilemap).
-2. Đã đưa mẫu Hero Knight vào chạy thử.
-3. Đã tạo ra các cục Prefab cho quái (Slime).
+#### A3. Tạo GameObject Trống cho GameUI
+- [x] Trên thanh Menu Unity: **GameObject → Create Empty** → đặt tên là `GameUI`
+- [x] Kéo `GameUI.cs` thả vào GameObject vừa tạo
+- [x] *(Script này vẽ thanh HP, EXP, Vàng, và bảng kho đồ)*
+
+#### A4. Gắn Script vào Quái Vật (Slime / Monster)
+Chọn con Slime **Prefab** trong bảng Project → mở Inspector:
+- [x] Kéo `Monster.cs` → vào Slime Prefab
+- [x] Trong ô **Item Drop Prefab** của script Monster → kéo cục **Vàng Prefab** vào
+
+#### A5. Tạo Lò Đẻ Quái (MonsterSpawner)
+- [x] **GameObject → Create Empty** → đặt tên là `MonsterSpawner`
+- [x] Kéo `MonsterSpawner.cs` → vào GameObject vừa tạo
+- [x] Trong Inspector: kéo **Slime Prefab** vào ô **Monster Prefab**
+- [x] **Tạo Boss Prefab** — Làm theo các bước sau:
+  - [x] Kéo Slime Prefab từ Project thả vào **Hierarchy** (tạo 1 bản trong scene)
+  - [x] Đổi tên thành `Boss_Slime`
+  - [x] Trong Inspector → **Transform → Scale** đổi thành `3, 3, 1` (Boss to hơn)
+  - [x] Trong Inspector → **SpriteRenderer → Color** đổi sang màu **đỏ đậm** để phân biệt
+  - [x] Kéo `SmartBoss.cs` thả vào `Boss_Slime` (kéo thêm cùng Monster.cs đã có)
+  - [x] Trong ô **Summon Prefab** của SmartBoss → kéo Slime Prefab thường vào (Boss sẽ triệu hồi quái nhỏ!)
+  - [x] Kéo `Boss_Slime` từ Hierarchy xuống bảng **Project** để tạo thành **Prefab màu xanh**
+  - [x] Xóa `Boss_Slime` khỏi Hierarchy (đã có Prefab rồi)
+- [x] Trong Inspector của **MonsterSpawner** → kéo **Boss_Slime Prefab** vào ô **Boss Prefab**
+
+#### A6. Cài đặt Animator cho Nhân Vật (Quan trọng nhất!)
+Nếu không làm bước này, nhân vật sẽ đứng im như tượng đá:
+- [x] Chọn Player → mở cửa sổ **Animator** (Window → Animation → Animator)
+- [x] Vào Tab **Parameters** ở góc trái → bấm dấu **[+]**
+  - [x] Tạo 1 biến **Float** tên là: `Speed` *(viết hoa S)*
+  - [x] Tạo 1 biến **Trigger** tên là: `Attack` *(viết hoa A)*
+- [x] Nối dây: **Idle → Run** với điều kiện `Speed > 0.1` + **tắt Has Exit Time**
+- [x] Nối dây: **Run → Idle** với điều kiện `Speed < 0.1` + **tắt Has Exit Time**
+- [x] Nối dây: **AnyState → Attack** với điều kiện `Attack` Trigger
 
 ---
 
-## 🚩 3. CÁC VẤN ĐỀ ĐÃ GIẢI QUYẾT (HISTORY FIXES)
-- **Fix lỗi Input System:** Chuyển từ hệ cũ sang Unity 6 Input System.
-- **Fix lỗi Spawner:** Sửa lỗi quái ngừng đẻ sau khi Boss chết.
-- **Fix lỗi Transparency:** Hướng dẫn bật Alpha Is Transparency để mất nền trắng của nhân vật.
-- **Fix lỗi currentHealth:** Chuyển sang Public để Script AI bên ngoài có thể đọc được máu quái.
+### 🟡 NHÓM B — CÀI ĐẶT KHI CÓ THÊM TÀI NGUYÊN
+
+#### B1. NPC Bán Đồ (Cần làm sau khi tôi code xong NPCShop.cs)
+- [ ] Tạo 1 nhân vật 2D đơn giản (hình vuông/tròn màu xanh) đặt trên bản đồ → đặt tên `NPC_ShopKeeper`
+- [ ] Kéo `NPCShop.cs` → vào đối tượng NPC đó
+- [ ] *(Người chơi đứng gần + bấm E sẽ mở cửa hàng)*
+
+#### B2. Cắt Ảnh Hoạt Ảnh (Sprite Animation)
+Làm bước này nếu bạn có bộ ảnh nhân vật:
+- [ ] Chọn ảnh trong Project → Inspector → **Sprite Mode: Multiple** → **Sprite Editor**
+- [ ] Vào **Slice** → cắt theo số cột/hàng → bấm **Apply**
+- [ ] Quét chọn các frame **đứng yên** → kéo vào Player → đặt tên `Player_Idle`
+- [ ] Quét chọn các frame **chạy** → kéo vào Player → đặt tên `Player_Run`
+- [ ] Quét chọn các frame **đánh** → kéo vào Player → đặt tên `Player_Attack`
+
+#### B3. Bật Trong Suốt cho Ảnh Nhân Vật
+- [ ] Chọn tất cả ảnh nhân vật/quái vật trong bảng Project
+- [ ] Inspector → tích vào ô **Alpha Is Transparency** → bấm **Apply**
+
+#### B4. Hệ thống Đệ Tử (Companion AI)
+- [ ] Tạo 1 đối tượng mới (ví dụ: nhân vật tròn hoặc hiệp sĩ khác) đặt vào scene.
+- [ ] Đổi tên thành `Companion_DeTu`.
+- [ ] Thêm thành phần **Sprite Renderer** (nếu chưa có).
+- [ ] Kéo file script **`CompanionAI.cs`** thả vào nhân vật này.
+- [ ] *(Đệ tử sẽ tự đổi sang màu Xanh Dương khi chạy game, tự động bảo vệ bạn khi có quái).*
 
 ---
+
+### 🟢 NHÓM C — CÁC VIỆC ĐÃ LÀM XONG (DO BẠN THỰC HIỆN)
+
+1. ✅ Đã đưa Map vào game (Tilemap).
+2. ✅ Đã đưa mẫu Hero Knight vào Hierarchy.
+3. ✅ Đã tạo ra các cục Prefab cho quái (Slime).
+
+---
+
+## ✅ LỊCH SỬ CODE ĐÃ XONG (DO TÔI VIẾT)
+
+### 🐾 Giai đoạn Đệ Tử - RPG Companion (Cao cấp)
+- **Đệ tử như Người chơi:** Có đầy đủ 9 ô trang bị, túi đồ riêng, bảng kỹ năng và thăng cấp bằng EXP.
+- **Trí tuệ nhân tạo:** Tự động đi theo, tự tìm quái và **tự dùng tuyệt chiêu AOE** khi cần.
+- **Quản lý linh hoạt:** Trong bảng Túi đồ (phím B) có nút chuyển đổi giữa Người chơi và Đệ tử.
+- **Tính năng chuyển đồ:** Nút "Giao cho đệ tử" giúp nhanh chóng đưa trang bị tốt cho đồng đội.
+- **Kinh tế:** Đệ tử nhặt vàng sẽ tự động cộng dồn vào túi tiền chung của Người chơi.
+
+### 🔥 Phiên bản 15/04/2026 — Cập nhật 11 yêu cầu lớng RPG Cao cấp
+- **9 Ô Trang bị (9 slots):** Đầu, Áo, Giày, Dây chuyền, Nhẫn 1, Nhẫn 2, Vàng cổ, Vũ khí chính, Khiên.
+- **Logic 1 Tay & 2 Tay (1H/2H):** Cầm vũ khí Đại/2 Tay → tự tháo Khiên. Cầm 1 Tay → được dùng Khiên.
+- **Hệ thống Khảm Ngọc (Socket System):** Ngọc Đỏ: +ATK, Ngọc Xanh: +DEF, Ngọc Tím: +HP.
+- **Tuyệt Chiêu Theo Cấp Độ:** Cứ 3 Level học được 1 kỹ năng. Phím **1** = Chém Gió (x2 dame).
+- **Giao diện Tab:** Tab TRANG BỊ và Tab KỸ NĂNG.
+- **Hệ thống "An toàn & Chống lỗi":** Fix lỗi đứng game khi mặc/bán đồ quá nhanh.
+
+### 🛡️ Giai đoạn Trước — Giao diện & Hiệu ứng
+- **Chữ nhảy số (Damage Text):** Số đỏ khi bị đánh, số trắng khi chém quái.
+- **Thanh cuộn (Scroll View):** Túi đồ không giới hạn.
+- **Nút tắt [X]:** Đóng UI bằng chuột.
+- **Camera Follow:** Script camera bám đuổi nhân vật.
+
+### ⚔️ Giai đoạn Khởi đầu — Gameplay Cơ bản
+- **Di chuyển & Chiến đấu:** Chạy 8 hướng, Chém thường (Space).
+- **Lò đẻ quái vô tận:** Wave 10 quái → 1 Boss. Tăng độ khó theo thời gian.
+- **Rơi đồ & Vàng:** Quái chết → rớt vàng (30%) hoặc đồ (10%). Tự hút khi đứng gần.
+
+---
+
+## 🔧 LỊCH SỬ SỬA LỖI
+
+### Fix ngày 15/04/2026 — Sửa lỗi GameUI & API
+- **Fix Game UI biến mất:** Thêm `TryFindPlayer()` tìm lại mỗi frame thay vì chỉ tìm 1 lần ở `Start()`.
+- **Fix Damage Text không hiện:** Di chuyển `DrawFloatingDamage()` lên đầu `OnGUI()`, trước lệnh `return`.
+- **Fix Camera null crash:** Thêm kiểm tra `Camera.main != null`.
+- **Fix deprecated API Unity 6:** `FindObjectOfType` → `FindAnyObjectByType`, `FindObjectsOfType` → `FindObjectsByType`.
+- **Cải thiện HUD:** Hiện "HP: X / MaxHP" thay vì chỉ "HP: X".
+- **Files đã sửa:** `GameUI.cs`, `Monster.cs`, `PlayerCombat.cs`, `CameraFollow.cs`.
+
+---
+
+## 🚀 DANH SÁCH YÊU CẦU ĐANG LÀM (NGÀY 15/04/2026)
+
+Đây là 11 yêu cầu từ file YÊU CẦU.md — đang được triển khai:
+
+| # | Yêu cầu | Trạng thái | File |
+|---|---------|-----------|------|
+| 1 | Idle animation khi đứng yên | ⏳ Đang làm | `PlayerMovement.cs` |
+| 2 | Camera di chuyển theo map | ⏳ Đang làm | `CameraFollow.cs` |
+| 3 | Giảm tỉ lệ rớt đồ 10%, vàng 30% | ⏳ Đang làm | `ItemDrop.cs` |
+| 4 | Item rớt ra sáng/nhấp nháy rõ hơn | ⏳ Đang làm | `ItemDrop.cs` |
+| 5 | UI kho đồ có nút Sử dụng/Gỡ/Giá | ✅ Đã có | `GameUI.cs` |
+| 6 | Chữ Vàng dễ đọc hơn | ⏳ Đang làm | `GameUI.cs` |
+| 7 | 9 ô trang bị + Ngọc chỉ số | ✅ Đã có | `PlayerStats.cs` |
+| 8 | Bảng kỹ năng cứ 3 Lv | ✅ Đã có | `GameUI.cs` |
+| 9 | Đánh thường chỉ trúng 1 quái gần nhất | ⏳ Đang làm | `PlayerCombat.cs` |
+| 10 | Giảm dame & chỉ số đồ cho cân bằng | ⏳ Đang làm | `PlayerStats.cs` |
+| 11 | NPC bán đồ/bình máu/trang bị | ⏳ Đang làm | `NPCShop.cs` *(MỚI)* |
+
+---
+
 > [!IMPORTANT]
-> **Hướng dẫn sử dụng Kỹ năng:** Cày lên **Cấp 3**, mở bảng **Kỹ năng**, bấm nút **Học**, sau đó nhấn phím **số 1** trên bàn phím để chém sấm sét!
+> **Hướng dẫn sử dụng Kỹ năng:** Cày lên **Cấp 3**, mở bảng **Kỹ năng** (phím B), bấm nút **Học**, sau đó nhấn phím **số 1** để chém Chém Gió!
+
+> [!TIP]
+> **Mẹo nhanh:** Nếu thấy lỗi "Missing Script" màu vàng ở Inspector → xóa component đó → kéo lại script từ bảng Project vào là xong!

@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-// Gắn script này vào nhân vật của bạn (Player) cùng với PlayerStats
+// Gắn script này vào nhân vật Player cùng với PlayerStats
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Thông số sức mạnh")]
-    public int attackDamage = 25;
-    public float attackRange = 2f; 
+    public int attackDamage = 10;   // YC#10: Giảm từ 25 → 10 cho cân bằng
+    public float attackRange = 1.8f;
 
     private Animator anim;
 
@@ -19,62 +19,124 @@ public class PlayerCombat : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-
-    // Update được gọi mỗi khung hình
     void Update()
     {
-        // Nhận diện phím theo hệ thống Input mới của Unity 6
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current != null)
         {
             if (Keyboard.current.spaceKey.wasPressedThisFrame) Attack();
-            if (Keyboard.current.digit1Key.wasPressedThisFrame) CastSkill();
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) CastSkill_ChemGio();
+            if (Keyboard.current.digit2Key.wasPressedThisFrame) CastSkill_LoiDinh();
         }
 #else
         if (Input.GetKeyDown(KeyCode.Space)) Attack();
-        if (Input.GetKeyDown(KeyCode.Alpha1)) CastSkill();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) CastSkill_ChemGio();
+        if (Input.GetKeyDown(KeyCode.Alpha2)) CastSkill_LoiDinh();
 #endif
     }
 
-    void CastSkill()
+    // ===== ĐÁNH THƯỜNG: Chỉ trúng 1 quái GẦN NHẤT =====
+    // YC#9: Đánh thường KHÔNG đánh AOE, chỉ hit 1 mục tiêu gần nhất
+    void Attack()
+    {
+        if (anim != null) anim.SetTrigger("Attack");
+
+        int tongDame = attackDamage;
+        PlayerStats stats = GetComponent<PlayerStats>();
+        if (stats != null) tongDame += stats.bonusDamage;
+
+        // Tìm 1 quái GẦN NHẤT trong tầm
+        Monster target = FindNearestMonster(attackRange);
+        if (target != null)
+        {
+            target.TakeDamage(tongDame);
+            Debug.Log($"⚔️ Chém thường → {target.monsterName}: -{tongDame} dame");
+        }
+        else
+        {
+            Debug.Log("⚔️ Vung kiếm nhưng không trúng ai.");
+        }
+    }
+
+    // ===== KỸ NĂNG 1: Chém Gió (Lv3) — ĐÁNH TẤT CẢ quái xung quanh =====
+    // Phím số 1
+    void CastSkill_ChemGio()
     {
         PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats == null || !stats.unlockedSkills.Contains("Chém Gió (Lv3)")) 
+        if (stats == null || !stats.unlockedSkills.Contains("Chém Gió (Lv3)"))
         {
-            Debug.Log("Bạn chưa học kỹ năng này!");
+            Debug.Log("❌ Bạn chưa học Chém Gió! (Cần Lv3)");
+            // Hiện thông báo trên màn hình
+            if (GameUI.instance != null)
+                GameUI.instance.ShowDamage(transform.position, "Chưa học kỹ năng!", Color.gray);
             return;
         }
 
-        Debug.Log("🔥 TUYỆT CHIÊU: CHÉM GIÓ!");
         if (anim != null) anim.SetTrigger("Attack");
 
-        // Gây sát thương X2
-        int skillDamage = (attackDamage + stats.bonusDamage) * 2;
-        HitMonsters(skillDamage, attackRange + 1f); // Tầm đánh xa hơn chiêu thường
+        // Chém Gió: AOE x2 dame, tầm xa hơn
+        int skillDame = (attackDamage + stats.bonusDamage) * 2;
+        HitAllMonstersInRange(skillDame, attackRange + 1.5f);
+        if (GameUI.instance != null)
+            GameUI.instance.ShowDamage(transform.position, "💨 CHÉM GIÓ!", Color.yellow);
+        Debug.Log($"💨 CHÉM GIÓ! Đánh AOE {skillDame} dame trong tầm {attackRange + 1.5f}");
     }
 
-    void Attack()
+    // ===== KỸ NĂNG 2: Lôi Đình (Lv6) — ĐÁNH TẤT CẢ, tầm rất rộng =====
+    // Phím số 2
+    void CastSkill_LoiDinh()
     {
-        Debug.Log("Người chơi vung kiếm!");
-        if (anim != null) anim.SetTrigger("Attack");
-
-        int tongSatThuongThucTe = attackDamage;
         PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats != null) tongSatThuongThucTe += stats.bonusDamage;
+        if (stats == null || !stats.unlockedSkills.Contains("Lôi Đình (Lv6)"))
+        {
+            Debug.Log("❌ Bạn chưa học Lôi Đình! (Cần Lv6)");
+            if (GameUI.instance != null)
+                GameUI.instance.ShowDamage(transform.position, "Chưa học kỹ năng!", Color.gray);
+            return;
+        }
 
-        HitMonsters(tongSatThuongThucTe, attackRange);
+        if (anim != null) anim.SetTrigger("Attack");
+
+        // Lôi Đình: AOE x3 dame, tầm cực rộng
+        int skillDame = (attackDamage + stats.bonusDamage) * 3;
+        HitAllMonstersInRange(skillDame, attackRange + 3f);
+        if (GameUI.instance != null)
+            GameUI.instance.ShowDamage(transform.position, "⚡ LÔI ĐÌNH!", new Color(0.5f, 0.5f, 1f));
+        Debug.Log($"⚡ LÔI ĐÌNH! AOE {skillDame} dame trong tầm {attackRange + 3f}");
     }
 
-    void HitMonsters(int damage, float range)
+    // ===== HÀM TÌM QUÁI GẦN NHẤT =====
+    Monster FindNearestMonster(float range)
     {
-        Monster[] allMonsters = FindObjectsOfType<Monster>();
-        foreach (Monster monster in allMonsters)
+        Monster[] allMonsters = FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        Monster nearest = null;
+        float minDist = float.MaxValue;
+
+        foreach (Monster m in allMonsters)
         {
-            if (Vector2.Distance(transform.position, monster.transform.position) <= range)
+            float dist = Vector2.Distance(transform.position, m.transform.position);
+            if (dist <= range && dist < minDist)
             {
-                monster.TakeDamage(damage);
+                minDist = dist;
+                nearest = m;
             }
         }
+        return nearest;
     }
 
+    // ===== HÀM ĐÁNH TẤT CẢ TRONG TẦM (AOE — Dùng cho Kỹ năng) =====
+    void HitAllMonstersInRange(int damage, float range)
+    {
+        Monster[] allMonsters = FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        int hitCount = 0;
+        foreach (Monster m in allMonsters)
+        {
+            if (Vector2.Distance(transform.position, m.transform.position) <= range)
+            {
+                m.TakeDamage(damage);
+                hitCount++;
+            }
+        }
+        Debug.Log($"[AOE] Trúng {hitCount} quái.");
+    }
 }

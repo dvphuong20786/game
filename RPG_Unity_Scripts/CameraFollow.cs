@@ -2,27 +2,61 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private Transform target; // Nhân vật để camera đuổi theo
-    public float smoothSpeed = 0.125f; // Độ mượt của camera
-    public Vector3 offset = new Vector3(0, 0, -10); // Khoảng cách giữa cam và người
+    private Transform target;
+    public float smoothSpeed = 5f; // Tăng lên để camera mượt hơn (cũ là 0.125f quá chậm)
+    public Vector3 offset = new Vector3(0, 0, -10);
+
+    private float findTimer = 0f;
+    private const float FIND_INTERVAL = 2f; // Tìm lại player mỗi 2 giây nếu bị mất
 
     void Start()
     {
-        // Tự động tìm nhân vật có tên là "Player" hoặc có gắn PlayerMovement
-        PlayerMovement p = FindAnyObjectByType<PlayerMovement>();
-        if (p != null) target = p.transform;
+        FindPlayer();
+    }
+
+    void FindPlayer()
+    {
+        // Cách 1: Tìm theo Tag "Player" (nhanh nhất, ít tốn tài nguyên nhất)
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            target = playerObj.transform;
+            Debug.Log("[CameraFollow] ✅ Tìm thấy Player bằng Tag!");
+            return;
+        }
+
+        // Cách 2: Fallback - tìm theo script PlayerMovement
+        PlayerMovement pm = FindAnyObjectByType<PlayerMovement>();
+        if (pm != null)
+        {
+            target = pm.transform;
+            Debug.Log("[CameraFollow] ✅ Tìm thấy Player bằng script PlayerMovement!");
+            return;
+        }
+
+        Debug.LogWarning("[CameraFollow] ⚠️ Chưa tìm thấy Player! Hãy đảm bảo:\n" +
+                         "1. Nhân vật có Tag là 'Player', HOẶC\n" +
+                         "2. Nhân vật có script PlayerMovement gắn vào.");
     }
 
     void LateUpdate()
     {
-        if (target == null) return;
+        // Nếu mất target, thử tìm lại định kỳ
+        if (target == null)
+        {
+            findTimer += Time.deltaTime;
+            if (findTimer >= FIND_INTERVAL)
+            {
+                findTimer = 0f;
+                FindPlayer();
+            }
+            return;
+        }
 
-        // Tính toán vị trí mới của camera
-        Vector3 desiredPosition = target.position + offset;
-        
-        // Di chuyển mượt mà tới đó (Lerp)
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        
-        transform.position = smoothedPosition;
+        // Di chuyển camera theo player
+        Vector3 desiredPosition = new Vector3(target.position.x, target.position.y, transform.position.z) + offset;
+
+        // Dùng Lerp với Time.deltaTime để mượt đều trên mọi máy tính
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
     }
 }

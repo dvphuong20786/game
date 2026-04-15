@@ -5,18 +5,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-// Script để gắn vào Nhân vật (Player), chịu trách nhiệm chức năng rảo bộ quanh bản đồ
+// Script để gắn vào Nhân vật (Player), chịu trách nhiệm chức năng di chuyển
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Cài đặt Di chuyển")]
-    public float moveSpeed = 5f; // Tốc độ di chuyển, có thể thay đổi số này trong Unity (Inspector)
+    public float moveSpeed = 5f;
 
-    // Update is called once per frame (Khung hình chạy liên tục)
     private Animator anim;
+    private SpriteRenderer sr;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -40,14 +41,36 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveX, moveY, 0f).normalized;
         transform.Translate(movement * moveSpeed * Time.deltaTime);
 
-        // Đẩy tín hiệu sang Animator
+        // ===== GỬI TÍN HIỆU ANIMATOR =====
         if (anim != null)
         {
-            // Nếu có di chuyển thì Speed > 0, không thì Speed = 0 giúp chuyển về Idle
-            float currentSpeed = (moveX != 0 || moveY != 0) ? 1f : 0f;
-            anim.SetFloat("Speed", currentSpeed);
-            
-            // Xoay hướng nhân vật (Flip) dựa trên hướng đi của X
+            bool isMoving = (moveX != 0 || moveY != 0);
+
+            // Dùng CẢ HAI: Float Speed (để transition) và Bool IsMoving (để chắc chắn hơn)
+            anim.SetFloat("Speed", isMoving ? 1f : 0f);
+
+            // Nếu Animator có bool "IsMoving" thì dùng thêm
+            // (Tạo trong Unity: Parameters → [+] → Bool → đặt tên "IsMoving")
+            foreach (AnimatorControllerParameter p in anim.parameters)
+            {
+                if (p.name == "IsMoving" && p.type == AnimatorControllerParameterType.Bool)
+                {
+                    anim.SetBool("IsMoving", isMoving);
+                    break;
+                }
+            }
+        }
+
+        // ===== LẬT MẶT NHÂN VẬT =====
+        // Dùng SpriteRenderer.flipX thay vì scale để tránh xung đột với Camera
+        if (sr != null)
+        {
+            if (moveX > 0) sr.flipX = false;  // Đi phải → mặt phải
+            else if (moveX < 0) sr.flipX = true;  // Đi trái → lật mặt
+        }
+        else
+        {
+            // Fallback dùng localScale nếu không có SpriteRenderer trực tiếp
             if (moveX > 0) transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, 1);
             else if (moveX < 0) transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, 1);
         }

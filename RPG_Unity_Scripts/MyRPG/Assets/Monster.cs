@@ -89,7 +89,7 @@ public class Monster : MonoBehaviour
         Debug.Log("Quái vật " + monsterName + " đã CHẾT!");
 
         // 1. Cống nạp EXP
-        PlayerStats player = FindObjectOfType<PlayerStats>();
+        PlayerStats player = FindAnyObjectByType<PlayerStats>();
         if (player != null)
         {
             player.AddExp(expReward);
