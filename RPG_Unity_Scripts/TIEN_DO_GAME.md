@@ -87,11 +87,11 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 - [ ] Kéo file script **`CompanionAI.cs`** thả vào nhân vật này.
 - [ ] *(Đệ tử sẽ tự đổi sang màu Xanh Dương khi chạy game, tự động bảo vệ bạn khi có quái).*
 
-#### B5. NPC Huấn Luyện (Trainer) - [Đang lên kế hoạch]
-- [ ] Tạo GameObject cho NPC Huấn Luyện.
-- [ ] Gán script `TrainerNPC.cs` (Sắp có).
+#### B5. NPC Huấn Luyện (Trainer) - [ĐÃ XONG CODE]
+- [x] Tạo GameObject cho NPC Huấn Luyện.
+- [ ] Gán script `TrainerNPC.cs`.
 - [ ] Thiết lập các Prefab đệ tử: Cung thủ, Kiếm khách, Slime đồng minh.
-- [ ] *(NPC này cho phép bạn dùng Vàng để chiêu mộ đồng đội mới với kỹ năng riêng).*
+- [ ] *(Xem hướng dẫn chi tiết tại HUONG_DAN_CHI_TIET_GAME.md phần 7.2)*.
 
 ---
 

@@ -51,15 +51,56 @@
 > **Mẹo nhỏ:** 
 > Nếu bạn thấy lỗi "Missing Script" màu vàng ở Inspector, hãy xóa component đó đi và kéo lại script từ bảng Project vào là xong!
 
+## 7. HƯỚNG DẪN CHI TIẾT NPC & ĐỆ TỬ (MỚI)
 
+### 7.1. NPC BÁN ĐỒ (`NPC_ShopKeeper`)
+- **Gắn Script:** `NPCShop.cs`.
+- **Nhiệm vụ:** Quản lý kho hàng 14 vật phẩm (Máu, Kiếm, Áo giáp, Ngọc).
+- **Lưu ý:** Tầm tương tác (`Interact Range`) nên để 2.5. Bạn chỉ cần đứng gần và bấm phím **E** để mở quầy hàng.
 
-1. Tạo NPC Huấn Luyện:
-- Tạo một GameObject mới, đặt tên là **`NPC_Trainer`**.
-- Kéo script **`TrainerNPC.cs`** vào nó.
-- Chọn hình ảnh ông lão (Merchant) làm đại diện.
-2. Tạo 3 Prefab Đệ tử (**`Warrior`**, **`Archer`**, **`Slime`**):
-- Bạn hãy tạo 3 Prefab khác nhau dựa trên hướng dẫn trong file Tiến độ.
-- Lưu ý cực quan trọng: Trên mỗi Prefab đệ tử, ở script **`CompanionAI`**, hãy chọn đúng loại (Type) là **`Warrior`**, **`Archer`** hoặc **`Slime`** để chúng biết đánh gần hay đánh xa.
-3. Kéo vào NPC Trainer:
-- Mở NPC_Trainer lên, bạn sẽ thấy 3 ô: **`Warrior Prefab`**, **`Archer Prefab`**, **`Slime Prefab`**.
-- Kéo 3 cái Prefab vừa tạo vào đúng ô đó.
+### 7.2. NPC HUẤN LUYỆN (`NPC_Trainer`)
+- **Gắn Script:** `TrainerNPC.cs` và `NPCAnimation.cs`.
+- **Nhiệm vụ:** Hiện menu mua đệ tử. 
+- **Bước quan trọng:** Bạn phải mở Inspector của NPC này, tìm 3 ô: `Warrior Prefab`, `Archer Prefab`, `Slime Prefab` và kéo 3 bản mẫu đệ tử tương ứng vào đó.
+
+### 7.3. CÁCH LÀM ANIMATOR CHO ĐỆ TỬ
+Để đệ tử biết đánh, biết chạy đúng lúc, bạn mở cửa sổ **Animator** của chúng:
+1. **Parameters:** Tạo một **Bool** tên là `IsWalking` và một **Trigger** tên là `Attack`. (Phải viết đúng chính tả!).
+2. **Nối dây từ Idle sang Run:** Điều kiện: `IsWalking = true`.
+3. **Nối dây từ Run về Idle:** Điều kiện: `IsWalking = false`.
+4. **Hành động Đánh:** Nối từ **Any State** tới clip `Attack`. Điều kiện: `Attack` (Trigger). 
+5. **Dây nối ngược:** Nối từ `Attack` về `Idle`. Nhớ **TÍCH** vào **Has Exit Time** để nó chém xong mới thôi.
+
+## 8. XƯỞNG CHẾ TẠO ĐỆ TỬ (COMPANION WORKSHOP) - TỪNG BƯỚC MỘT
+
+Bạn hãy làm theo đúng bảng danh sách này để tạo ra một đệ tử hoàn hảo:
+
+### 📦 PHẦN 1: THIẾT LẬP THÂN XÁC (OUTSIDE)
+- [ ] **Bước 1:** Kéo ảnh (Sprite) của đệ tử vào **Hierarchy**. Đặt tên (vd: `Companion_Archer`).
+- [ ] **Bước 2:** Chỉnh **Sorting Layer** thành cùng layer với Player để không bị che khuất.
+
+### 🧠 PHẦN 2: THIẾT LẬP BỘ NÃO (SCRIPTS)
+- [ ] **Bước 3: Gắn script `PlayerStats.cs`**
+  - [ ] **CỰC KỲ QUAN TRỌNG:** Bỏ tích ô **`Is Player`**.
+- [ ] **Bước 4: Gắn script `CompanionAI.cs`**
+  - [ ] Ở ô **Type**, chọn đúng: `Warrior`, `Archer`, hoặc `Slime`.
+
+### 🎬 PHẦN 3: THIẾT LẬP ĐỘNG TÁC (ANIMATOR)
+- [ ] **Bước 5:** Trong cửa sổ **Animator**, tạo 2 Parameters:
+   1.  **Bool**: `IsWalking`
+   2.  **Trigger**: `Attack`
+- [ ] **Bước 6:** Nối dây:
+   - [ ] Idle <-> Run (Dùng `IsWalking`).
+   - [ ] Any State -> Attack (Dùng `Attack`).
+
+### 🚀 PHẦN 4: XUẤT XƯỞNG (PREFAB)
+- [ ] **Bước 7:** Kéo đệ tử từ Hierarchy xuống Project để tạo **Prefab**.
+- [ ] **Bước 8:** Chọn **`NPC_Trainer`** -> Kéo Prefab vào ô tương ứng trong Inspector.
+
+---
+
+### 7.4. PHÂN LOẠI ĐỆ TỬ (COMPANION TYPE)
+Trên mỗi đệ tử, tìm script **`CompanionAI`**:
+- **Warrior:** Tự động áp sát quái và chém AOE.
+- **Archer:** Tự động đứng từ xa bắn cung (tầm bắn 6m).
+- **Slime:** Đi chậm, phản dame và làm tanker cho bạn.
