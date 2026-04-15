@@ -50,3 +50,16 @@
 > [!IMPORTANT]
 > **Mẹo nhỏ:** 
 > Nếu bạn thấy lỗi "Missing Script" màu vàng ở Inspector, hãy xóa component đó đi và kéo lại script từ bảng Project vào là xong!
+
+
+
+1. Tạo NPC Huấn Luyện:
+- Tạo một GameObject mới, đặt tên là **`NPC_Trainer`**.
+- Kéo script **`TrainerNPC.cs`** vào nó.
+- Chọn hình ảnh ông lão (Merchant) làm đại diện.
+2. Tạo 3 Prefab Đệ tử (**`Warrior`**, **`Archer`**, **`Slime`**):
+- Bạn hãy tạo 3 Prefab khác nhau dựa trên hướng dẫn trong file Tiến độ.
+- Lưu ý cực quan trọng: Trên mỗi Prefab đệ tử, ở script **`CompanionAI`**, hãy chọn đúng loại (Type) là **`Warrior`**, **`Archer`** hoặc **`Slime`** để chúng biết đánh gần hay đánh xa.
+3. Kéo vào NPC Trainer:
+- Mở NPC_Trainer lên, bạn sẽ thấy 3 ô: **`Warrior Prefab`**, **`Archer Prefab`**, **`Slime Prefab`**.
+- Kéo 3 cái Prefab vừa tạo vào đúng ô đó.

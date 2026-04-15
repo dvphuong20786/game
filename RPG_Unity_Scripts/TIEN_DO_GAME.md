@@ -64,9 +64,9 @@ Nếu không làm bước này, nhân vật sẽ đứng im như tượng đá:
 ### 🟡 NHÓM B — CÀI ĐẶT KHI CÓ THÊM TÀI NGUYÊN
 
 #### B1. NPC Bán Đồ (Cần làm sau khi tôi code xong NPCShop.cs)
-- [ ] Tạo 1 nhân vật 2D đơn giản (hình vuông/tròn màu xanh) đặt trên bản đồ → đặt tên `NPC_ShopKeeper`
-- [ ] Kéo `NPCShop.cs` → vào đối tượng NPC đó
-- [ ] *(Người chơi đứng gần + bấm E sẽ mở cửa hàng)*
+- [x] Tạo 1 nhân vật 2D đơn giản (hình vuông/tròn màu xanh) đặt trên bản đồ → đặt tên `NPC_ShopKeeper`
+- [x] Kéo `NPCShop.cs` → vào đối tượng NPC đó
+- [x] *(Người chơi đứng gần + bấm E sẽ mở cửa hàng)*
 
 #### B2. Cắt Ảnh Hoạt Ảnh (Sprite Animation)
 Làm bước này nếu bạn có bộ ảnh nhân vật:
@@ -86,6 +86,12 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 - [ ] Thêm thành phần **Sprite Renderer** (nếu chưa có).
 - [ ] Kéo file script **`CompanionAI.cs`** thả vào nhân vật này.
 - [ ] *(Đệ tử sẽ tự đổi sang màu Xanh Dương khi chạy game, tự động bảo vệ bạn khi có quái).*
+
+#### B5. NPC Huấn Luyện (Trainer) - [Đang lên kế hoạch]
+- [ ] Tạo GameObject cho NPC Huấn Luyện.
+- [ ] Gán script `TrainerNPC.cs` (Sắp có).
+- [ ] Thiết lập các Prefab đệ tử: Cung thủ, Kiếm khách, Slime đồng minh.
+- [ ] *(NPC này cho phép bạn dùng Vàng để chiêu mộ đồng đội mới với kỹ năng riêng).*
 
 ---
 

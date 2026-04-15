@@ -1,45 +1,42 @@
-# Kế hoạch Nâng cấp Hệ thống Đệ tử (Companion AI)
+# Kế hoạch Thêm NPC Huấn Luyện & Hệ thống Thuê Đệ Tử
 
-Nâng cấp Đệ tử từ một AI đơn giản thành một nhân vật có chiều sâu, có thể thăng cấp, mặc trang bị và học kỹ năng riêng biệt.
+Hệ thống này cho phép người chơi chiêu mộ đồng đội mới (Humans, Monsters) với các vai trò khác nhau (Cận chiến, Tầm xa, Tanker) thông qua NPC Huấn Luyện.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Cơ chế Chia sẻ Đồ:** Tôi đề xuất thêm nút "Giao cho Đệ Tử" trong túi đồ của Người chơi để chuyển vật phẩm sang cho Đệ tử. Bạn có đồng ý không?
+> **Số lượng Đệ tử:** Đã thống nhất giới hạn tối đa **4 đệ tử** cùng lúc. Tôi sẽ tối ưu code để các đệ tử không đứng chồng lên nhau khi đi theo bạn.
 >
-> **Cơ chế Vàng:** Đệ tử nên dùng chung túi tiền với Người chơi hay có tiền riêng? (Tạm thời tôi sẽ để dùng chung tiền để dễ quản lý).
+> **Thuê vs Mua:** Đã thống nhất cơ chế "Mua đứt". Người chơi có thể sở hữu đội quân 4 người của riêng mình.
 
 ## Proposed Changes
 
-### [Component] Core Stats & RPG Logic
-
-#### [MODIFY] [PlayerStats.cs](file:///d:/work/1/RPG_Unity_Scripts/PlayerStats.cs)
-- Chỉnh sửa để script này có thể gắn vào cả Người chơi và Đệ tử.
-- Bỏ ràng buộc Singleton cứng nhắc (chỉ người chơi chính mới giữ `instance`).
-- Thêm biến `isCompanion` để phân biệt logic (ví dụ: Đệ tử không tự lưu game đè lên Player).
-- Cập nhật hàm `TakeDamage`, `LevelUp` để thông báo damage text đúng vị trí của Đệ tử.
-
-### [Component] Companion AI Logic
+### [Component] Companion System Expansion
 
 #### [MODIFY] [CompanionAI.cs](file:///d:/work/1/RPG_Unity_Scripts/CompanionAI.cs)
-- Xóa các biến hardcode (`attackDamage`, `movementSpeed`).
-- Lấy chỉ số trực tiếp từ `PlayerStats` gắn trên chính nó.
-- Cải tiến AI: Biết tự dùng kỹ năng (ví dụ: Chém Gió) khi quái đông.
-- Sử dụng tầm đánh (`attackRange`) từ vũ khí đang mặc.
+- Cập nhật để hỗ trợ các loại tấn công khác nhau (Tầm xa - bắn cung, Cận chiến - chém).
+- Thêm biến `companionType` để xác định hành vi riêng của từng loài.
+
+#### [NEW] [TrainerNPC.cs](file:///d:/work/1/RPG_Unity_Scripts/TrainerNPC.cs)
+- Script mới cho NPC Huấn Luyện.
+- Quản lý danh sách các Prefab Đệ tử có thể thuê.
+- Giao diện UI riêng để chọn Đệ tử:
+  - **Kiếm Khách (Warrior):** Máu trâu, chém mạnh.
+  - **Cung Thủ (Archer):** Máu giấy, bắn xa an toàn.
+  - **Slime Đồng Minh:** Phản dame, làm chậm quái.
 
 ### [Component] User Interface (UI)
 
 #### [MODIFY] [GameUI.cs](file:///d:/work/1/RPG_Unity_Scripts/GameUI.cs)
-- Thêm nút chuyển đổi (Chế độ: Người chơi / Đệ tử) trong bảng túi đồ (phím B).
-- Khi chọn "Đệ tử", toàn bộ bảng Trang bị, Túi đồ và Kỹ năng sẽ hiển thị dữ liệu của Đệ tử.
-- Thêm nút "Giao cho đệ tử" khi đang xem túi đồ người chơi.
+- Cập nhật HUD để hiện máu của Đệ tử hiện tại (để người chơi biết khi nào đệ tử sắp "tử trận").
+
+## Open Questions
+
+- Bạn đã có sẵn Sprite cho Cung thủ hay Quái vật đồng minh chưa? Nếu chưa tôi sẽ tạo hình bằng AI giúp bạn.
 
 ## Verification Plan
 
-### Automated Tests
-- Kiểm tra Đệ tử có nhận được chỉ số bonus khi mặc đồ không.
-- Kiểm tra Đệ tử có lên cấp khi cùng tiêu diệt quái không.
-
 ### Manual Verification
-- Mở túi đồ (phím B), bấm nút chuyển sang Đệ tử, thử mặc một cái áo cho đệ tử và xem máu của nó có tăng lên không.
-- Đứng nhìn Đệ tử đánh quái xem nó có dùng kỹ năng đã học không.
+- Chạy lại gần NPC Huấn Luyện (phím E), chọn mua "Cung Thủ".
+- Kiểm tra xem bạn có thể dẫn theo tối đa 4 đệ tử khác nhau không.
+- Dẫn cả đội hình đi đánh quái xem hiệu quả chiến đấu nhóm.
