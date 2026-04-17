@@ -87,11 +87,16 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 - [ ] Kéo file script **`CompanionAI.cs`** thả vào nhân vật này.
 - [ ] *(Đệ tử sẽ tự đổi sang màu Xanh Dương khi chạy game, tự động bảo vệ bạn khi có quái).*
 
-#### B5. NPC Huấn Luyện (Trainer) - [ĐÃ XONG CODE]
-- [x] Tạo GameObject cho NPC Huấn Luyện.
-- [ ] Gán script `TrainerNPC.cs`.
-- [ ] Thiết lập các Prefab đệ tử: Cung thủ, Kiếm khách, Slime đồng minh.
-- [ ] *(Xem hướng dẫn chi tiết tại HUONG_DAN_CHI_TIET_GAME.md phần 7.2)*.
+#### B5. NPC Huấn Luyện (Trainer) - [CẦN BẠN KÉO THẢ]
+- [x] Tạo GameObject đặt tên là `NPC_Trainer`.
+- [x] Gán script `TrainerNPC.cs`.
+- [ ] **Việc bạn phải làm:** Mở Inspector của `NPC_Trainer`:
+    - [ ] Kéo **Warrior Prefab** vào ô tương ứng.
+    - [ ] Kéo **Archer Prefab** vào ô tương ứng.
+    - [ ] Kéo **Slime Prefab** vào ô tương ứng.
+    - [ ] Nắm 1 file âm thanh (AudioClip) thả vào ô **Hire Sound**.
+- [ ] **Thiết lập di chuyển:** Tích vào **Can Patrol**, chỉnh **Move Speed** = 1.5, **Patrol Distance** = 4.
+- [ ] *(Xem hướng dẫn chi tiết tại HUONG_DAN_CHI_TIET_GAME.md mục 7.2 & 9)*.
 
 ---
 
@@ -161,7 +166,10 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 | 8 | Bảng kỹ năng cứ 3 Lv | ✅ Đã có | `GameUI.cs` |
 | 9 | Đánh thường chỉ trúng 1 quái gần nhất | ⏳ Đang làm | `PlayerCombat.cs` |
 | 10 | Giảm dame & chỉ số đồ cho cân bằng | ⏳ Đang làm | `PlayerStats.cs` |
-| 11 | NPC bán đồ/bình máu/trang bị | ⏳ Đang làm | `NPCShop.cs` *(MỚI)* |
+| 11 | NPC bán đồ/bình máu/trang bị | ✅ Đã có | `NPCShop.cs` |
+| 12 | HUD Đệ tử & Chỉ số chi tiết | ✅ Đã có | `GameUI.cs` |
+| 13 | Hệ thống cộng điểm STR/VIT/AGI | ✅ Đã có | `PlayerStats.cs` |
+| 14 | Chia sẻ 50/50 EXP & Focus Camera | ✅ Đã có | `Monster.cs` / `CameraFollow.cs` |
 
 ---
 

@@ -1,36 +1,44 @@
-# 🐾 WALKTHROUGH: HỆ THỐNG ĐỆ TỬ CAO CẤP
+# Tổng kết: Đại tu hệ thống Đệ tử & Giao diện Nâng cao
 
-Tôi đã nâng cấp Đệ tử từ một AI di chuyển đơn giản thành một hệ thống RPG hoàn chỉnh. Giờ đây, Đệ tử của bạn thực sự là một "Người chơi thứ hai" với đầy đủ sức mạnh!
+Tôi đã hoàn thành toàn bộ các yêu cầu của bạn về việc nâng cấp hệ thống đệ tử, hiển thị chỉ số chi tiết, tối ưu camera và xây dựng hệ thông cộng điểm tiềm năng.
 
-## 🌟 Các tính năng mới
+## Các thay đổi chính
 
-### 1. Chỉ số và Trang bị (RPG Stats)
-- Đệ tử giờ dùng chung script `PlayerStats` với Người chơi. 
-- Nó có **9 ô trang bị riêng**: Đầu, Áo, Giày, Nhẫn, Vũ khí... 
-- Khi bạn cho Đệ tử mặc đồ, máu và dame của nó sẽ tăng lên thực tế.
+### 1. Hệ thống Camera Focus & Tốc độ
+- **Tốc độ:** Tăng từ 5 -> 12, giúp camera bám đuôi nhân vật mượt mà và nhanh chóng hơn.
+- **Focus:** Khi bạn chọn "XEM ĐỆ TỬ" trong bảng Bag, Camera sẽ tự động chuyển tiêu điểm sang Đệ tử để bạn dễ quan sát.
 
-### 2. Quản lý Túi đồ (Inventory Management)
-- Trong bảng Túi đồ (Phím **B**), nay có nút **[🐕 XEM ĐỆ TỬ]** ở góc trên.
-- Bấm nút này để hoán đổi xem Trang bị/Kỹ năng của bạn hoặc của Đệ tử.
-- Khi đang xem túi đồ của mình, chọn 1 món đồ sẽ thấy nút **[🐕 GIAO CHO ĐỆ TỬ]** để chuyển đồ sang cho nó.
+### 2. Hệ thống Chỉ số Tiềm năng (STR/VIT/AGI)
+- **Cộng điểm:** Mỗi khi lên cấp, bạn nhận được 5 điểm tiềm năng. Bạn có thể nhấn nút **[+]** trong bảng Bag để nâng:
+    - `STR`: Tăng sát thương vật lý đáng kể.
+    - `VIT`: Tăng máu tối đa và phòng thủ tự nhiên.
+    - `AGI`: Tăng tốc độ di chuyển và tấn công.
+- **Chia sẻ EXP:** Kinh nghiệm từ quái vật giờ đây được chia đều **50/50** cho cả Người chơi và Đệ tử.
 
-### 3. Trí tuệ chiến đấu (Smart AI)
-- Đệ tử biết tự dùng tuyệt chiêu **Chém Gió (AOE)** khi có nhiều quái bao quanh (nếu bạn đã học kỹ năng đó cho nó).
-- Tốc độ đánh và chạy của Đệ tử tỉ lệ thuận với điểm **AGI**.
-- Mặc định Đệ tử nhặt vàng sẽ tự động bay vào túi tiền của bạn.
+### 3. Giao diện (UI) Nâng cao
+- **HUD Đệ tử:** Đã thêm thanh Máu và EXP của đệ tử ngay dưới thanh của người chơi (góc trên trái).
+- **Tooltip chi tiết:** Khi chọn vật phẩm, bảng mô tả sẽ hiện chính xác các chỉ số cộng thêm (vd: "⚔ +15 Sát thương") thay vì chỉ hiện tên.
+- **Bảng Kỹ năng:** Tách biệt kỹ năng của Người chơi và Đệ tử.
 
-## 🛠️ Cách cài đặt trong Unity (Nếu tạo mới)
-1. Gắn `PlayerStats.cs` vào Đệ tử.
-2. Trong Inspector của Đệ tử: **Bỏ tích** ô `isPlayer`. (Quan trọng!)
-3. Gắn `CompanionAI.cs` vào Đệ tử.
-4. Gắn `Animator` và các sprite như người chơi thường.
+### 4. Kỹ năng Hỗ trợ của Đệ tử
+- Đệ tử giờ đây có các kỹ năng mang tính hỗ trợ khi lên cấp:
+    - `🛡 Hộ Vệ`: Tăng giáp cho chủ nhân khi đứng gần.
+    - `❤ Trị Thương`: Tự động hồi máu cho cả đội sau mỗi 5 giây.
 
-## ✅ Kết quả kiểm thử
-- [x] Đệ tử nhận đồ từ người chơi chính xác.
-- [x] Đệ tử tăng dame khi mặc kiếm, tăng thủ khi mặc giáp.
-- [x] Nút chuyển đổi UI hoạt động mượt mà.
-- [x] Đệ tử tự dùng skill khi đủ điều kiện.
+## Hướng dẫn cho bạn (QUAN TRỌNG)
+
+Bạn cần thực hiện các thao tác kéo thả sau trong Unity để NPC Trainer hoạt động:
+
+1.  **Cài đặt Trainer:**
+    - Chọn GameObject `NPC_Trainer`.
+    - Trong Inspector của script `TrainerNPC`:
+        - Kéo các Prefab đệ tử của bạn vào các ô `Prefab Warrior`, `Prefab Archer`, `Prefab Slime`.
+        - Kéo 1 file âm thanh vào ô `Hire Sound`.
+        - Tích vào `Can Patrol` để NPC đi lại tuần tra.
+2.  **Kỹ năng:**
+    - Đệ tử cần đạt Lv3 để học `Hộ Vệ` và Lv6 để học `Trị Thương`. Bạn hãy dùng điểm kỹ năng của đệ tử để học trong bảng Bag -> Tab Kỹ năng.
 
 ---
-> [!TIP]
-> Bạn hãy thử cày lên Level 3 cho Đệ tử, sau đó mở bảng kỹ năng của nó và bấm **Học "Chém Gió"**. Bạn sẽ thấy nó bắt đầu chém AOE cực mạnh để bảo vệ bạn!
+Mọi thông tin chi tiết về cách vận hành bạn có thể xem thêm tại: 
+- [TIEN_DO_GAME.md](file:///d:/work/1/RPG_Unity_Scripts/TIEN_DO_GAME.md)
+- [HUONG_DAN_CHI_TIET_GAME.md](file:///d:/work/1/RPG_Unity_Scripts/HUONG_DAN_CHI_TIET_GAME.md)

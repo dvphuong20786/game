@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 // ===========================
 // Gán script này vào NPC Huấn Luyện (Trainer)
-// Cho phép chiêu mộ tối đa 4 đệ tử
+// Cho phép chiêu mộ tối đa 4 đệ tử, có khả năng di chuyển đi lại
 // ===========================
 public class TrainerNPC : MonoBehaviour
 {
@@ -14,7 +14,21 @@ public class TrainerNPC : MonoBehaviour
     public float interactRange = 3f;
     public int maxCompanions = 4;
 
-    [Header("Danh sách Đệ tử có thể chiêu mộ")]
+    [Header("Cài đặt giá thuê")]
+    public int priceWarrior = 500;
+    public int priceArcher = 800;
+    public int priceSlime = 300;
+
+    [Header("Cài đặt di chuyển (Patrol)")]
+    public bool canPatrol = true;
+    public float moveSpeed = 1.5f;
+    public float patrolDistance = 4f;
+
+    [Header("Hiệu ứng âm thanh")]
+    public AudioClip hireSound;
+    private AudioSource audioSource;
+
+    [Header("Danh sách Đệ tử Prefabs")]
     public GameObject warriorPrefab;
     public GameObject archerPrefab;
     public GameObject slimePrefab;
@@ -23,13 +37,30 @@ public class TrainerNPC : MonoBehaviour
     private PlayerStats player;
     private Vector2 scrollPos;
 
-    void Start() { player = FindAnyObjectByType<PlayerStats>(); }
+    // Biến điều khiển di chuyển
+    private Vector3 startPos;
+    private bool walkingRight = true;
+    private Animator anim;
+    private SpriteRenderer sr;
+
+    void Start() 
+    { 
+        player = FindAnyObjectByType<PlayerStats>(); 
+        startPos = transform.position;
+        anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
+        
+        // Tự động thêm AudioSource nếu chưa có
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+    }
 
     void Update()
     {
         if (player == null) return;
         float dist = Vector2.Distance(transform.position, player.transform.position);
 
+        // --- 1. LOGIC TƯƠNG TÁC ---
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
 #else
@@ -39,7 +70,28 @@ public class TrainerNPC : MonoBehaviour
             if (dist <= interactRange) menuOpen = !menuOpen;
             else menuOpen = false;
         }
+
         if (dist > interactRange + 1f) menuOpen = false;
+
+        // --- 2. LOGIC DI CHUYỂN (PATROL) ---
+        // Chỉ di chuyển khi menu đang đóng và người chơi không ở quá gần
+        if (canPatrol && !menuOpen && dist > interactRange)
+        {
+            float currentDistFromStart = transform.position.x - startPos.x;
+
+            if (walkingRight && currentDistFromStart >= patrolDistance) walkingRight = false;
+            else if (!walkingRight && currentDistFromStart <= -patrolDistance) walkingRight = true;
+
+            float dir = walkingRight ? 1 : -1;
+            transform.Translate(Vector3.right * dir * moveSpeed * Time.deltaTime);
+
+            if (sr != null) sr.flipX = !walkingRight;
+            if (anim != null) anim.SetBool("IsWalking", true);
+        }
+        else
+        {
+            if (anim != null) anim.SetBool("IsWalking", false);
+        }
     }
 
     void OnGUI()
@@ -54,7 +106,8 @@ public class TrainerNPC : MonoBehaviour
                 Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
                 if (screenPos.z > 0) {
                     GUI.color = Color.yellow;
-                    GUI.Label(new Rect(screenPos.x - 80, Screen.height - screenPos.y - 60, 160, 30), "[E] Chiêu mộ đệ tử", new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter, fontStyle=FontStyle.Bold});
+                    GUIStyle hintStyle = new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter, fontStyle=FontStyle.Bold, fontSize = 14};
+                    GUI.Label(new Rect(screenPos.x - 80, Screen.height - screenPos.y - 60, 160, 30), "[E] Chiêu mộ đệ tử", hintStyle);
                 }
             }
         }
@@ -79,15 +132,15 @@ public class TrainerNPC : MonoBehaviour
         
         // Đếm số đệ tử hiện có
         int currentCount = 0;
-        CompanionAI[] comps = FindObjectsOfType<CompanionAI>();
+        CompanionAI[] comps = Object.FindObjectsByType<CompanionAI>(FindObjectsSortMode.None);
         currentCount = comps.Length;
         GUI.Label(new Rect(sx+w-180, sy+10, 160, 30), "Đội ngũ: " + currentCount + "/" + maxCompanions);
 
         // Danh sách chiêu mộ
         float rowY = sy + 50;
-        DrawHireRow(sx+20, rowY, "Kiếm Khách", 500, "Cận chiến, Máu trâu, có Chém Gió", warriorPrefab, currentCount);
-        DrawHireRow(sx+20, rowY+90, "Cung Thủ", 800, "Tầm xa, Dame cực cao, Máu giấy", archerPrefab, currentCount);
-        DrawHireRow(sx+20, rowY+180, "Slime Xanh", 300, "Hỗ trợ, Phản dame, làm chậm quái", slimePrefab, currentCount);
+        DrawHireRow(sx+20, rowY, "Kiếm Khách", priceWarrior, "Cận chiến, Máu trâu, có Chém Gió", warriorPrefab, currentCount);
+        DrawHireRow(sx+20, rowY+90, "Cung Thủ", priceArcher, "Tầm xa, Dame cực cao, Máu giấy", archerPrefab, currentCount);
+        DrawHireRow(sx+20, rowY+180, "Slime Xanh", priceSlime, "Hỗ trợ, Phản dame, làm chậm quái", slimePrefab, currentCount);
 
         GUI.color = Color.red;
         if (GUI.Button(new Rect(sx+w-40, sy+10, 30, 30), "X")) menuOpen = false;
@@ -107,7 +160,7 @@ public class TrainerNPC : MonoBehaviour
         
         if (player.gold >= price && count < maxCompanions && prefab != null) {
             GUI.color = Color.green;
-            if (GUI.Button(new Rect(x+470, y+20, 80, 40), "THUÊ")) Hire(prefab, price);
+            if (GUI.Button(new Rect(x+470, y+20, 80, 40), "THUÊ")) Hire(prefab, price, name);
         } else if (count >= maxCompanions) {
             GUI.color = Color.red;
             GUI.Box(new Rect(x+470, y+20, 80, 40), "Đầy đội");
@@ -117,16 +170,36 @@ public class TrainerNPC : MonoBehaviour
         }
     }
 
-    void Hire(GameObject prefab, int price)
+    void Hire(GameObject prefab, int price, string companionName)
     {
         player.gold -= price;
         Vector3 spawnPos = transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
         GameObject g = Instantiate(prefab, spawnPos, Quaternion.identity);
         
+        // Phát âm thanh
+        if (hireSound != null && audioSource != null)
+            audioSource.PlayOneShot(hireSound);
+
         // Phát hiệu ứng nếu có GameUI
         if (GameUI.instance != null)
-            GameUI.instance.ShowDamage(player.transform.position, "Chào mừng " + name, Color.cyan);
+            GameUI.instance.ShowDamage(player.transform.position, "Chào mừng " + companionName, Color.cyan);
             
         Debug.Log("🛡 Đã chiêu mộ đệ tử mới! Còn lại: " + player.gold + " Vàng");
     }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, interactRange);
+        
+        // Vẽ đường tuần tra
+        if (Application.isPlaying) {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(startPos + Vector3.left * patrolDistance, startPos + Vector3.right * patrolDistance);
+        } else {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position + Vector3.left * patrolDistance, transform.position + Vector3.right * patrolDistance);
+        }
+    }
 }
+

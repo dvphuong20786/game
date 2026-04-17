@@ -57,20 +57,21 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
         CalculateBonus();
+        currentHealth = maxHealth;
         
         // Đệ tử tự nhận diện tên nếu chưa đặt
-        if (!isPlayer && characterName == "Hiệp Sĩ") characterName = "Đệ Tử Tử Long";
+        if (!isPlayer && (characterName == "Hiệp Sĩ" || characterName == "")) characterName = "Đệ Tử";
     }
 
     public void TakeDamage(int damage)
     {
-        int thucTe = damage - bonusDefense - (VIT * 1);
+        // VIT tăng phòng thủ tự nhiên
+        int giapTuNhien = VIT / 2;
+        int thucTe = damage - bonusDefense - giapTuNhien;
         if (thucTe < 1) thucTe = 1;
         currentHealth -= thucTe;
         
-        // Hiện damage ngay tại vị trí nhân vật này
         if (GameUI.instance != null) 
             GameUI.instance.ShowDamage(transform.position, "-" + thucTe, isPlayer ? Color.red : new Color(1f, 0.5f, 0.5f));
             
@@ -84,7 +85,7 @@ public class PlayerStats : MonoBehaviour
 
     public void AddGold(int amount) 
     { 
-        if (!isPlayer && instance != null) instance.gold += amount; // Cộng dồn về túi chủ
+        if (!isPlayer && instance != null) instance.gold += amount;
         else gold += amount; 
     }
 
@@ -94,22 +95,55 @@ public class PlayerStats : MonoBehaviour
         if (currentExp >= expToNextLevel) LevelUp(); 
     }
 
+    // Hàm tĩnh để chia sẻ EXP cho cả Player và Companion
+    public static void ShareExp(int amount)
+    {
+        PlayerStats p = instance;
+        PlayerStats c = null;
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach(var s in all) if(!s.isPlayer) { c = s; break; }
+
+        if (p != null && c != null)
+        {
+            p.AddExp(amount / 2);
+            c.AddExp(amount / 2);
+        }
+        else if (p != null)
+        {
+            p.AddExp(amount);
+        }
+        else if (c != null)
+        {
+            c.AddExp(amount);
+        }
+    }
+
     void LevelUp()
     {
         currentExp -= expToNextLevel; level++;
-        expToNextLevel += 50;
-        statPoints += 5;
-        if (level % 3 == 0) skillPoints++;
-        maxHealth += 15;
+        expToNextLevel = (int)(expToNextLevel * 1.2f) + 50;
+        statPoints += 5; // Tặng 5 điểm tiềm năng mỗi cấp
+        if (level % 3 == 0) skillPoints++; // Tặng điểm kỹ năng mỗi 3 cấp
+        
+        CalculateBonus();
         currentHealth = maxHealth;
         
         if (GameUI.instance != null)
             GameUI.instance.ShowDamage(transform.position, (isPlayer ? "✨ " : "🐕 ") + "LÊN CẤP " + level + "!", Color.yellow);
     }
 
+    public void AddStat(string statName)
+    {
+        if (statPoints <= 0) return;
+        if (statName == "STR") STR++;
+        else if (statName == "VIT") VIT++;
+        else if (statName == "AGI") AGI++;
+        statPoints--;
+        CalculateBonus();
+    }
+
     public void PickUpItem(string itemName) { inventory.Add(itemName); }
 
-    // ===== MẶC ĐỒ =====
     public void EquipItem(int index, string subSlot = "")
     {
         if (index < 0 || index >= inventory.Count) return;
@@ -190,9 +224,11 @@ public class PlayerStats : MonoBehaviour
 
     public void CalculateBonus()
     {
-        bonusDamage = (STR * 1);
+        // STR tăng sát thương: 1 STR = 2 Dame
+        bonusDamage = STR * 2;
+        // VIT tăng máu: 1 VIT = 15 HP
+        maxHealth = 100 + (VIT * 15);
         bonusDefense = 0;
-        maxHealth = 100 + (VIT * 8);
 
         ApplyStats(eqHead); ApplyStats(eqBody); ApplyStats(eqLegs);
         ApplyStats(eqWeaponMain); ApplyStats(eqWeaponOff);
@@ -240,10 +276,9 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    // ===== LƯU / LOAD =====
     public void SaveGame()
     {
-        if (!isPlayer) return; // Chỉ lưu thông số người chơi chính vào Prefs chính
+        if (!isPlayer) return;
         PlayerPrefs.SetInt("Level", level); PlayerPrefs.SetInt("Gold", gold);
         PlayerPrefs.SetInt("SkillPts", skillPoints); PlayerPrefs.SetInt("HP", currentHealth);
         PlayerPrefs.SetString("Skills", string.Join(",", unlockedSkills));
@@ -255,7 +290,6 @@ public class PlayerStats : MonoBehaviour
         PlayerPrefs.SetString("Anc", eqAncientGold);
         PlayerPrefs.SetInt("STR", STR); PlayerPrefs.SetInt("VIT", VIT); PlayerPrefs.SetInt("AGI", AGI);
         PlayerPrefs.Save();
-        Debug.Log("💾 Đã lưu game!");
     }
 
     public void LoadGame()
@@ -275,6 +309,6 @@ public class PlayerStats : MonoBehaviour
         if (inventory.Count == 1 && inventory[0] == "") inventory.Clear();
         CalculateBonus();
         currentHealth = PlayerPrefs.GetInt("HP", maxHealth);
-        Debug.Log("📂 Đã load game!");
     }
 }
+

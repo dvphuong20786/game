@@ -59,9 +59,11 @@
 - **Lưu ý:** Tầm tương tác (`Interact Range`) nên để 2.5. Bạn chỉ cần đứng gần và bấm phím **E** để mở quầy hàng.
 
 ### 7.2. NPC HUẤN LUYỆN (`NPC_Trainer`)
-- **Gắn Script:** `TrainerNPC.cs` và `NPCAnimation.cs`.
-- **Nhiệm vụ:** Hiện menu mua đệ tử. 
-- **Bước quan trọng:** Bạn phải mở Inspector của NPC này, tìm 3 ô: `Warrior Prefab`, `Archer Prefab`, `Slime Prefab` và kéo 3 bản mẫu đệ tử tương ứng vào đó.
+- **Gắn Script:** `TrainerNPC.cs`. (Lưu ý: Không cần gắn thêm `NPCAnimation.cs` vì tôi đã tích hợp logic di chuyển vào trong `TrainerNPC.cs` cho bạn rồi).
+- **Phím tắt:** Đứng gần bấm **E** để mở Menu chiêu mộ.
+- **Giá Thuê:** Bạn có thể chỉnh giá `Warrior`, `Archer`, `Slime` tùy ý trong Inspector (mặc định là 500, 800, 300).
+- **Âm thanh:** Kéo một file nhạc hiệu/tiếng ting ting vào ô **Hire Sound**.
+- **Di chuyển:** Tích vào ô **Can Patrol**, chỉnh **Move Speed** (tốc độ) và **Patrol Distance** (khoảng cách đi lại). NPC sẽ tự động đi qua đi lại khi bạn đứng xa.
 
 ### 7.3. CÁCH LÀM ANIMATOR CHO ĐỆ TỬ
 Để đệ tử biết đánh, biết chạy đúng lúc, bạn mở cửa sổ **Animator** của chúng:
@@ -76,31 +78,58 @@
 Bạn hãy làm theo đúng bảng danh sách này để tạo ra một đệ tử hoàn hảo:
 
 ### 📦 PHẦN 1: THIẾT LẬP THÂN XÁC (OUTSIDE)
-- [ ] **Bước 1:** Kéo ảnh (Sprite) của đệ tử vào **Hierarchy**. Đặt tên (vd: `Companion_Archer`).
-- [ ] **Bước 2:** Chỉnh **Sorting Layer** thành cùng layer với Player để không bị che khuất.
+- [x] **Bước 1:** Kéo ảnh (Sprite) của đệ tử vào **Hierarchy**. Đặt tên (vd: `Companion_Archer`).
+- [x] **Bước 2:** Chỉnh **Sorting Layer** thành cùng layer với Player để không bị che khuất.
 
 ### 🧠 PHẦN 2: THIẾT LẬP BỘ NÃO (SCRIPTS)
-- [ ] **Bước 3: Gắn script `PlayerStats.cs`**
-  - [ ] **CỰC KỲ QUAN TRỌNG:** Bỏ tích ô **`Is Player`**.
-- [ ] **Bước 4: Gắn script `CompanionAI.cs`**
-  - [ ] Ở ô **Type**, chọn đúng: `Warrior`, `Archer`, hoặc `Slime`.
+- [x] **Bước 3: Gắn script `PlayerStats.cs`**
+  - [x] **CỰC KỲ QUAN TRỌNG:** Bỏ tích ô **`Is Player`**.
+- [x] **Bước 4: Gắn script `CompanionAI.cs`**
+  - [x] Ở ô **Type**, chọn đúng: `Warrior`, `Archer`, hoặc `Slime`.
 
 ### 🎬 PHẦN 3: THIẾT LẬP ĐỘNG TÁC (ANIMATOR)
-- [ ] **Bước 5:** Trong cửa sổ **Animator**, tạo 2 Parameters:
+- [x] **Bước 5:** Trong cửa sổ **Animator**, tạo 2 Parameters:
    1.  **Bool**: `IsWalking`
    2.  **Trigger**: `Attack`
-- [ ] **Bước 6:** Nối dây:
-   - [ ] Idle <-> Run (Dùng `IsWalking`).
-   - [ ] Any State -> Attack (Dùng `Attack`).
+- [x] **Bước 6:** Nối dây:
+   - [x] Idle <-> Run (Dùng `IsWalking`).
+   - [x] Any State -> Attack (Dùng `Attack`).
 
 ### 🚀 PHẦN 4: XUẤT XƯỞNG (PREFAB)
-- [ ] **Bước 7:** Kéo đệ tử từ Hierarchy xuống Project để tạo **Prefab**.
-- [ ] **Bước 8:** Chọn **`NPC_Trainer`** -> Kéo Prefab vào ô tương ứng trong Inspector.
+- [x] **Bước 7:** Kéo đệ tử từ Hierarchy xuống Project để tạo **Prefab**.
+- [x] **Bước 8:** Chọn **`NPC_Trainer`** -> Kéo Prefab vào ô tương ứng trong Inspector.
 
 ---
 
-### 7.4. PHÂN LOẠI ĐỆ TỬ (COMPANION TYPE)
-Trên mỗi đệ tử, tìm script **`CompanionAI`**:
-- **Warrior:** Tự động áp sát quái và chém AOE.
-- **Archer:** Tự động đứng từ xa bắn cung (tầm bắn 6m).
-- **Slime:** Đi chậm, phản dame và làm tanker cho bạn.
+---
+
+## 9. HƯỚNG DẪN HỆ THỐNG ĐỘI NGŨ (TEAM SYSTEM)
+
+Hệ thống giờ đây đã chuyên nghiệp hơn với khả năng chia sẻ kinh nghiệm và hỗ trợ lẫn nhau.
+
+### 9.1. Chia sẻ Kinh nghiệm (EXP Sharing)
+- Mỗi khi quái chết, **50% EXP** sẽ được chuyển cho Người chơi và **50% EXP** cho Đệ tử.
+- Thanh kinh nghiệm của cả hai sẽ hiển thị ngay ở góc trên bên trái màn hình.
+- Đệ tử lên cấp cũng nhận được điểm Tiềm năng và điểm Kỹ năng như người chơi.
+
+### 9.2. Cộng điểm Tiềm năng (Stat Points)
+- Khi lên cấp, bạn nhận được 5 điểm tiềm năng.
+- Bấm **phím B** -> Chọn nhân vật muốn nâng (Người chơi/Đệ tử).
+- Nhấn dấu **[+]** bên cạnh các chỉ số:
+    - **STR (Sức mạnh):** Tăng sát thương vật lý.
+    - **VIT (Thể chất):** Tăng Máu tối đa và khả năng phòng thủ.
+    - **AGI (Nhanh nhẹn):** Tăng tốc chiến đấu.
+
+### 9.3. Chuyển mục tiêu Camera (Focus)
+- Trong bảng Bag, khi bạn bấm nút **"XEM ĐỆ TỬ"** hoặc **"XEM NGƯỜI CHƠI"**, Camera sẽ tự động lướt đến nhân vật đó. 
+- Điều này giúp bạn dễ dàng kiểm tra đệ tử đang ở đâu trên bản đồ hoặc mặc đồ cho chúng một cách chính xác.
+
+## 10. KỸ NĂNG HỖ TRỢ CỦA ĐỆ TỬ
+
+Đệ tử không còn đánh giống người chơi mà sẽ có bảng chuyên biệt:
+1. **🛡 Hộ Vệ (Lv3):** Tăng 10 Giáp cho chủ nhân khi đứng gần.
+2. **❤ Trị Thương (Lv6):** Hồi máu định kỳ cho cả đội.
+3. **💠 Phản Nguyên (Lv9):** Phản sát thương cho kẻ thù.
+
+> [!TIP]
+> **Cách mặc đồ cho đệ tử:** Bấm B -> Bấm "XEM ĐỆ TỬ" -> Chọn món đồ trong hòm -> Bấm "MẶC / DÙNG". Đệ tử sẽ ngay lập tức được tăng chỉ số!

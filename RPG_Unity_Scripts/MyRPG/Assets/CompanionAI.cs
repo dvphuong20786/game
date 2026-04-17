@@ -1,4 +1,7 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 
 // ===========================
 // Gán script này vào Đệ Tử
@@ -39,27 +42,19 @@ public class CompanionAI : MonoBehaviour
         if (stats == null || master == null || stats.currentHealth <= 0) return;
 
         // --- TÌM MỤC TIÊU ---
-        Monster[] allMonsters = FindObjectsOfType<Monster>();
-        Monster qTarget = null;
-        float minDis = 999f;
-        foreach (Monster mm in allMonsters) {
-            if (mm.currentHealth <= 0) continue;
-            float d = Vector2.Distance(transform.position, mm.transform.position);
-            if (d < minDis) { minDis = d; qTarget = mm; }
-        }
+        Monster qTarget = FindNearestMonster(8f);
 
         // --- DI CHUYỂN & CHIẾN ĐẤU ---
-        float range = (type == CompanionType.Archer) ? 6f : 1.5f; // Tầm đánh tùy theo loại
+        float range = (type == CompanionType.Archer) ? 6f : 1.5f;
         
-        if (qTarget != null && minDis < 8f) // Có quái trong tầm quét
+        if (qTarget != null)
         {
+            float minDis = Vector2.Distance(transform.position, qTarget.transform.position);
             if (minDis > range) {
-                // Tiếp cận đến tầm bắn/đánh
                 float speed = (3.5f + stats.AGI * 0.1f) * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, qTarget.transform.position, speed);
                 FlipSprite(qTarget.transform.position.x);
             } else {
-                // Tấn công
                 attackTimer += Time.deltaTime;
                 float cd = (type == CompanionType.Archer) ? 1.5f : 1.2f;
                 if (attackTimer >= cd - (stats.AGI * 0.02f)) {
@@ -78,12 +73,59 @@ public class CompanionAI : MonoBehaviour
             }
         }
 
+        // --- LOGIC KỸ NĂNG HỖ TRỢ (MỚI) ---
         skillTimer += Time.deltaTime;
-        if (type == CompanionType.Warrior && qTarget != null && minDis < 3f && skillTimer >= 6f) {
-            CastSkill_Warrior();
+        if (skillTimer >= 5f) // Thử dùng kỹ năng mỗi 5 giây
+        {
+            CastSupportSkills();
             skillTimer = 0;
         }
     }
+
+    void CastSupportSkills()
+    {
+        if (stats == null || master == null) return;
+
+        // 1. ❤ Trị Thương (Lv6) - Hồi máu cho chủ và bản thân
+        if (stats.unlockedSkills.Contains("❤ Trị Thương (Lv6)"))
+        {
+            int healAmt = 15 + (stats.VIT / 2);
+            master.currentHealth = Mathf.Min(master.currentHealth + healAmt, master.maxHealth);
+            stats.currentHealth = Mathf.Min(stats.currentHealth + healAmt, stats.maxHealth);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "❤ +" + healAmt, Color.green);
+            Debug.Log("🐕 Đệ tử dùng Trị Thương!");
+        }
+
+        // 2. 🛡 Hộ Vệ (Lv3) - Tăng thủ tạm thời (Logic tạm thời: cộng thẳng bonusDefense trong 5s)
+        if (stats.unlockedSkills.Contains("🛡 Hộ Vệ (Lv3)"))
+        {
+            float distToMaster = Vector2.Distance(transform.position, master.transform.position);
+            if (distToMaster < 4f)
+            {
+                master.bonusDefense += 10;
+                StartCoroutine(RemoveBuff(master, 10, 4.5f));
+                if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "🛡 HỘ VỆ", Color.cyan);
+            }
+        }
+    }
+
+    IEnumerator RemoveBuff(PlayerStats targetStats, int amt, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (targetStats != null) targetStats.bonusDefense -= amt;
+    }
+
+    private Monster FindNearestMonster(float r)
+    {
+        Monster[] all = Object.FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        Monster nearest = null; float minD = r;
+        foreach (var m in all) {
+            float d = Vector2.Distance(transform.position, m.transform.position);
+            if (d < minD) { minD = d; nearest = m; }
+        }
+        return nearest;
+    }
+
 
     void Attack(Monster target)
     {

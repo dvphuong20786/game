@@ -88,12 +88,8 @@ public class Monster : MonoBehaviour
     {
         Debug.Log("Quái vật " + monsterName + " đã CHẾT!");
 
-        // 1. Cống nạp EXP
-        PlayerStats player = FindAnyObjectByType<PlayerStats>();
-        if (player != null)
-        {
-            player.AddExp(expReward);
-        }
+        // 1. Chia sẻ EXP cho đội ngũ
+        PlayerStats.ShareExp(expReward);
 
         // 2. Rớt đồ ra đất (Prefab)
         if (itemDropPrefab != null)
@@ -105,6 +101,7 @@ public class Monster : MonoBehaviour
         // 3. Tiêu hủy cái xác
         Destroy(gameObject);
     }
+
 
     // Vẽ thanh máu nổi bồng bềnh trên đỉnh đầu con quái vật
     void OnGUI()

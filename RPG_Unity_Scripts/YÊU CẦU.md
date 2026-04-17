@@ -11,3 +11,5 @@ thêm giá bán mỗi món trang bị.
 9. đánh thường sẽ không đánh nhiều quái vật cùng lúc, chỉ đánh kỹ năng , hoặc tùy từng kỹ năng mới có đánh lan nhiều quái cùng lúc.
 10. Giảm dame nhân vật và đồ đạc giảm chỉ số xuống cho phù hợp nhân vật.
 11. cần NPC bán đồ item, đồ ăn, máu... vv. và mua những đồ của tôi. như 1 game hoàn thiện
+12. đệ tử có giao diện máu xp giống player. đệ tử có bảng kỹ năng riêng
+13. người chơi và đệ tử có cộng điểm kỹ năng và + điểm khi lên lv. và có thể trang bị đồ cho đệ tử, chia sẻ kinh nghiệm giữa người chơi và đệ tử

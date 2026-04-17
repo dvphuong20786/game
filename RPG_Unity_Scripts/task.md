@@ -1,13 +1,14 @@
-# Task: Nâng cấp Đệ tử (RPG Companion)
+# Danh sách công việc: Hoàn thiện NPC Trainer
 
-- [x] **Phần 1: Lõi Chỉ số (Core Stats)**
-  - [x] Sửa `PlayerStats.cs`: cho phép đa đối tượng, bỏ Singleton cứng.
-  - [x] Cập nhật Save/Load cho Đệ tử.
-- [x] **Phần 2: Trí tuệ AI (AI Logic)**
-  - [x] Sửa `CompanionAI.cs`: lấy chỉ số từ PlayerStats.
-  - [x] Thêm logic dùng Kỹ năng AOE cho Đệ tử.
-- [x] **Phần 3: Giao diện (UI Updates)**
-  - [x] Sửa `GameUI.cs`: Thêm nút chuyển đổi Người chơi/Đệ tử.
-  - [x] Thêm nút "Giao cho Đệ tử" trong túi đồ.
-- [x] **Phần 4: Bản tin tiến độ**
-  - [x] Cập nhật `TIEN_DO_GAME.md`.
+- [x] Đại tu hệ thống Đệ tử & UI Nâng cao
+    - [x] Cập nhật `CameraFollow.cs` (Tốc độ & Chuyển focus)
+    - [x] Cập nhật `PlayerStats.cs` (Cộng điểm STR/VIT/AGI & Kỹ năng hỗ trợ)
+    - [x] Cập nhật `GameUI.cs` (HUD Đệ tử, Nút cộng điểm, Tooltip chi tiết)
+    - [x] Cập nhật `Monster.cs` (Chia sẻ 50/50 XP)
+    - [x] Cập nhật `CompanionAI.cs` (Logic dùng kỹ năng hỗ trợ)
+- [x] Cập nhật Tài liệu & Hướng dẫn
+    - [x] Chi tiết hóa phần việc chưa làm cho `TrainerNPC` trong `TIEN_DO_GAME.md`
+    - [x] Hướng dẫn kéo thả và mặc đồ cho đệ tử trong `HUONG_DAN_CHI_TIET_GAME.md`
+- [x] Kiểm tra và bàn giao
+    - [x] Kiểm tra lỗi compile
+    - [x] Tạo file `walkthrough.md` tổng kết các tính năng mới
