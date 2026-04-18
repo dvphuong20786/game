@@ -45,7 +45,7 @@ public class TrainerNPC : MonoBehaviour
 
     void Start() 
     { 
-        player = FindAnyObjectByType<PlayerStats>(); 
+        FindMainPlayer();
         startPos = transform.position;
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
@@ -53,6 +53,12 @@ public class TrainerNPC : MonoBehaviour
         // Tự động thêm AudioSource nếu chưa có
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    void FindMainPlayer()
+    {
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach (var s in all) if (s.isPlayer) { player = s; break; }
     }
 
     // Hàm hỗ trợ đặt biến Animator an toàn (không bị Warning nếu thiếu biến)
@@ -71,7 +77,7 @@ public class TrainerNPC : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        if (player == null) { FindMainPlayer(); return; }
         float dist = Vector2.Distance(transform.position, player.transform.position);
 
         // --- 1. LOGIC TƯƠNG TÁC ---
@@ -187,9 +193,18 @@ public class TrainerNPC : MonoBehaviour
     void Hire(GameObject prefab, int price, string companionName)
     {
         player.gold -= price;
-        Vector3 spawnPos = transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        // Đảm bảo sinh ra ở Z = 0 để không bị che khuất bởi map hoặc camera
+        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-1f, 1f), transform.position.y + Random.Range(-1f, 1f), 0f);
         GameObject g = Instantiate(prefab, spawnPos, Quaternion.identity);
         
+        // Cố định lớp hiển thị (Sorting Layer) nếu có SpriteRenderer
+        SpriteRenderer companionSR = g.GetComponent<SpriteRenderer>();
+        if (companionSR != null)
+        {
+            companionSR.sortingLayerName = "Default"; // Hoặc "Characters" nếu bạn có
+            companionSR.sortingOrder = 5; // Ưu tiên hiển thị trên Map
+        }
+
         // Phát âm thanh
         if (hireSound != null && audioSource != null)
             audioSource.PlayOneShot(hireSound);
@@ -198,7 +213,7 @@ public class TrainerNPC : MonoBehaviour
         if (GameUI.instance != null)
             GameUI.instance.ShowDamage(player.transform.position, "Chào mừng " + companionName, Color.cyan);
             
-        Debug.Log("🛡 Đã chiêu mộ đệ tử mới! Còn lại: " + player.gold + " Vàng");
+        Debug.Log($"🛡️ ĐÃ SINH ĐỆ TỬ: {companionName} tại {spawnPos}. Vàng còn lại: {player.gold}");
     }
 
     void OnDrawGizmosSelected()

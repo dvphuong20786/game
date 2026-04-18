@@ -57,12 +57,18 @@ public class NPCShop : MonoBehaviour
 
     void Start()
     {
-        player = FindAnyObjectByType<PlayerStats>();
+        FindMainPlayer();
+    }
+
+    void FindMainPlayer()
+    {
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach (var s in all) if (s.isPlayer) { player = s; break; }
     }
 
     void Update()
     {
-        if (player == null) { player = FindAnyObjectByType<PlayerStats>(); return; }
+        if (player == null) { FindMainPlayer(); return; }
 
         float dist = Vector2.Distance(transform.position, player.transform.position);
 

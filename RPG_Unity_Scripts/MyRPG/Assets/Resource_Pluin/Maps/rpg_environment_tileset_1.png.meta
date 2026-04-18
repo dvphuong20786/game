@@ -1,0 +1,1122 @@
+fileFormatVersion: 2
+guid: 44b62a580732df142967e0b5309c2808
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5275347479304210993
+    second: rpg_environment_tileset_1_0
+  - first:
+      213: 3561602987744835216
+    second: rpg_environment_tileset_1_1
+  - first:
+      213: 1862767108444060814
+    second: rpg_environment_tileset_1_2
+  - first:
+      213: -9131871382762674336
+    second: rpg_environment_tileset_1_3
+  - first:
+      213: -4555508372754547777
+    second: rpg_environment_tileset_1_4
+  - first:
+      213: -2601413373988910292
+    second: rpg_environment_tileset_1_5
+  - first:
+      213: -5015507772709590610
+    second: rpg_environment_tileset_1_6
+  - first:
+      213: -4312880900936029346
+    second: rpg_environment_tileset_1_7
+  - first:
+      213: 6488837856570723515
+    second: rpg_environment_tileset_1_8
+  - first:
+      213: 2991174807481312166
+    second: rpg_environment_tileset_1_9
+  - first:
+      213: -6124633970064836064
+    second: rpg_environment_tileset_1_10
+  - first:
+      213: 2890493324840056665
+    second: rpg_environment_tileset_1_11
+  - first:
+      213: 6241744373149305008
+    second: rpg_environment_tileset_1_12
+  - first:
+      213: 7050855605707907492
+    second: rpg_environment_tileset_1_13
+  - first:
+      213: 3473638798987440068
+    second: rpg_environment_tileset_1_14
+  - first:
+      213: -3512339868942853012
+    second: rpg_environment_tileset_1_15
+  - first:
+      213: -387889629382604433
+    second: rpg_environment_tileset_1_16
+  - first:
+      213: -4012011126244469411
+    second: rpg_environment_tileset_1_17
+  - first:
+      213: 1003435944906280717
+    second: rpg_environment_tileset_1_18
+  - first:
+      213: -6830231312579820989
+    second: rpg_environment_tileset_1_19
+  - first:
+      213: -8070005348536878230
+    second: rpg_environment_tileset_1_20
+  - first:
+      213: 1370514594384289871
+    second: rpg_environment_tileset_1_21
+  - first:
+      213: -4588341944278985665
+    second: rpg_environment_tileset_1_22
+  - first:
+      213: -6518223746041633995
+    second: rpg_environment_tileset_1_23
+  - first:
+      213: 2117503724171315205
+    second: rpg_environment_tileset_1_24
+  - first:
+      213: -2233799164229042710
+    second: rpg_environment_tileset_1_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 256
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2
+        width: 763
+        height: 1022
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 763, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13a0eaa159cc53940800000000000000
+      internalID: 5275347479304210993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_1
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 865
+        width: 172
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09630831c0b5d6130800000000000000
+      internalID: 3561602987744835216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_2
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 858
+        width: 118
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8cf616d0d0e9d910800000000000000
+      internalID: 1862767108444060814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_3
+      rect:
+        serializedVersion: 2
+        x: 1240
+        y: 862
+        width: 109
+        height: 161
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06720ef2c53154180800000000000000
+      internalID: -9131871382762674336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_4
+      rect:
+        serializedVersion: 2
+        x: 1361
+        y: 865
+        width: 116
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbbb5a6654597c0c0800000000000000
+      internalID: -4555508372754547777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_5
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 626
+        width: 87
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2bc079b15ce5ebd0800000000000000
+      internalID: -2601413373988910292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_6
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 638
+        width: 247
+        height: 203
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea92f670146556ab0800000000000000
+      internalID: -5015507772709590610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_7
+      rect:
+        serializedVersion: 2
+        x: 1360
+        y: 641
+        width: 99
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5b2425dba19524c0800000000000000
+      internalID: -4312880900936029346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_8
+      rect:
+        serializedVersion: 2
+        x: 1455
+        y: 728
+        width: 59
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbc4106b6abfc0a50800000000000000
+      internalID: 6488837856570723515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_9
+      rect:
+        serializedVersion: 2
+        x: 1459
+        y: 640
+        width: 53
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a36505b3a9c28920800000000000000
+      internalID: 2991174807481312166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_11
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 512
+        width: 86
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 957babc4d581d1820800000000000000
+      internalID: 2890493324840056665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_12
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 620
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b88b5cef612f9650800000000000000
+      internalID: 6241744373149305008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_13
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 507
+        width: 123
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a1aaccf0dba9d160800000000000000
+      internalID: 7050855605707907492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_14
+      rect:
+        serializedVersion: 2
+        x: 1297
+        y: 517
+        width: 57
+        height: 113
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cf29a36518d43030800000000000000
+      internalID: 3473638798987440068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_15
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 515
+        width: 93
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6c18359f79a14fc0800000000000000
+      internalID: -3512339868942853012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_16
+      rect:
+        serializedVersion: 2
+        x: 1454
+        y: 516
+        width: 66
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f69879cef60fd9af0800000000000000
+      internalID: -387889629382604433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_17
+      rect:
+        serializedVersion: 2
+        x: 1016
+        y: 537
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d55984123297258c0800000000000000
+      internalID: -4012011126244469411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_19
+      rect:
+        serializedVersion: 2
+        x: 1012
+        y: 256
+        width: 97
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3420eef2fc42631a0800000000000000
+      internalID: -6830231312579820989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_20
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 344
+        width: 122
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6bf4f864e4910090800000000000000
+      internalID: -8070005348536878230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_21
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 385
+        width: 133
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f40a3c523cb050310800000000000000
+      internalID: 1370514594384289871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_22
+      rect:
+        serializedVersion: 2
+        x: 1365
+        y: 384
+        width: 81
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f34d93fcf4fe250c0800000000000000
+      internalID: -4588341944278985665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_23
+      rect:
+        serializedVersion: 2
+        x: 1448
+        y: 384
+        width: 68
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5332caab90e9a85a0800000000000000
+      internalID: -6518223746041633995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_24
+      rect:
+        serializedVersion: 2
+        x: 1513
+        y: 384
+        width: 23
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5084cc90b62e26d10800000000000000
+      internalID: 2117503724171315205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_25
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 278
+        width: 59
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aed309cce73fff0e0800000000000000
+      internalID: -2233799164229042710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_26
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 278
+        width: 64
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2766ca6430e7144593c69da32f60c95
+      internalID: -999390081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_27
+      rect:
+        serializedVersion: 2
+        x: 1234
+        y: 264
+        width: 60
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74b8d87cef73abc4b83448f764d9bd10
+      internalID: -1909053212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_28
+      rect:
+        serializedVersion: 2
+        x: 1296
+        y: 274
+        width: 62
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21f9d7ea0d750ad4bb2095388e8343f9
+      internalID: -4684323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_29
+      rect:
+        serializedVersion: 2
+        x: 1358
+        y: 270
+        width: 98
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96cefff47dc10dd4eb34d0c6842e9727
+      internalID: 206677532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_30
+      rect:
+        serializedVersion: 2
+        x: 1016
+        y: 190
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dc5fd72c7891024a8cf3e52124d1201
+      internalID: -89359604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_31
+      rect:
+        serializedVersion: 2
+        x: 1017
+        y: 132
+        width: 57
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6465f84fb78e854c9ec295dc68f9c8f
+      internalID: -188383268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_32
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 140
+        width: 145
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0cd765e68e650340a8d385ac6c0e66a
+      internalID: -870915775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_33
+      rect:
+        serializedVersion: 2
+        x: 1217
+        y: 144
+        width: 77
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c089a0ffa8b1ab49ade338428db3790
+      internalID: -242606933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_34
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 144
+        width: 70
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43bf7836582335f4780ac719c9bca369
+      internalID: -1709848514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_35
+      rect:
+        serializedVersion: 2
+        x: 1360
+        y: 14
+        width: 149
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7527287602445a429be4733d779b92e
+      internalID: -114765129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_36
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 2
+        width: 107
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 447e3cac5d319fc43bd153c3531027d4
+      internalID: 372486835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_37
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 123
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dad9877cdf96b940bfe129d3b9b5d04
+      internalID: 123498447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_38
+      rect:
+        serializedVersion: 2
+        x: 1136
+        y: 2
+        width: 81
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b2983fccf82a92448d6d34ae241c4d4
+      internalID: 2068275810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_39
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 861
+        width: 143
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d4a04917e0df2c4eb23ce0938b04a26
+      internalID: -1591896585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rpg_environment_tileset_1_40
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 644
+        width: 124
+        height: 196
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f58b532702b2b540a922be059f92bd9
+      internalID: 1055031615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 7572e0935a6363d4a8d6daba223819c4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      rpg_environment_tileset_1_0: 5275347479304210993
+      rpg_environment_tileset_1_1: 3561602987744835216
+      rpg_environment_tileset_1_10: -6124633970064836064
+      rpg_environment_tileset_1_11: 2890493324840056665
+      rpg_environment_tileset_1_12: 6241744373149305008
+      rpg_environment_tileset_1_13: 7050855605707907492
+      rpg_environment_tileset_1_14: 3473638798987440068
+      rpg_environment_tileset_1_15: -3512339868942853012
+      rpg_environment_tileset_1_16: -387889629382604433
+      rpg_environment_tileset_1_17: -4012011126244469411
+      rpg_environment_tileset_1_18: 1003435944906280717
+      rpg_environment_tileset_1_19: -6830231312579820989
+      rpg_environment_tileset_1_2: 1862767108444060814
+      rpg_environment_tileset_1_20: -8070005348536878230
+      rpg_environment_tileset_1_21: 1370514594384289871
+      rpg_environment_tileset_1_22: -4588341944278985665
+      rpg_environment_tileset_1_23: -6518223746041633995
+      rpg_environment_tileset_1_24: 2117503724171315205
+      rpg_environment_tileset_1_25: -2233799164229042710
+      rpg_environment_tileset_1_26: -999390081
+      rpg_environment_tileset_1_27: -1909053212
+      rpg_environment_tileset_1_28: -4684323
+      rpg_environment_tileset_1_29: 206677532
+      rpg_environment_tileset_1_3: -9131871382762674336
+      rpg_environment_tileset_1_30: -89359604
+      rpg_environment_tileset_1_31: -188383268
+      rpg_environment_tileset_1_32: -870915775
+      rpg_environment_tileset_1_33: -242606933
+      rpg_environment_tileset_1_34: -1709848514
+      rpg_environment_tileset_1_35: -114765129
+      rpg_environment_tileset_1_36: 372486835
+      rpg_environment_tileset_1_37: 123498447
+      rpg_environment_tileset_1_38: 2068275810
+      rpg_environment_tileset_1_39: -1591896585
+      rpg_environment_tileset_1_4: -4555508372754547777
+      rpg_environment_tileset_1_40: 1055031615
+      rpg_environment_tileset_1_5: -2601413373988910292
+      rpg_environment_tileset_1_6: -5015507772709590610
+      rpg_environment_tileset_1_7: -4312880900936029346
+      rpg_environment_tileset_1_8: 6488837856570723515
+      rpg_environment_tileset_1_9: 2991174807481312166
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

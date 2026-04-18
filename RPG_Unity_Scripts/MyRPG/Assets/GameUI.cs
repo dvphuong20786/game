@@ -47,7 +47,22 @@ public class GameUI : MonoBehaviour
         if (player == null) foreach(var s in allStats) if(s.isPlayer) { player = s; break; }
         if (companion == null) foreach(var s in allStats) if(!s.isPlayer) { companion = s; break; }
         if (combat == null) combat = FindObjectOfType<PlayerCombat>();
-        if (currentView == null && player != null) currentView = player;
+        if (player == null || companion == null || combat == null)
+        {
+            allStats = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+            foreach (var s in allStats)
+            {
+                if (s.isPlayer) player = s;
+                else companion = s;
+            }
+            if (combat == null) combat = FindObjectOfType<PlayerCombat>();
+        }
+        
+        // ĐẢM BẢO LUÔN CÓ NHÂN VẬT ĐỂ XEM
+        if (currentView == null) {
+            if (player != null) currentView = player;
+            else if (companion != null) currentView = companion;
+        }
     }
 
     public void ShowDamage(Vector3 pos, string txt, Color col)
@@ -89,16 +104,40 @@ public class GameUI : MonoBehaviour
     {
         InitStyles();
         DrawFloatingDamage();
-        if (player == null) return;
+
+        // Đảm bảo túi đồ luôn nằm trên cùng để bấm được
+        GUI.depth = 0;
+
+        // Kiểm tra Player để hiện HUD
+        if (player == null) {
+             TryFindPlayer();
+             if(player == null) {
+                 GUI.color = Color.red;
+                 GUI.Label(new Rect(10, 10, 500, 30), "⚠️ LỖI: Không tìm thấy nhân vật chính (HiepSi). Hãy kiểm tra ô 'Is Player'!");
+                 return;
+             }
+        }
+
         DrawHUD();
 
         if (isBagOpen)
         {
+            // GIẢI PHÓNG CHUỘT KHI MỞ TÚI ĐỒ
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
             GUI.color = new Color(0, 0, 0, 0.5f);
             GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture);
+            
+            // TÍNH TOÁN BẢNG TRANG BỊ CO DÃN (RESPONSIVE)
+            float uiW = Mathf.Min(860, Screen.width * 0.95f);
+            float uiH = Mathf.Min(530, Screen.height * 0.9f);
+            Rect mainR = new Rect(Screen.width / 2 - uiW / 2, Screen.height / 2 - uiH / 2, uiW, uiH);
+
             GUI.color = new Color(0.08f, 0.08f, 0.15f, 0.98f);
-            Rect mainR = new Rect(Screen.width / 2 - 430, 55, 860, 530);
             GUI.DrawTexture(mainR, Texture2D.whiteTexture);
+            GUI.color = Color.white;
+
             GUI.color = new Color(0.4f, 0.4f, 0.8f, 1f);
             GUI.DrawTexture(new Rect(mainR.x, mainR.y, mainR.width, 2), Texture2D.whiteTexture);
             GUI.DrawTexture(new Rect(mainR.x, mainR.yMax-2, mainR.width, 2), Texture2D.whiteTexture);
@@ -219,12 +258,21 @@ public class GameUI : MonoBehaviour
 
         if (fromInv) {
             GUI.color = Color.green; if (GUI.Button(new Rect(x+10, y+240, 200, 30), "MẶC / DÙNG")) { currentView.EquipItem(selectedItemIdx); ResetSelection(); }
+            
             if (currentView == player && companion != null) {
-                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+275, 200, 30), "GIAO CHO ĐỆ")) { companion.inventory.Add(player.inventory[selectedItemIdx]); player.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
+                GUI.color = new Color(0.2f, 0.8f, 1f); 
+                if (GUI.Button(new Rect(x+10, y+275, 200, 30), "TRANG BỊ CHO ĐỆ")) {
+                    string itemToGive = player.inventory[selectedItemIdx];
+                    companion.inventory.Add(itemToGive);
+                    player.inventory.RemoveAt(selectedItemIdx);
+                    companion.EquipItem(companion.inventory.Count - 1);
+                    ResetSelection();
+                }
+                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+310, 200, 30), "GIAO CHO ĐỆ")) { companion.inventory.Add(player.inventory[selectedItemIdx]); player.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
             } else if (currentView == companion && player != null) {
                 GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+275, 200, 30), "LẤY VỀ TÚI")) { player.inventory.Add(companion.inventory[selectedItemIdx]); companion.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
             }
-            GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+310, 200, 25), "BÁN: +" + currentView.GetItemPrice(n) + "G")) { currentView.SellItem(selectedItemIdx); ResetSelection(); }
+            GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+345, 200, 25), "BÁN: +" + currentView.GetItemPrice(n) + "G")) { currentView.SellItem(selectedItemIdx); ResetSelection(); }
         } else {
             GUI.color = new Color(1f, 0.5f, 0f); if (GUI.Button(new Rect(x+10, y+310, 200, 30), "GỠ RA")) { currentView.Unequip(selectedSlot); ResetSelection(); }
         }
@@ -234,16 +282,24 @@ public class GameUI : MonoBehaviour
         if (n.Contains("Kiếm Gỗ")) return "⚔ +8 Sát thương";
         if (n.Contains("Kiếm Sắt")) return "⚔ +15 Sát thương";
         if (n.Contains("Huyết Kiếm")) return "⚔ +40 Sát thương\n🔥 Sức mạnh quỷ dữ\n(Vũ khí 2 tay)";
+        
         if (n.Contains("Áo Da")) return "🛡 +12 Phòng thủ\n🍃 Nhẹ nhàng linh hoạt";
         if (n.Contains("Áo Giáp")) return "🛡 +18 Phòng thủ\n📦 Chống chịu vật lý";
+        
+        if (n.Contains("Mũ Sắt")) return "🛡 +8 Phòng thủ";
+        if (n.Contains("Giày")) return "🛡 +5 Phòng thủ\n🏃 Tăng tốc chạy";
+        
         if (n.Contains("Khiên Gỗ")) return "🛡 +10 Phòng thủ";
-        if (n.Contains("Khiên Sắt")) return "🛡 +20 Phòng thủ";
+        if (n.Contains("Khiên Sắt") || n.Contains("Khiên")) return "🛡 +20 Phòng thủ";
+        
         if (n.Contains("Nhẫn Kim Cương")) return "⚔ +5 Sát thương\n🛡 +5 Phòng thủ";
         if (n.Contains("Dây Chuyền Bạc")) return "❤ +30 Máu tối đa";
         if (n.Contains("Vàng Cổ")) return "⭐ Bảo vật thượng cổ\n⚔ +10 Sát thương\n🛡 +10 Phòng thủ\n❤ +50 Máu";
+        
         if (n.Contains("Ngọc Đỏ")) return "🔴 Ngọc Tinh Nhuệ\n⚔ +20 Sát thương";
         if (n.Contains("Ngọc Xanh")) return "🔵 Ngọc Hộ Mệnh\n🛡 +15 Phòng thủ";
         if (n.Contains("Ngọc Tím")) return "🟣 Ngọc Sinh Mệnh\n❤ +80 Máu tối đa";
+        
         if (n.Contains("Bình Máu")) return "💊 Hồi phục sinh lực tức thời";
         return "📦 Vật phẩm RPG cổ điển\nHãy mặc thử để xem sự thay đổi!";
     }

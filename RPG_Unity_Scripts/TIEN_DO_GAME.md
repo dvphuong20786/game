@@ -38,6 +38,16 @@ Chọn con Slime **Prefab** trong bảng Project → mở Inspector:
 - [x] **GameObject → Create Empty** → đặt tên là `MonsterSpawner`
 - [x] Kéo `MonsterSpawner.cs` → vào GameObject vừa tạo
 - [x] Trong Inspector: kéo **Slime Prefab** vào ô **Monster Prefab**
+
+#### A6. Thiết lập Rừng Ngẫu Nhiên (Map 50x50)
+- [x] Thực hiện theo hướng dẫn chi tiết tại: [HUONG_DAN_TAO_MAP_TUNG_BUOC.md](file:///f:/WORK/GAME/RPG_Unity_Scripts/HUONG_DAN_TAO_MAP_TUNG_BUOC.md)
+- [x] Đặt tên Scene mới là `Wilderness`
+- [x] Gán đủ 4 loại tài nguyên (Cỏ, Đất, Cây, Đá) vào MapManager.
+
+#### A7. Xây dựng Scene Làng (Village)
+- [ ] Thực hiện theo hướng dẫn: [HUONG_DAN_TAO_LANG_VILLAGE.md](file:///f:/WORK/GAME/RPG_Unity_Scripts/HUONG_DAN_TAO_LANG_VILLAGE.md)
+- [ ] Biến Player, UI, Camera thành Prefab.
+- [ ] Sắp xếp Nhà, Giếng, Hàng rào và NPC.
 - [x] **Tạo Boss Prefab** — Làm theo các bước sau:
   - [x] Kéo Slime Prefab từ Project thả vào **Hierarchy** (tạo 1 bản trong scene)
   - [x] Đổi tên thành `Boss_Slime`
@@ -116,6 +126,26 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 - **Quản lý linh hoạt:** Trong bảng Túi đồ (phím B) có nút chuyển đổi giữa Người chơi và Đệ tử.
 - **Tính năng chuyển đồ:** Nút "Giao cho đệ tử" giúp nhanh chóng đưa trang bị tốt cho đồng đội.
 - **Kinh tế:** Đệ tử nhặt vàng sẽ tự động cộng dồn vào túi tiền chung của Người chơi.
+- **Trang bị trực tiếp:** Nút "Trang bị cho đệ" giúp mặc đồ thẳng từ túi người chơi cho đệ tử, cực kỳ tiện lợi.
+- **Hệ thống Hào quang & Hồi máu:** Đệ tử có vòng sáng dưới chân và tự hồi 2% HP mỗi 3s khi rảnh rỗi.
+
+### 🕳️ Giai đoạn Lỗ Quái Vật & AI Nâng cao (Cập nhật)
+- **Quái vật Đi tuần:** Quái vật sinh ra từ lỗ sẽ đi lại tuần tra xung quanh lỗ thay vì đứng im.
+- **Tầm đánh Kiếm sĩ:** Điều chỉnh chỉ còn **1.2f** để tăng độ khó và thực tế.
+- **Fix lỗi hiển thị:** Sửa lỗi đệ tử bị tàng hình khi vừa thuê (Z-index & Sorting Layer).
+- **AI Đệ tử:** Tầm quét quái tăng lên 12m, thông minh hơn trong việc chọn mục tiêu.
+
+### 🌐 Hệ thống Thế giới Ngẫu nhiên (Mới)
+- **Sinh bản đồ 50x50:** Mỗi lần vào map "Wilderness", bản đồ sẽ được lắp ghép ngẫu nhiên từ 2500 ô gạch.
+- **Tự động đặt vật cản:** Cây cối và đá được rải ngẫu nhiên, tạo ra các lối đi khác nhau mỗi lần chơi.
+- **Lỗ quái vật ngẫu nhiên:** Sinh ra 8 "Monster Pit" tại các vị trí bất kỳ trong rừng.
+- **AI Generated Sprites:** Các tài nguyên Cỏ, Đất, Cây, Đá được tạo bằng AI để sử dụng ngay.
+
+### 🕳️ Giai đoạn Lỗ Quái Vật - Monster Pit (Mới)
+- **Hệ thống Lỗ Quái:** Tự động sinh quái với số lượng cấu hình được (mặc định 4-5 con).
+- **Trí tuệ Nhân tạo (AI Range):** Quái từ lỗ sẽ nhận diện mục tiêu ở tầm 10-12m. Nếu bị quái đuổi quá 20-24m (gấp đôi tầm nhìn), quái sẽ tự động quay về lỗ.
+- **Tấn công Đệ tử:** Quái vật hiện đã biết tấn công cả Đệ tử nếu chúng ở gần hơn Người chơi.
+- **Hệ thống Vật phẩm:** Toàn bộ item rớt ra đã được bổ sung đầy đủ chỉ số và mô tả trong kho đồ.
 
 ### 🔥 Phiên bản 15/04/2026 — Cập nhật 11 yêu cầu lớng RPG Cao cấp
 - **9 Ô Trang bị (9 slots):** Đầu, Áo, Giày, Dây chuyền, Nhẫn 1, Nhẫn 2, Vàng cổ, Vũ khí chính, Khiên.
@@ -170,6 +200,17 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 | 12 | HUD Đệ tử & Chỉ số chi tiết | ✅ Đã có | `GameUI.cs` |
 | 13 | Hệ thống cộng điểm STR/VIT/AGI | ✅ Đã có | `PlayerStats.cs` |
 | 14 | Chia sẻ 50/50 EXP & Focus Camera | ✅ Đã có | `Monster.cs` / `CameraFollow.cs` |
+| 15 | Hệ thống Lỗ Quái Vật (Monster Pit) | ✅ Đã có | `MonsterPit.cs` |
+| 16 | Quái tấn công cả đệ tử | ✅ Đã có | `Monster.cs` |
+| 17 | Trang bị cho đệ từ túi người chơi | ✅ Đã có | `GameUI.cs` |
+| 18 | Hào quang & Hồi máu đệ tử | ✅ Đã có | `CompanionAI.cs` |
+| 19 | Quái vật đi tuần quanh lỗ | ✅ Đã có | `Monster.cs` |
+| 20 | Fix lỗi đệ tử không hiện | ✅ Đã có | `NPCTrainer.cs` |
+| 21 | Giảm tầm đánh kiếm sĩ 1.2f | ✅ Đã có | `PlayerCombat.cs` |
+| 22 | Hệ thống sinh map ngẫu nhiên 50x50 | ✅ Đã có | `MapGenerator.cs` |
+| 23 | Sprites Cỏ, Đất, Cây, Đá | ✅ Đã có | `AI_Generated_Sprites/` |
+| 24 | Sprites Nhà, Giếng, Hàng rào | ✅ Đã có | `AI_Generated_Sprites/` |
+| 25 | Hệ thống chuyển cảnh Portal | ✅ Đã có | `Portal.cs` |
 
 ---
 

@@ -59,26 +59,27 @@ public class ItemDrop : MonoBehaviour
         float pulse = 1f + Mathf.Sin(pulseTimer * 1.5f) * 0.15f; 
         transform.localScale = initialScale * pulse;
 
-        // ===== TỰ ĐỘNG HÚT VÀO NGƯỜI CHƠI =====
-        PlayerStats player = FindAnyObjectByType<PlayerStats>();
-        if (player != null)
+        // ===== TỰ ĐỘNG HÚT VÀO NGƯỜI CHƠI HOẶC ĐỆ TỬ =====
+        PlayerStats[] allStats = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach (PlayerStats stats in allStats)
         {
-            float distance = Vector2.Distance(transform.position, player.transform.position);
+            float distance = Vector2.Distance(transform.position, stats.transform.position);
             if (distance <= 1.2f)
             {
                 if (!isItem)
                 {
-                    player.AddGold(10);
+                    stats.AddGold(10);
                     if (GameUI.instance != null)
                         GameUI.instance.ShowDamage(transform.position, "+10G", new Color(1f, 0.9f, 0f));
                 }
                 else
                 {
-                    player.PickUpItem(itemName);
+                    stats.PickUpItem(itemName);
                     if (GameUI.instance != null)
                         GameUI.instance.ShowDamage(transform.position, "+" + itemName, Color.cyan);
                 }
                 Destroy(gameObject);
+                break;
             }
         }
     }

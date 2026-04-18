@@ -13,3 +13,7 @@ thêm giá bán mỗi món trang bị.
 11. cần NPC bán đồ item, đồ ăn, máu... vv. và mua những đồ của tôi. như 1 game hoàn thiện
 12. đệ tử có giao diện máu xp giống player. đệ tử có bảng kỹ năng riêng
 13. người chơi và đệ tử có cộng điểm kỹ năng và + điểm khi lên lv. và có thể trang bị đồ cho đệ tử, chia sẻ kinh nghiệm giữa người chơi và đệ tử
+14. thêm 1 kiểu lỗ quái vật, xung quanh lỗ đó chỉ đẻ tối đa bao nhiêu quái vật được cài đặt, người chơi đi vào đó thì quái vật sẽ tấn công, khi người chơi vượt quá phạm vi cài đặt 2 thì quái sẽ quay lại. khi chết hết quái thì 1 lúc sẽ lại xuất hiện lại.
+15. quái vật tấn công cả đệ tử.
+16. kiểm tra lại toàn bộ item. tôi vẫn thấy nhiều item nhặt được trong túi đồ không hiện chỉ số. yêu cầu tất cả item phải hiện chỉ số.
+17. trang bị hiện nay trên người player không cách nào đưa cho đệ tử mặc. hãy sửa lại điều này. người chơi có thể trang bị cho đệ tử. những vật phẩm đang ở hành trang của player. 

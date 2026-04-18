@@ -10,7 +10,7 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("Thông số sức mạnh")]
     public int attackDamage = 10;   // YC#10: Giảm từ 25 → 10 cho cân bằng
-    public float attackRange = 1.8f;
+    public float attackRange = 1.2f; // Giảm từ 1.8 xuống 1.2 theo yêu cầu mới
 
     private Animator anim;
 

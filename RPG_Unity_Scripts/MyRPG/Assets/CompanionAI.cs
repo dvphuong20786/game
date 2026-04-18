@@ -19,6 +19,7 @@ public class CompanionAI : MonoBehaviour
 
     private float attackTimer;
     private float skillTimer;
+    private float regenTimer; // YC: Hồi máu tự động
     private Vector3 followOffset; // Khoảng cách lệch để không đứng đè lên chủ
 
     void Start()
@@ -28,7 +29,7 @@ public class CompanionAI : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         
         // Tìm chủ nhân
-        PlayerStats[] allStats = FindObjectsOfType<PlayerStats>();
+        PlayerStats[] allStats = FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
         foreach (var s in allStats) if (s.isPlayer) { master = s; break; }
 
         // Tạo một độ lệch ngẫu nhiên để khi 4 đệ tử đi theo sẽ không bị trùng khít
@@ -41,8 +42,8 @@ public class CompanionAI : MonoBehaviour
     {
         if (stats == null || master == null || stats.currentHealth <= 0) return;
 
-        // --- TÌM MỤC TIÊU ---
-        Monster qTarget = FindNearestMonster(8f);
+        // --- TÌM MỤC TIÊU (Tầm quét rộng hơn: 12f) ---
+        Monster qTarget = FindNearestMonster(12f);
 
         // --- DI CHUYỂN & CHIẾN ĐẤU ---
         float range = (type == CompanionType.Archer) ? 6f : 1.5f;
@@ -51,10 +52,12 @@ public class CompanionAI : MonoBehaviour
         {
             float minDis = Vector2.Distance(transform.position, qTarget.transform.position);
             if (minDis > range) {
-                float speed = (3.5f + stats.AGI * 0.1f) * Time.deltaTime;
+                float speed = (4.5f + stats.AGI * 0.12f) * Time.deltaTime; // Tăng nhẹ tốc độ rượt đuổi
                 transform.position = Vector3.MoveTowards(transform.position, qTarget.transform.position, speed);
                 FlipSprite(qTarget.transform.position.x);
+                SetAnimBool("IsWalking", true);
             } else {
+                SetAnimBool("IsWalking", false);
                 attackTimer += Time.deltaTime;
                 float cd = (type == CompanionType.Archer) ? 1.5f : 1.2f;
                 if (attackTimer >= cd - (stats.AGI * 0.02f)) {
@@ -66,41 +69,52 @@ public class CompanionAI : MonoBehaviour
         else // Không có quái -> Quay về đi theo chủ
         {
             float distToMaster = Vector2.Distance(transform.position, master.transform.position + followOffset);
-            if (distToMaster > 0.5f) {
+            if (distToMaster > 0.8f) {
                 float speed = (4f + stats.AGI * 0.1f) * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, master.transform.position + followOffset, speed);
                 FlipSprite(master.transform.position.x);
+                SetAnimBool("IsWalking", true);
+            } else {
+                SetAnimBool("IsWalking", false);
+            }
+
+            // --- HỒI MÁU TỰ ĐỘNG (Khi không có quái) ---
+            regenTimer += Time.deltaTime;
+            if (regenTimer >= 3f) {
+                int regenAmt = Mathf.Max(1, stats.maxHealth / 50); // Hồi 2% HP
+                if (stats.currentHealth < stats.maxHealth) {
+                    stats.currentHealth = Mathf.Min(stats.currentHealth + regenAmt, stats.maxHealth);
+                    // if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "✚", Color.green);
+                }
+                regenTimer = 0;
             }
         }
 
-        // --- LOGIC KỸ NĂNG HỖ TRỢ (MỚI) ---
+        // --- LOGIC KỸ NĂNG HỖ TRỢ ---
         skillTimer += Time.deltaTime;
-        if (skillTimer >= 5f) // Thử dùng kỹ năng mỗi 5 giây
-        {
-            CastSupportSkills();
-            skillTimer = 0;
-        }
+        if (skillTimer >= 5f) { CastSupportSkills(); skillTimer = 0; }
+    }
+
+    void SetAnimBool(string paramName, bool val)
+    {
+        if (anim == null) return;
+        foreach (var p in anim.parameters) if (p.name == paramName) { anim.SetBool(paramName, val); break; }
     }
 
     void CastSupportSkills()
     {
         if (stats == null || master == null) return;
-
-        // 1. ❤ Trị Thương (Lv6) - Hồi máu cho chủ và bản thân
         if (stats.unlockedSkills.Contains("❤ Trị Thương (Lv6)"))
         {
             int healAmt = 15 + (stats.VIT / 2);
             master.currentHealth = Mathf.Min(master.currentHealth + healAmt, master.maxHealth);
             stats.currentHealth = Mathf.Min(stats.currentHealth + healAmt, stats.maxHealth);
             if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "❤ +" + healAmt, Color.green);
-            Debug.Log("🐕 Đệ tử dùng Trị Thương!");
         }
 
-        // 2. 🛡 Hộ Vệ (Lv3) - Tăng thủ tạm thời (Logic tạm thời: cộng thẳng bonusDefense trong 5s)
         if (stats.unlockedSkills.Contains("🛡 Hộ Vệ (Lv3)"))
         {
-            float distToMaster = Vector2.Distance(transform.position, master.transform.position);
-            if (distToMaster < 4f)
+            if (Vector2.Distance(transform.position, master.transform.position) < 4f)
             {
                 master.bonusDefense += 10;
                 StartCoroutine(RemoveBuff(master, 10, 4.5f));
@@ -126,32 +140,32 @@ public class CompanionAI : MonoBehaviour
         return nearest;
     }
 
-
     void Attack(Monster target)
     {
         if (anim != null) anim.SetTrigger("Attack");
         int dmg = 15 + stats.bonusDamage;
-        
-        if (type == CompanionType.Archer) {
-            // Logic bắn tên (ở đây tạm thời gây sát thương thẳng, bạn có thể tạo Arrow Prefab sau)
-            target.TakeDamage(dmg);
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(target.transform.position, "🏹 -" + dmg, Color.green);
-        } else {
-            target.TakeDamage(dmg);
-        }
+        target.TakeDamage(dmg);
+        if (type == CompanionType.Archer && GameUI.instance != null) 
+            GameUI.instance.ShowDamage(target.transform.position, "🏹 -" + dmg, Color.green);
     }
 
-    void CastSkill_Warrior() {
-        if (anim != null) anim.SetTrigger("Attack");
-        int dmg = (15 + stats.bonusDamage) * 2;
-        Monster[] targets = FindObjectsOfType<Monster>();
-        foreach (var m in targets) {
-            if (Vector2.Distance(transform.position, m.transform.position) < 3.5f) m.TakeDamage(dmg);
-        }
-        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "💥 CHÉM GIÓ!", Color.cyan);
-    }
+    void FlipSprite(float tx) { if (sr != null) sr.flipX = tx < transform.position.x; }
 
-    void FlipSprite(float tx) {
-        if (sr != null) sr.flipX = tx < transform.position.x;
+    // --- VẼ HÀO QUANG (AURA) ---
+    void OnGUI()
+    {
+        if (stats == null || stats.currentHealth <= 0) return;
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
+        if (screenPos.z > 0)
+        {
+            // Vẽ một vòng tròn nhỏ dưới chân
+            float size = 40f;
+            GUI.color = new Color(0f, 1f, 1f, 0.4f); // Màu xanh Cyan nhạt
+            GUI.DrawTexture(new Rect(screenPos.x - size / 2, Screen.height - screenPos.y - 10, size, 15), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+        }
     }
 }

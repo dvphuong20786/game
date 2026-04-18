@@ -1,44 +1,37 @@
-# Tổng kết: Đại tu hệ thống Đệ tử & Giao diện Nâng cao
+# Walkthrough: Đệ Tử Nâng Cao & Quái Vật Tuần Tra
 
-Tôi đã hoàn thành toàn bộ các yêu cầu của bạn về việc nâng cấp hệ thống đệ tử, hiển thị chỉ số chi tiết, tối ưu camera và xây dựng hệ thông cộng điểm tiềm năng.
+Tôi đã hoàn tất việc sửa lỗi và bổ sung các tính năng nâng cao cho đệ tử và quái vật theo yêu cầu của bạn.
 
-## Các thay đổi chính
+## Các thay đổi quan trọng
 
-### 1. Hệ thống Camera Focus & Tốc độ
-- **Tốc độ:** Tăng từ 5 -> 12, giúp camera bám đuôi nhân vật mượt mà và nhanh chóng hơn.
-- **Focus:** Khi bạn chọn "XEM ĐỆ TỬ" trong bảng Bag, Camera sẽ tự động chuyển tiêu điểm sang Đệ tử để bạn dễ quan sát.
+### 1. Sửa lỗi đệ tử "tàng hình" [NPCTrainer.cs]
+- **Vấn đề:** Đệ tử được thuê nhưng không thấy xuất hiện.
+- **Giải pháp:** Cố định tọa độ **Z = 0** khi sinh ra và gán **Sorting Order = 5** (hiển thị trên lớp Player/Map).
+- **Kiểm tra:** Khi thuê, bạn sẽ thấy thông báo `🛡️ ĐÃ SINH ĐỆ TỬ` kèm tọa độ trong bảng Console.
 
-### 2. Hệ thống Chỉ số Tiềm năng (STR/VIT/AGI)
-- **Cộng điểm:** Mỗi khi lên cấp, bạn nhận được 5 điểm tiềm năng. Bạn có thể nhấn nút **[+]** trong bảng Bag để nâng:
-    - `STR`: Tăng sát thương vật lý đáng kể.
-    - `VIT`: Tăng máu tối đa và phòng thủ tự nhiên.
-    - `AGI`: Tăng tốc độ di chuyển và tấn công.
-- **Chia sẻ EXP:** Kinh nghiệm từ quái vật giờ đây được chia đều **50/50** cho cả Người chơi và Đệ tử.
+### 2. Nâng cấp đệ tử: Hào quang & Hồi máu [CompanionAI.cs]
+- **Hào quang (Aura):** Đệ tử khi còn sống sẽ có một vòng tròn màu xanh Cyan nhạt dưới chân để bạn dễ phân biệt với NPC khác.
+- **Hồi máu (Regen):** Khi không có quái vật, đệ tử tự hồi **2% HP mỗi 3 giây**.
+- **AI nhạy bén hơn:** Tầm quét quái vật tăng lên **12m** (thay vì 8m), đệ tử sẽ chủ động tìm quái từ xa hơn.
 
-### 3. Giao diện (UI) Nâng cao
-- **HUD Đệ tử:** Đã thêm thanh Máu và EXP của đệ tử ngay dưới thanh của người chơi (góc trên trái).
-- **Tooltip chi tiết:** Khi chọn vật phẩm, bảng mô tả sẽ hiện chính xác các chỉ số cộng thêm (vd: "⚔ +15 Sát thương") thay vì chỉ hiện tên.
-- **Bảng Kỹ năng:** Tách biệt kỹ năng của Người chơi và Đệ tử.
+### 3. Quái vật đi tuần (Patrol) [Monster.cs]
+- **Hành động:** Quái vật sinh ra từ Lỗ (Monster Pit) giờ đây sẽ không đứng im một chỗ mà sẽ đi lại chậm rãi xung quanh lỗ.
+- **Cơ chế:** Nếu không có mục tiêu để đuổi, chúng sẽ tự tìm một điểm ngẫu nhiên trong bán kính 3m quanh lỗ để đi dạo.
 
-### 4. Kỹ năng Hỗ trợ của Đệ tử
-- Đệ tử giờ đây có các kỹ năng mang tính hỗ trợ khi lên cấp:
-    - `🛡 Hộ Vệ`: Tăng giáp cho chủ nhân khi đứng gần.
-    - `❤ Trị Thương`: Tự động hồi máu cho cả đội sau mỗi 5 giây.
+### 4. Điều chỉnh chiến đấu [PlayerCombat.cs]
+- **Tầm đánh:** Giảm xuống **1.2f** đúng theo yêu cầu.
+- **An toàn:** Đòn đánh của người chơi và đệ tử giờ đây hoàn toàn tách biệt, không gây sát thương lẫn nhau (Friendly Fire).
 
-## Hướng dẫn cho bạn (QUAN TRỌNG)
+### 5. Tối ưu hóa & Sửa lỗi linh tinh
+- **Monster.cs:** Xóa các dòng tiêu đề trùng lặp, tối ưu hóa việc lật hình ảnh (FlipSprite) để tiết kiệm tài nguyên máy tính.
+- **Chia sẻ EXP:** Nếu bạn có nhiều đệ tử, kinh nghiệm (EXP) sẽ được chia đều cho tất cả chúng thay vì chỉ người đầu tiên.
+- **Fix Camera:** Sửa lỗi bám đuôi bị "trôi" và tăng tốc độ lên mức 20 cực kỳ mượt mà.
+- **Fix Cú pháp:** Sửa lỗi thừa dấu ngoặc nhọn gây lỗi biên dịch trong `CompanionAI.cs`.
 
-Bạn cần thực hiện các thao tác kéo thả sau trong Unity để NPC Trainer hoạt động:
+## Hướng dẫn cho bạn
 
-1.  **Cài đặt Trainer:**
-    - Chọn GameObject `NPC_Trainer`.
-    - Trong Inspector của script `TrainerNPC`:
-        - Kéo các Prefab đệ tử của bạn vào các ô `Prefab Warrior`, `Prefab Archer`, `Prefab Slime`.
-        - Kéo 1 file âm thanh vào ô `Hire Sound`.
-        - Tích vào `Can Patrol` để NPC đi lại tuần tra.
-2.  **Kỹ năng:**
-    - Đệ tử cần đạt Lv3 để học `Hộ Vệ` và Lv6 để học `Trị Thương`. Bạn hãy dùng điểm kỹ năng của đệ tử để học trong bảng Bag -> Tab Kỹ năng.
+- Bạn hãy mở bảng **Console** trong Unity để theo dõi các thông báo sinh đệ tử.
+- Nếu thấy quái vật "hiền" hơn hoặc "hung dữ" hơn, bạn có thể chỉnh lại `Attack Range` và `Attack Speed` trực tiếp trong Inspector của Monster Prefab.
 
 ---
-Mọi thông tin chi tiết về cách vận hành bạn có thể xem thêm tại: 
-- [TIEN_DO_GAME.md](file:///d:/work/1/RPG_Unity_Scripts/TIEN_DO_GAME.md)
-- [HUONG_DAN_CHI_TIET_GAME.md](file:///d:/work/1/RPG_Unity_Scripts/HUONG_DAN_CHI_TIET_GAME.md)
+Mọi chi tiết về lịch sử thay đổi đã được cập nhật tại [TIEN_DO_GAME.md](file:///f:/WORK/GAME/RPG_Unity_Scripts/TIEN_DO_GAME.md).

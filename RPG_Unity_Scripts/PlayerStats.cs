@@ -242,17 +242,22 @@ public class PlayerStats : MonoBehaviour
     {
         if (n == "Trống" || n == "Tay Không") return;
         if (n.Contains("Kiếm Gỗ")) bonusDamage += 8;
+        if (n.Contains("Kiếm Sắt")) bonusDamage += 15;
         if (n.Contains("Huyết Kiếm")) bonusDamage += 40;
+        
         if (n.Contains("Áo Da")) bonusDefense += 12;
-        if (n.Contains("Mũ Sắt")) bonusDefense += 5;
-        if (n.Contains("Giày")) bonusDefense += 3;
-        if (n.Contains("Khiên")) bonusDefense += 20;
+        if (n.Contains("Áo Giáp")) bonusDefense += 18;
+        
+        if (n.Contains("Mũ Sắt")) bonusDefense += 8;
+        if (n.Contains("Giày")) bonusDefense += 5;
+        
+        if (n.Contains("Khiên Gỗ")) bonusDefense += 10;
+        if (n.Contains("Khiên Sắt") || n.Contains("Khiên")) bonusDefense += 20;
+        
         if (n.Contains("Nhẫn Kim Cương")) { bonusDamage += 5; bonusDefense += 5; }
         if (n.Contains("Dây Chuyền Bạc")) maxHealth += 30;
         if (n.Contains("Vàng Cổ")) { bonusDamage += 10; bonusDefense += 10; maxHealth += 50; }
-        if (n.Contains("Kiếm Sắt")) bonusDamage += 15;
-        if (n.Contains("Áo Giáp")) bonusDefense += 18;
-        if (n.Contains("Khiên Gỗ")) bonusDefense += 10;
+        
         if (n.Contains("Ngọc Đỏ")) bonusDamage += 20;
         if (n.Contains("Ngọc Xanh")) bonusDefense += 15;
         if (n.Contains("Ngọc Tím")) maxHealth += 80;

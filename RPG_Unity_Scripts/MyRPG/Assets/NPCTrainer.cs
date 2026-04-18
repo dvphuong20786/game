@@ -45,7 +45,7 @@ public class TrainerNPC : MonoBehaviour
 
     void Start() 
     { 
-        player = FindAnyObjectByType<PlayerStats>(); 
+        FindMainPlayer();
         startPos = transform.position;
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
@@ -55,9 +55,29 @@ public class TrainerNPC : MonoBehaviour
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
     }
 
+    void FindMainPlayer()
+    {
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach (var s in all) if (s.isPlayer) { player = s; break; }
+    }
+
+    // Hàm hỗ trợ đặt biến Animator an toàn (không bị Warning nếu thiếu biến)
+    void SetAnimBool(string paramName, bool value)
+    {
+        if (anim == null) return;
+        foreach (AnimatorControllerParameter p in anim.parameters)
+        {
+            if (p.name == paramName) 
+            {
+                anim.SetBool(paramName, value);
+                return;
+            }
+        }
+    }
+
     void Update()
     {
-        if (player == null) return;
+        if (player == null) { FindMainPlayer(); return; }
         float dist = Vector2.Distance(transform.position, player.transform.position);
 
         // --- 1. LOGIC TƯƠNG TÁC ---
@@ -74,7 +94,6 @@ public class TrainerNPC : MonoBehaviour
         if (dist > interactRange + 1f) menuOpen = false;
 
         // --- 2. LOGIC DI CHUYỂN (PATROL) ---
-        // Chỉ di chuyển khi menu đang đóng và người chơi không ở quá gần
         if (canPatrol && !menuOpen && dist > interactRange)
         {
             float currentDistFromStart = transform.position.x - startPos.x;
@@ -86,13 +105,14 @@ public class TrainerNPC : MonoBehaviour
             transform.Translate(Vector3.right * dir * moveSpeed * Time.deltaTime);
 
             if (sr != null) sr.flipX = !walkingRight;
-            if (anim != null) anim.SetBool("IsWalking", true);
+            SetAnimBool("IsWalking", true);
         }
         else
         {
-            if (anim != null) anim.SetBool("IsWalking", false);
+            SetAnimBool("IsWalking", false);
         }
     }
+
 
     void OnGUI()
     {
@@ -173,9 +193,18 @@ public class TrainerNPC : MonoBehaviour
     void Hire(GameObject prefab, int price, string companionName)
     {
         player.gold -= price;
-        Vector3 spawnPos = transform.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+        // Đảm bảo sinh ra ở Z = 0 để không bị che khuất bởi map hoặc camera
+        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-1f, 1f), transform.position.y + Random.Range(-1f, 1f), 0f);
         GameObject g = Instantiate(prefab, spawnPos, Quaternion.identity);
         
+        // Cố định lớp hiển thị (Sorting Layer) nếu có SpriteRenderer
+        SpriteRenderer companionSR = g.GetComponent<SpriteRenderer>();
+        if (companionSR != null)
+        {
+            companionSR.sortingLayerName = "Default"; // Hoặc "Characters" nếu bạn có
+            companionSR.sortingOrder = 5; // Ưu tiên hiển thị trên Map
+        }
+
         // Phát âm thanh
         if (hireSound != null && audioSource != null)
             audioSource.PlayOneShot(hireSound);
@@ -184,7 +213,7 @@ public class TrainerNPC : MonoBehaviour
         if (GameUI.instance != null)
             GameUI.instance.ShowDamage(player.transform.position, "Chào mừng " + companionName, Color.cyan);
             
-        Debug.Log("🛡 Đã chiêu mộ đệ tử mới! Còn lại: " + player.gold + " Vàng");
+        Debug.Log($"🛡️ ĐÃ SINH ĐỆ TỬ: {companionName} tại {spawnPos}. Vàng còn lại: {player.gold}");
     }
 
     void OnDrawGizmosSelected()

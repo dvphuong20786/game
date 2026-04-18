@@ -6,17 +6,29 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     Animator anim;
+    private SpriteRenderer sr; // Cache SpriteRenderer
+
     [Header("Chỉ số Quái vật")]
     public string monsterName = "Slime Nhỏ";
     public int maxHealth = 50;
     public int currentHealth;
 
-    [Header("Chỉ số Tấn Công (Mới Thêm)")]
+    [Header("Chỉ số Tấn Công")]
     public int attackDamage = 15; // Sức mạnh cắn
-    public float attackRange = 1.5f; // Bán kính vòng tròn nó có thể với tới
+    public float attackRange = 1.0f; // Tầm cắn (Đã giảm theo YC)
     public float attackSpeed = 1.2f; // Giãn cách giữa 2 cú cắn (giây)
-    public float moveSpeed = 1.5f; // Tốc độ chạy xé gió rượt theo bạn
-    private float attackTimer = 0f;
+    public float moveSpeed = 1.5f; // Tốc độ chạy rượt theo bạn
+    private float attackTimer = 10f; // Cho phép đánh ngay khi vừa gặp lần đầu
+
+    [Header("Cơ chế Lỗ (Pit Logic)")]
+    private Vector3 pitHome;
+    private float pitAggro;
+    private float pitReset;
+    private PlayerStats pitTarget;
+    private bool isReturning = false;
+    private bool isPatrolling = false;
+    private Vector3 patrolTarget;
+    private float patrolTimer = 0f;
 
     [Header("Phần thưởng")]
     public int expReward = 35; // Điểm kinh nghiệm cho người chơi khi chết
@@ -26,45 +38,109 @@ public class Monster : MonoBehaviour
     {
         currentHealth = maxHealth;
         anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>(); // Cache tại đây để tối ưu hiệu năng
+        pitHome = transform.position; // Mặc định nhà là nơi sinh ra
+    }
+
+    public void SetPitLogic(Vector3 home, float aggro, float reset, PlayerStats target)
+    {
+        pitHome = home;
+        pitAggro = aggro;
+        pitReset = reset;
+        pitTarget = target;
     }
 
     void Update()
     {
-        // Đồng hồ bấm giờ trong game (Thời gian trôi qua)
         attackTimer += Time.deltaTime;
 
-        // 1. Dò la tìm tung tích Người chơi
-        PlayerStats player = FindAnyObjectByType<PlayerStats>();
-        if (player != null)
+        // --- 1. XÁC ĐỊNH MỤC TIÊU ---
+        PlayerStats target = pitTarget;
+        if (target == null) target = FindNearestTarget(pitAggro > 0 ? pitAggro : 10f);
+
+        // --- 2. KIỂM TRA PHẠM VI QUAY VỀ (Pit Logic) ---
+        if (pitAggro > 0) 
         {
-            // Đo khoảng cách giữa mình (Quái) và chữ Player
-            float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
-
-            // TÍNH NĂNG MỚI: NẾU CHƯA CẮN ĐƯỢC THÌ RƯỢT THEO!
-            if (distanceToPlayer > attackRange)
+            float distToHome = Vector2.Distance(transform.position, pitHome);
+            if (target != null)
             {
-                // Vẽ đường thẳng hướng thẳng tới vị trí người chơi và chạy tới
-                Vector3 huongDi = (player.transform.position - transform.position).normalized;
-                transform.Translate(huongDi * moveSpeed * Time.deltaTime);
-
-                // Lật mặt quái vật hướng về phía người chơi
-                if (huongDi.x > 0)
-                    GetComponent<SpriteRenderer>().flipX = true; // Quay phải
-                else if (huongDi.x < 0)
-                    GetComponent<SpriteRenderer>().flipX = false; // Quay trái
+                float distToTargetFromHome = Vector2.Distance(target.transform.position, pitHome);
+                if (distToTargetFromHome > pitReset) isReturning = true;
+                else if (distToTargetFromHome < pitAggro) isReturning = false;
             }
-            // 2. Nếu con mồi lọt vào tầm đánh & Đã chờ đủ thời gian thì CẮN
-            else if (attackTimer >= attackSpeed)
+            else
+            {
+                if (distToHome > 5f) isReturning = true;
+            }
+        }
+
+        // --- 3. THỰC HIỆN HÀNH ĐỘNG ---
+        if (isReturning)
+        {
+            Vector3 huongVe = (pitHome - transform.position).normalized;
+            transform.Translate(huongVe * moveSpeed * Time.deltaTime);
+            FlipSprite(huongVe.x);
+            if (Vector2.Distance(transform.position, pitHome) < 0.5f) { isReturning = false; isPatrolling = true; }
+        }
+        else if (target != null && target.currentHealth > 0)
+        {
+            isPatrolling = false;
+            float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+
+            if (distanceToTarget > attackRange)
+            {
+                Vector3 huongDi = (target.transform.position - transform.position).normalized;
+                transform.Translate(huongDi * moveSpeed * Time.deltaTime);
+                FlipSprite(huongDi.x);
+            }
+            
+            if (distanceToTarget <= attackRange + 0.2f && attackTimer >= attackSpeed)
             {
                 if (anim != null) anim.SetTrigger("Attack");
-                player.TakeDamage(attackDamage);
-                
-                // Mở lại bảng Console ở dưới để xem chữ này nhé
-                Debug.Log($"⚠️ OÁY! {monsterName} vừa ngoạm bạn mất {attackDamage} Máu!");
-
-                // Reset đồng hồ về 0 để chờ 1.2 giây sau cắn hiệp tiếp theo
+                target.TakeDamage(attackDamage);
                 attackTimer = 0f; 
             }
+        }
+        else if (pitAggro > 0) // --- LOGIC ĐI TUẦN (PATROL) ---
+        {
+            patrolTimer += Time.deltaTime;
+            if (patrolTimer >= 3f || Vector2.Distance(transform.position, patrolTarget) < 0.2f)
+            {
+                patrolTarget = pitHome + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0);
+                patrolTimer = 0;
+                isPatrolling = true;
+            }
+
+            if (isPatrolling)
+            {
+                Vector3 huongDi = (patrolTarget - transform.position).normalized;
+                transform.Translate(huongDi * (moveSpeed * 0.5f) * Time.deltaTime); 
+                FlipSprite(huongDi.x);
+            }
+        }
+    }
+
+    PlayerStats FindNearestTarget(float range)
+    {
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        PlayerStats nearest = null;
+        float minD = range;
+
+        foreach (var p in all)
+        {
+            if (p.currentHealth <= 0) continue;
+            float d = Vector2.Distance(transform.position, p.transform.position);
+            if (d < minD) { minD = d; nearest = p; }
+        }
+        return nearest;
+    }
+
+    void FlipSprite(float xDir)
+    {
+        if (sr != null)
+        {
+            if (xDir > 0) sr.flipX = true;
+            else if (xDir < 0) sr.flipX = false;
         }
     }
 

@@ -4,7 +4,7 @@ public class CameraFollow : MonoBehaviour
 {
     public static CameraFollow instance;
     private Transform target;
-    public float smoothSpeed = 12f; // Tốc độ bám đuôi nhanh hơn (User yêu cầu)
+    public float smoothSpeed = 20f; // Tăng lên 20 để bám sát hơn
     public Vector3 offset = new Vector3(0, 0, -10);
 
     private float findTimer = 0f;
@@ -54,7 +54,8 @@ public class CameraFollow : MonoBehaviour
             return;
         }
 
-        Vector3 desiredPosition = new Vector3(target.position.x, target.position.y, transform.position.z) + offset;
+        // Sửa logic Z: Không cộng dồn Z của camera vào offset nữa
+        Vector3 desiredPosition = target.position + offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
     }
 }
