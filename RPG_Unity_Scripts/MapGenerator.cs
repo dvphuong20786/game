@@ -87,6 +87,12 @@ public class MapGenerator : MonoBehaviour
         if (portalScript != null) portalScript.tenMapTiepTheo = "Village"; // Giả định tên scene làng là Village
 
         Debug.Log("✅ Sinh bản đồ hoàn tất!");
+
+        // TỰ ĐỘNG KẾT NỐI CAMERA
+        if (CameraFollow.instance != null)
+        {
+            CameraFollow.instance.SetTarget(null); // Force Camera tìm lại Player chính xác
+        }
     }
 
     void SpawnObstacle(int x, int y, bool isWall)

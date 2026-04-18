@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // ===========================
 // Hệ thống Chỉ số & RPG Cơ bản
@@ -18,8 +19,40 @@ public class PlayerStats : MonoBehaviour
     {
         if (isPlayer)
         {
-            if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); }
-            else { Destroy(gameObject); }
+            if (instance == null) 
+            { 
+                instance = this; 
+                DontDestroyOnLoad(gameObject);
+                // Đăng ký tự động lưu khi chuyển map
+                SceneManager.sceneLoaded += OnSceneLoaded;
+            }
+            else { Destroy(gameObject); return; }
+        }
+        
+        // KHỞI TẠO MÁU SỚM ĐỂ TRÁNH LỖI UI 0/HP
+        CalculateBonus();
+        currentHealth = maxHealth;
+    }
+
+    void OnDestroy()
+    {
+        if (isPlayer) SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Tự động load data khi vào Scene mới
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (isPlayer && PlayerPrefs.HasKey("Level"))
+        {
+            LoadGame();
+            
+            // TRIỆU HỒI ĐỆ TỬ KHI CHUYỂN MAP
+            if (CompanionManager.instance != null)
+            {
+                CompanionManager.instance.LoadAndSpawnCompanions(transform);
+            }
+            
+            Debug.Log($"[Save] ✅ Đã tải dữ liệu & Đội ngũ vào Scene: {scene.name}");
         }
     }
 
@@ -57,11 +90,27 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        CalculateBonus();
-        currentHealth = maxHealth;
-        
-        // Đệ tử tự nhận diện tên nếu chưa đặt
-        if (!isPlayer && (characterName == "Hiệp Sĩ" || characterName == "")) characterName = "Đệ Tử";
+        if (isPlayer)
+        {
+            // Nếu đã có save thì tải, không thì giữ nguyên giá trị mặc định
+            if (PlayerPrefs.HasKey("Level"))
+            {
+                LoadGame();
+                Debug.Log("[Save] 📂 Đã tải dữ liệu game.");
+            }
+            else
+            {
+                CalculateBonus();
+                currentHealth = maxHealth;
+            }
+        }
+        else
+        {
+            // Đệ tử
+            CalculateBonus();
+            currentHealth = maxHealth;
+            if (characterName == "Hiệp Sĩ" || characterName == "") characterName = "Đệ Tử";
+        }
     }
 
     public void TakeDamage(int damage)
@@ -284,8 +333,15 @@ public class PlayerStats : MonoBehaviour
     public void SaveGame()
     {
         if (!isPlayer) return;
-        PlayerPrefs.SetInt("Level", level); PlayerPrefs.SetInt("Gold", gold);
-        PlayerPrefs.SetInt("SkillPts", skillPoints); PlayerPrefs.SetInt("HP", currentHealth);
+        PlayerPrefs.SetInt("Level", level); 
+        PlayerPrefs.SetInt("Gold", gold);
+        PlayerPrefs.SetInt("HP", currentHealth);
+        PlayerPrefs.SetInt("MaxHP", maxHealth);
+        PlayerPrefs.SetInt("CurExp", currentExp);
+        PlayerPrefs.SetInt("ExpNext", expToNextLevel);
+        PlayerPrefs.SetInt("StatPts", statPoints);
+        PlayerPrefs.SetInt("SkillPts", skillPoints);
+        PlayerPrefs.SetInt("STR", STR); PlayerPrefs.SetInt("VIT", VIT); PlayerPrefs.SetInt("AGI", AGI);
         PlayerPrefs.SetString("Skills", string.Join(",", unlockedSkills));
         PlayerPrefs.SetString("Inv", string.Join(",", inventory));
         PlayerPrefs.SetString("WepM", eqWeaponMain); PlayerPrefs.SetString("WepO", eqWeaponOff);
@@ -293,27 +349,67 @@ public class PlayerStats : MonoBehaviour
         PlayerPrefs.SetString("Head", eqHead); PlayerPrefs.SetString("Body", eqBody);
         PlayerPrefs.SetString("Legs", eqLegs); PlayerPrefs.SetString("Neck", eqNecklace);
         PlayerPrefs.SetString("Anc", eqAncientGold);
-        PlayerPrefs.SetInt("STR", STR); PlayerPrefs.SetInt("VIT", VIT); PlayerPrefs.SetInt("AGI", AGI);
+        PlayerPrefs.SetString("CharName", characterName);
+        
+        // LƯU LUÔN ĐỘI NGŨ ĐỆ TỬ
+        if (CompanionManager.instance != null)
+        {
+            CompanionManager.instance.SaveCompanions();
+        }
+
         PlayerPrefs.Save();
+        Debug.Log("[Save] 💾 Đã lưu game!");
     }
 
     public void LoadGame()
     {
         if (!isPlayer || !PlayerPrefs.HasKey("Level")) return;
-        level = PlayerPrefs.GetInt("Level"); gold = PlayerPrefs.GetInt("Gold");
-        skillPoints = PlayerPrefs.GetInt("SkillPts");
-        STR = PlayerPrefs.GetInt("STR"); VIT = PlayerPrefs.GetInt("VIT"); AGI = PlayerPrefs.GetInt("AGI");
-        eqWeaponMain = PlayerPrefs.GetString("WepM"); eqWeaponOff = PlayerPrefs.GetString("WepO");
-        eqRing1 = PlayerPrefs.GetString("R1"); eqRing2 = PlayerPrefs.GetString("R2");
-        eqHead = PlayerPrefs.GetString("Head"); eqBody = PlayerPrefs.GetString("Body");
-        eqLegs = PlayerPrefs.GetString("Legs"); eqNecklace = PlayerPrefs.GetString("Neck");
-        eqAncientGold = PlayerPrefs.GetString("Anc");
-        unlockedSkills = new List<string>(PlayerPrefs.GetString("Skills").Split(','));
-        if (unlockedSkills.Count == 1 && unlockedSkills[0] == "") unlockedSkills.Clear();
-        inventory = new List<string>(PlayerPrefs.GetString("Inv").Split(','));
-        if (inventory.Count == 1 && inventory[0] == "") inventory.Clear();
+        level       = PlayerPrefs.GetInt("Level");
+        gold        = PlayerPrefs.GetInt("Gold");
+        currentExp  = PlayerPrefs.GetInt("CurExp", 0);
+        expToNextLevel = PlayerPrefs.GetInt("ExpNext", 100);
+        statPoints  = PlayerPrefs.GetInt("StatPts", 0);
+        skillPoints = PlayerPrefs.GetInt("SkillPts", 0);
+        STR = PlayerPrefs.GetInt("STR", 5);
+        VIT = PlayerPrefs.GetInt("VIT", 5);
+        AGI = PlayerPrefs.GetInt("AGI", 5);
+        eqWeaponMain = PlayerPrefs.GetString("WepM", "Tay Không");
+        eqWeaponOff  = PlayerPrefs.GetString("WepO", "Trống");
+        eqRing1 = PlayerPrefs.GetString("R1", "Trống");
+        eqRing2 = PlayerPrefs.GetString("R2", "Trống");
+        eqHead  = PlayerPrefs.GetString("Head", "Trống");
+        eqBody  = PlayerPrefs.GetString("Body", "Trống");
+        eqLegs  = PlayerPrefs.GetString("Legs", "Trống");
+        eqNecklace   = PlayerPrefs.GetString("Neck", "Trống");
+        eqAncientGold= PlayerPrefs.GetString("Anc", "Trống");
+        if (PlayerPrefs.HasKey("CharName")) characterName = PlayerPrefs.GetString("CharName");
+        
+        string skillsRaw = PlayerPrefs.GetString("Skills", "");
+        unlockedSkills = skillsRaw == "" ? new List<string>() : new List<string>(skillsRaw.Split(','));
+        
+        string invRaw = PlayerPrefs.GetString("Inv", "");
+        inventory = invRaw == "" ? new List<string>() : new List<string>(invRaw.Split(','));
+        
         CalculateBonus();
         currentHealth = PlayerPrefs.GetInt("HP", maxHealth);
+    }
+
+    // Đặt lại toàn bộ dữ liệu về mặc định (Dành cho nút New Game)
+    public void ResetGame()
+    {
+        if (!isPlayer) return;
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString("SavedComps", ""); // Xóa danh sách đệ tử
+        level = 1; gold = 0; currentExp = 0; expToNextLevel = 100;
+        statPoints = 0; skillPoints = 0; STR = 5; VIT = 5; AGI = 5;
+        inventory.Clear(); unlockedSkills.Clear();
+        eqHead = "Trống"; eqBody = "Trống"; eqLegs = "Trống";
+        eqWeaponMain = "Tay Không"; eqWeaponOff = "Trống";
+        eqRing1 = "Trống"; eqRing2 = "Trống";
+        eqNecklace = "Trống"; eqAncientGold = "Trống";
+        CalculateBonus();
+        currentHealth = maxHealth;
+        Debug.Log("[Save] 🗑️ Đã xóa dữ liệu - Bắt đầu game mới!");
     }
 }
 

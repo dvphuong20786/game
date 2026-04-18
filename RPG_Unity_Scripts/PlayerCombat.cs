@@ -114,6 +114,7 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Monster m in allMonsters)
         {
+            if (m.isAlly) continue; // Bỏ qua đồng minh
             float dist = Vector2.Distance(transform.position, m.transform.position);
             if (dist <= range && dist < minDist)
             {
@@ -131,6 +132,7 @@ public class PlayerCombat : MonoBehaviour
         int hitCount = 0;
         foreach (Monster m in allMonsters)
         {
+            if (m.isAlly) continue; // Không đánh đệ tử/đồng minh
             if (Vector2.Distance(transform.position, m.transform.position) <= range)
             {
                 m.TakeDamage(damage);

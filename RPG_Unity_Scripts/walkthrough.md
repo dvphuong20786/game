@@ -1,37 +1,27 @@
-# Walkthrough: Đệ Tử Nâng Cao & Quái Vật Tuần Tra
+# Tổng kết: Nâng cấp Quản lý Đội hình 4 Đệ Tử
 
-Tôi đã hoàn tất việc sửa lỗi và bổ sung các tính năng nâng cao cho đệ tử và quái vật theo yêu cầu của bạn.
+Tôi đã hoàn thành việc nâng cấp hệ thống để bạn có thể điều hành một đội quân Archer (hoặc các đệ tử khác) một cách chuyên nghiệp nhất.
 
-## Các thay đổi quan trọng
+## Các thay đổi chính
 
-### 1. Sửa lỗi đệ tử "tàng hình" [NPCTrainer.cs]
-- **Vấn đề:** Đệ tử được thuê nhưng không thấy xuất hiện.
-- **Giải pháp:** Cố định tọa độ **Z = 0** khi sinh ra và gán **Sorting Order = 5** (hiển thị trên lớp Player/Map).
-- **Kiểm tra:** Khi thuê, bạn sẽ thấy thông báo `🛡️ ĐÃ SINH ĐỆ TỬ` kèm tọa độ trong bảng Console.
+### 1. Hệ thống Multi-Companion HUD (Giao diện đội hình)
+- **Danh sách máu**: Bây giờ góc trái màn hình sẽ hiển thị tối đa 4 thanh máu của 4 đệ tử khác nhau.
+- **Màu sắc phân biệt**: Mỗi đệ tử có một tông màu nhẹ khác nhau trên thanh máu để bạn dễ phân biệt.
+- **Xoay vòng nhân vật**: Trong túi đồ (Phím B), nút "XEM ĐỆ TỬ" bây giờ có thể nhấn liên tục để xoay vòng qua từng người. Bạn có thể soi đồ và mặc đồ cho Archer 1, Archer 2... cực kỳ nhanh chóng.
 
-### 2. Nâng cấp đệ tử: Hào quang & Hồi máu [CompanionAI.cs]
-- **Hào quang (Aura):** Đệ tử khi còn sống sẽ có một vòng tròn màu xanh Cyan nhạt dưới chân để bạn dễ phân biệt với NPC khác.
-- **Hồi máu (Regen):** Khi không có quái vật, đệ tử tự hồi **2% HP mỗi 3 giây**.
-- **AI nhạy bén hơn:** Tầm quét quái vật tăng lên **12m** (thay vì 8m), đệ tử sẽ chủ động tìm quái từ xa hơn.
+### 2. Thanh máu nổi (Floating Health Bars)
+- **Trên đầu nhân vật**: Mỗi đệ tử bây giờ có một thanh máu xanh nhỏ hiện ngay trên đầu trong màn hình Game.
+- **Theo dõi trực quan**: Bạn không cần nhìn sang góc màn hình cũng biết đệ tử nào đang bị quái đánh mất máu.
 
-### 3. Quái vật đi tuần (Patrol) [Monster.cs]
-- **Hành động:** Quái vật sinh ra từ Lỗ (Monster Pit) giờ đây sẽ không đứng im một chỗ mà sẽ đi lại chậm rãi xung quanh lỗ.
-- **Cơ chế:** Nếu không có mục tiêu để đuổi, chúng sẽ tự tìm một điểm ngẫu nhiên trong bán kính 3m quanh lỗ để đi dạo.
+### 3. Sửa lỗi hồi máu (HP Initialization Fix)
+- **Khởi tạo máu sớm**: Đã sửa mã nguồn để đảm bảo ngay khi bạn nhấn "THUÊ", đệ tử sẽ xuất hiện với máu đầy đủ (ví dụ: 175/175), không còn tình trạng bị hiện 0/175 như trước.
 
-### 4. Điều chỉnh chiến đấu [PlayerCombat.cs]
-- **Tầm đánh:** Giảm xuống **1.2f** đúng theo yêu cầu.
-- **An toàn:** Đòn đánh của người chơi và đệ tử giờ đây hoàn toàn tách biệt, không gây sát thương lẫn nhau (Friendly Fire).
-
-### 5. Tối ưu hóa & Sửa lỗi linh tinh
-- **Monster.cs:** Xóa các dòng tiêu đề trùng lặp, tối ưu hóa việc lật hình ảnh (FlipSprite) để tiết kiệm tài nguyên máy tính.
-- **Chia sẻ EXP:** Nếu bạn có nhiều đệ tử, kinh nghiệm (EXP) sẽ được chia đều cho tất cả chúng thay vì chỉ người đầu tiên.
-- **Fix Camera:** Sửa lỗi bám đuôi bị "trôi" và tăng tốc độ lên mức 20 cực kỳ mượt mà.
-- **Fix Cú pháp:** Sửa lỗi thừa dấu ngoặc nhọn gây lỗi biên dịch trong `CompanionAI.cs`.
-
-## Hướng dẫn cho bạn
-
-- Bạn hãy mở bảng **Console** trong Unity để theo dõi các thông báo sinh đệ tử.
-- Nếu thấy quái vật "hiền" hơn hoặc "hung dữ" hơn, bạn có thể chỉnh lại `Attack Range` và `Attack Speed` trực tiếp trong Inspector của Monster Prefab.
+## Cách kiểm tra trong Unity
+1. Nhấn **Play**.
+2. Đến chỗ NPC Trainer và thuê liên tục 3-4 đệ tử.
+3. Quan sát góc trái: 4 thanh máu sẽ hiện ra xếp chồng lên nhau.
+4. Nhìn vào nhân vật: Các thanh máu trên đầu sẽ bám sát theo đệ tử khi họ di chuyển.
 
 ---
-Mọi chi tiết về lịch sử thay đổi đã được cập nhật tại [TIEN_DO_GAME.md](file:///f:/WORK/GAME/RPG_Unity_Scripts/TIEN_DO_GAME.md).
+> [!TIP]
+> Bạn có thể thuê tối đa 4 người. Nếu muốn thay đổi đội hình, bạn có thể chỉnh biến `maxCompanions` trong script của NPC Trainer.

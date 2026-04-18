@@ -22,7 +22,8 @@ public class GameUI : MonoBehaviour
 
     // ===== Refs =====
     private PlayerStats player;
-    private PlayerStats companion;
+    private List<PlayerStats> companions = new List<PlayerStats>();
+    private int companionViewIdx = -1; // -1 là xem player, 0,1,2... là xem đệ tử
     private PlayerStats currentView; 
     private PlayerCombat combat;
 
@@ -44,24 +45,20 @@ public class GameUI : MonoBehaviour
     void TryFindPlayer()
     {
         PlayerStats[] allStats = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        
+        // Tìm player chính
         if (player == null) foreach(var s in allStats) if(s.isPlayer) { player = s; break; }
-        if (companion == null) foreach(var s in allStats) if(!s.isPlayer) { companion = s; break; }
+        
+        // Tìm toàn bộ đệ tử (clear list cũ để cập nhật mới)
+        companions.Clear();
+        foreach(var s in allStats) if(!s.isPlayer) { companions.Add(s); }
+
         if (combat == null) combat = FindObjectOfType<PlayerCombat>();
-        if (player == null || companion == null || combat == null)
-        {
-            allStats = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
-            foreach (var s in allStats)
-            {
-                if (s.isPlayer) player = s;
-                else companion = s;
-            }
-            if (combat == null) combat = FindObjectOfType<PlayerCombat>();
-        }
         
         // ĐẢM BẢO LUÔN CÓ NHÂN VẬT ĐỂ XEM
         if (currentView == null) {
             if (player != null) currentView = player;
-            else if (companion != null) currentView = companion;
+            else if (companions.Count > 0) currentView = companions[0];
         }
     }
 
@@ -159,17 +156,20 @@ public class GameUI : MonoBehaviour
         GUI.color = currentTab == 1 ? new Color(1f, 0.6f, 0.1f) : new Color(0.2f, 0.2f, 0.3f);
         if (GUI.Button(new Rect(mainR.x + 155, tabY, 130, 32), "⚡ KỸ NĂNG")) currentTab = 1;
 
-        if (companion != null)
+        if (companions.Count > 0)
         {
-            bool viewingPlayer = (currentView == player);
-            GUI.color = viewingPlayer ? Color.white : Color.cyan;
-            string btnText = viewingPlayer ? "🕹 XEM NGƯỜI CHƠI" : "🐕 XEM ĐỆ TỬ";
+            string btnText = (currentView == player) ? "🐕 XEM ĐỆ TỬ" : "🐕 XEM ĐỆ TIẾP";
             if (GUI.Button(new Rect(mainR.xMax - 250, tabY, 180, 32), btnText))
             {
-                currentView = viewingPlayer ? companion : player;
+                companionViewIdx++;
+                if (companionViewIdx >= companions.Count) companionViewIdx = -1; // Quay lại player
+
+                if (companionViewIdx == -1) currentView = player;
+                else currentView = companions[companionViewIdx];
+
                 ResetSelection();
-                // Focus camera vào nhân vật đang xem
-                if (CameraFollow.instance != null) CameraFollow.instance.SetTarget(currentView.transform);
+                if (CameraFollow.instance != null && currentView != null) 
+                    CameraFollow.instance.SetTarget(currentView.transform);
             }
         }
     }
@@ -259,18 +259,23 @@ public class GameUI : MonoBehaviour
         if (fromInv) {
             GUI.color = Color.green; if (GUI.Button(new Rect(x+10, y+240, 200, 30), "MẶC / DÙNG")) { currentView.EquipItem(selectedItemIdx); ResetSelection(); }
             
-            if (currentView == player && companion != null) {
+            // Logic giao dịch giữa Player và Đệ tử
+            if (currentView == player && companions.Count > 0) {
                 GUI.color = new Color(0.2f, 0.8f, 1f); 
-                if (GUI.Button(new Rect(x+10, y+275, 200, 30), "TRANG BỊ CHO ĐỆ")) {
+                // Mặc định tương tác với đệ tử đầu tiên khi đang ở túi đồ Player
+                PlayerStats targetComp = companions[0]; 
+
+                if (GUI.Button(new Rect(x+10, y+275, 200, 30), "TRANG BỊ CHO ĐỆ 1")) {
                     string itemToGive = player.inventory[selectedItemIdx];
-                    companion.inventory.Add(itemToGive);
+                    targetComp.inventory.Add(itemToGive);
                     player.inventory.RemoveAt(selectedItemIdx);
-                    companion.EquipItem(companion.inventory.Count - 1);
+                    targetComp.EquipItem(targetComp.inventory.Count - 1);
                     ResetSelection();
                 }
-                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+310, 200, 30), "GIAO CHO ĐỆ")) { companion.inventory.Add(player.inventory[selectedItemIdx]); player.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
-            } else if (currentView == companion && player != null) {
-                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+275, 200, 30), "LẤY VỀ TÚI")) { player.inventory.Add(companion.inventory[selectedItemIdx]); companion.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
+                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+310, 200, 30), "GIAO CHO ĐỆ 1")) { targetComp.inventory.Add(player.inventory[selectedItemIdx]); player.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
+            } else if (currentView != player && player != null) {
+                // Lấy đồ từ đệ tử đang xem về cho Player
+                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+275, 200, 30), "LẤY VỀ TÚI")) { player.inventory.Add(currentView.inventory[selectedItemIdx]); currentView.inventory.RemoveAt(selectedItemIdx); ResetSelection(); }
             }
             GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+345, 200, 25), "BÁN: +" + currentView.GetItemPrice(n) + "G")) { currentView.SellItem(selectedItemIdx); ResetSelection(); }
         } else {
@@ -336,10 +341,11 @@ public class GameUI : MonoBehaviour
         // --- 1. HUD NGƯỜI CHƠI ---
         DrawSingleHUD(10, 10, player, "NGƯỜI CHƠI", Color.red);
         
-        // --- 2. HUD ĐỆ TỬ ---
-        if (companion != null)
+        // --- 2. HUD ĐỆ TỬ (Đội hình tối đa 4 người) ---
+        for (int i = 0; i < companions.Count; i++)
         {
-            DrawSingleHUD(10, 100, companion, "ĐỆ TỬ", new Color(1f, 0.5f, 0.2f));
+            if (i >= 4) break; // Chỉ hiện HUD cho 4 người đầu
+            DrawSingleHUD(10, 100 + (i * 90), companions[i], "ĐỆ TỬ " + (i+1), new Color(1f, 0.5f, i * 0.2f));
         }
     }
 
@@ -367,7 +373,26 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    void DrawFooter(Rect r) { if (currentView != null && currentView.isPlayer) { GUI.color = Color.green; if (GUI.Button(new Rect(r.x+15, r.yMax-45, 120, 32), "💾 LƯU GAME")) player.SaveGame(); } }
+    void DrawFooter(Rect r) 
+    { 
+        if (player == null) return;
+        
+        // Nút LƯU GAME
+        GUI.color = Color.green;
+        if (GUI.Button(new Rect(r.x + 15, r.yMax - 45, 120, 32), "💾 LƯU GAME"))
+        {
+            player.SaveGame();
+            GameUI.instance?.ShowDamage(player.transform.position, "💾 Đã lưu!", Color.cyan);
+        }
+        
+        // Nút NEW GAME (xóa save)
+        GUI.color = new Color(0.8f, 0.1f, 0.1f);
+        if (GUI.Button(new Rect(r.x + 145, r.yMax - 45, 120, 32), "🗑 NEW GAME"))
+        {
+            player.ResetGame();
+            GameUI.instance?.ShowDamage(player.transform.position, "✨ START!", Color.yellow);
+        }
+    }
 
     bool DrawSlot(float x, float y, string c, bool s) {
         GUI.color = s ? Color.yellow : new Color(0.2f, 0.2f, 0.3f); GUI.DrawTexture(new Rect(x,y,68,68), Texture2D.whiteTexture);

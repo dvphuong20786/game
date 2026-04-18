@@ -63,11 +63,11 @@ Làng là "hậu phương" quan trọng. Tại đây chúng ta sẽ thực hiệ
     - Gắn script `NPCShop.cs` cho NPC bán đồ.
     - Gắn script `NPCTrainer.cs` cho NPC huấn luyện đệ tử.
 
-- [ ] **Bước 3.2: Đặt Cổng đi Rừng**
+- [x] **Bước 3.2: Đặt Cổng đi Rừng**
     - Kéo Prefab **Portal** vào một vị trí ở bìa làng.
     - Trong script Portal, ô `Ten Map Tiep Theo`, hãy gõ: `Wilderness`.
 
-- [ ] **Bước 3.3: Kiểm tra cổng quay về**
+- [x] **Bước 3.3: Kiểm tra cổng quay về**
     - Mở lại Scene `Wilderness`.
     - Chọn đối tượng `MapManager`.
     - Đảm bảo trong code hoặc Inspector, Cổng thoát (Exit Portal) được thiết lập tên map tới là: `Village`.

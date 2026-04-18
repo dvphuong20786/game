@@ -17,6 +17,13 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
+        // TỰ ĐỘNG DỌN DẸP LỖI: Thêm AudioListener nếu thiếu
+        if (GetComponent<AudioListener>() == null)
+        {
+            gameObject.AddComponent<AudioListener>();
+            Debug.Log("[Camera] 🔊 Đã tự động thêm AudioListener để xóa 999+ lỗi Console.");
+        }
+
         FindPlayer();
     }
 

@@ -38,8 +38,20 @@ public class Portal : MonoBehaviour
         }
     }
 
+    private bool isTeleporting = false; // Chống spam chuyển cảnh
+
     void ExecuteTeleport()
     {
+        if (isTeleporting) return;
+        isTeleporting = true;
+
+        // TỰ ĐỘNG LƯU GAME TRƯỚC KHI CHUYỂN MAP
+        if (player != null)
+        {
+            player.SaveGame();
+            Debug.Log("💾 Đã lưu game trước khi chuyển map.");
+        }
+
         Debug.Log("🚀 CHUYỂN CẢNH TỚI: " + tenMapTiepTheo);
         SceneManager.LoadScene(tenMapTiepTheo);
     }

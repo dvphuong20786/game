@@ -38,21 +38,42 @@ public class CompanionAI : MonoBehaviour
         if (stats != null) stats.isPlayer = false;
     }
 
+    // --- CÀI ĐẶT KHOẢNG CÁCH THÔNG MINH ---
+    public float leashDistance = 8f;   // Nếu xa chủ quá 8m sẽ tự chạy về
+    public float protectionRange = 10f; // Chỉ đánh quái nếu quái ở gần chủ trong tầm 10m
+
     void Update()
     {
         if (stats == null || master == null || stats.currentHealth <= 0) return;
 
-        // --- TÌM MỤC TIÊU (Tầm quét rộng hơn: 12f) ---
-        Monster qTarget = FindNearestMonster(12f);
+        float distToMaster = Vector2.Distance(transform.position, master.transform.position);
 
-        // --- DI CHUYỂN & CHIẾN ĐẤU ---
+        // --- 1. KIỂM TRA "DÂY XÍCH" (ƯU TIÊN HÀNG ĐẦU) ---
+        // Nếu quá xa chủ, bỏ qua mọi thứ để chạy về
+        if (distToMaster > leashDistance)
+        {
+            MoveToMaster();
+            return;
+        }
+
+        // --- 2. TÌM MỤC TIÊU TRONG VÙNG BẢO VỆ ---
+        Monster qTarget = FindNearestMonster(12f);
+        
+        // Kiểm tra xem quái có ở quá xa chủ nhân không
+        if (qTarget != null)
+        {
+            float monsterDistToMaster = Vector2.Distance(qTarget.transform.position, master.transform.position);
+            if (monsterDistToMaster > protectionRange) qTarget = null; // Quái ở xa chủ quá, mặc kệ nó
+        }
+
+        // --- 3. DI CHUYỂN & CHIẾN ĐẤU ---
         float range = (type == CompanionType.Archer) ? 6f : 1.5f;
         
         if (qTarget != null)
         {
-            float minDis = Vector2.Distance(transform.position, qTarget.transform.position);
-            if (minDis > range) {
-                float speed = (4.5f + stats.AGI * 0.12f) * Time.deltaTime; // Tăng nhẹ tốc độ rượt đuổi
+            float distToMonster = Vector2.Distance(transform.position, qTarget.transform.position);
+            if (distToMonster > range) {
+                float speed = (4.5f + stats.AGI * 0.12f) * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, qTarget.transform.position, speed);
                 FlipSprite(qTarget.transform.position.x);
                 SetAnimBool("IsWalking", true);
@@ -66,17 +87,9 @@ public class CompanionAI : MonoBehaviour
                 }
             }
         }
-        else // Không có quái -> Quay về đi theo chủ
+        else // Không có quái hoặc quái ở xa vùng bảo vệ -> Quay về đi theo chủ
         {
-            float distToMaster = Vector2.Distance(transform.position, master.transform.position + followOffset);
-            if (distToMaster > 0.8f) {
-                float speed = (4f + stats.AGI * 0.1f) * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, master.transform.position + followOffset, speed);
-                FlipSprite(master.transform.position.x);
-                SetAnimBool("IsWalking", true);
-            } else {
-                SetAnimBool("IsWalking", false);
-            }
+            MoveToMaster();
 
             // --- HỒI MÁU TỰ ĐỘNG (Khi không có quái) ---
             regenTimer += Time.deltaTime;
@@ -84,7 +97,6 @@ public class CompanionAI : MonoBehaviour
                 int regenAmt = Mathf.Max(1, stats.maxHealth / 50); // Hồi 2% HP
                 if (stats.currentHealth < stats.maxHealth) {
                     stats.currentHealth = Mathf.Min(stats.currentHealth + regenAmt, stats.maxHealth);
-                    // if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "✚", Color.green);
                 }
                 regenTimer = 0;
             }
@@ -95,10 +107,29 @@ public class CompanionAI : MonoBehaviour
         if (skillTimer >= 5f) { CastSupportSkills(); skillTimer = 0; }
     }
 
+    void MoveToMaster()
+    {
+        float distToFollowPos = Vector2.Distance(transform.position, master.transform.position + followOffset);
+        if (distToFollowPos > 0.8f) {
+            float speed = (4f + stats.AGI * 0.1f) * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, master.transform.position + followOffset, speed);
+            FlipSprite(master.transform.position.x);
+            SetAnimBool("IsWalking", true);
+        } else {
+            SetAnimBool("IsWalking", false);
+        }
+    }
+
     void SetAnimBool(string paramName, bool val)
     {
         if (anim == null) return;
-        foreach (var p in anim.parameters) if (p.name == paramName) { anim.SetBool(paramName, val); break; }
+        // Kiểm tra an toàn trước khi set parameter
+        foreach (var p in anim.parameters) {
+            if (p.name == paramName) {
+                anim.SetBool(paramName, val);
+                break;
+            }
+        }
     }
 
     void CastSupportSkills()
@@ -133,7 +164,8 @@ public class CompanionAI : MonoBehaviour
     {
         Monster[] all = Object.FindObjectsByType<Monster>(FindObjectsSortMode.None);
         Monster nearest = null; float minD = r;
-        foreach (var m in all) {
+        foreach (Monster m in all) {
+            if (m.isAlly) continue; // Không đánh đồng đội
             float d = Vector2.Distance(transform.position, m.transform.position);
             if (d < minD) { minD = d; nearest = m; }
         }
@@ -145,8 +177,13 @@ public class CompanionAI : MonoBehaviour
         if (anim != null) anim.SetTrigger("Attack");
         int dmg = 15 + stats.bonusDamage;
         target.TakeDamage(dmg);
-        if (type == CompanionType.Archer && GameUI.instance != null) 
-            GameUI.instance.ShowDamage(target.transform.position, "🏹 -" + dmg, Color.green);
+        
+        // Hiện hiệu ứng chữ bay cho đồng nhất
+        Color c = (type == CompanionType.Archer) ? Color.green : Color.yellow;
+        string icon = (type == CompanionType.Archer) ? "🏹" : (type == CompanionType.Slime ? "🟢" : "⚔️");
+        
+        if (GameUI.instance != null) 
+            GameUI.instance.ShowDamage(target.transform.position, icon + " -" + dmg, c);
     }
 
     void FlipSprite(float tx) { if (sr != null) sr.flipX = tx < transform.position.x; }
@@ -161,10 +198,24 @@ public class CompanionAI : MonoBehaviour
         Vector3 screenPos = cam.WorldToScreenPoint(transform.position);
         if (screenPos.z > 0)
         {
-            // Vẽ một vòng tròn nhỏ dưới chân
-            float size = 40f;
-            GUI.color = new Color(0f, 1f, 1f, 0.4f); // Màu xanh Cyan nhạt
-            GUI.DrawTexture(new Rect(screenPos.x - size / 2, Screen.height - screenPos.y - 10, size, 15), Texture2D.whiteTexture);
+            float barW = 50f;
+            float barH = 5f;
+            float yOffset = 50f; // Độ cao trên đầu
+
+            // 1. Vẽ Hào quang dưới chân
+            GUI.color = new Color(0f, 1f, 1f, 0.3f);
+            GUI.DrawTexture(new Rect(screenPos.x - 20, Screen.height - screenPos.y - 5, 40, 10), Texture2D.whiteTexture);
+
+            // 2. Vẽ Thanh máu trên đầu
+            float hpRatio = (float)stats.currentHealth / stats.maxHealth;
+            Rect bgR = new Rect(screenPos.x - barW/2, Screen.height - screenPos.y - yOffset, barW, barH);
+            
+            GUI.color = Color.black;
+            GUI.DrawTexture(bgR, Texture2D.whiteTexture);
+            
+            GUI.color = Color.green;
+            GUI.DrawTexture(new Rect(bgR.x, bgR.y, barW * hpRatio, barH), Texture2D.whiteTexture);
+            
             GUI.color = Color.white;
         }
     }

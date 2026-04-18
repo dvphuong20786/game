@@ -213,6 +213,17 @@ public class TrainerNPC : MonoBehaviour
         if (GameUI.instance != null)
             GameUI.instance.ShowDamage(player.transform.position, "Chào mừng " + companionName, Color.cyan);
             
+        // ĐĂNG KÝ VỚI MANAGER ĐỂ LƯU GAME
+        CompanionAI ai = g.GetComponent<CompanionAI>();
+        if (ai != null && CompanionManager.instance != null)
+        {
+            CompanionManager.instance.RegisterCompanion(ai);
+        }
+
+        // ĐẶC BIỆT: Chống phản chủ (Nếu đệ tử có script Monster)
+        Monster m = g.GetComponent<Monster>();
+        if (m != null) m.isAlly = true;
+
         Debug.Log($"🛡️ ĐÃ SINH ĐỆ TỬ: {companionName} tại {spawnPos}. Vàng còn lại: {player.gold}");
     }
 

@@ -6,7 +6,10 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     Animator anim;
-    private SpriteRenderer sr; // Cache SpriteRenderer
+    private SpriteRenderer sr; 
+    
+    [Header("Phe Phái")]
+    public bool isAlly = false; // Nếu là TRUE thì người chơi và đệ tử khác sẽ không đánh con này
 
     [Header("Chỉ số Quái vật")]
     public string monsterName = "Slime Nhỏ";
@@ -52,6 +55,9 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
+        // Nếu là ĐỒNG MINH/ĐỆ TỬ thì KHÔNG chạy logic quái vật (để CompanionAI điều khiển)
+        if (isAlly) return;
+
         attackTimer += Time.deltaTime;
 
         // --- 1. XÁC ĐỊNH MỤC TIÊU ---
@@ -205,8 +211,8 @@ public class Monster : MonoBehaviour
                 GUI.color = Color.black;
                 GUI.DrawTexture(new Rect(startX, startY, barWidth, barHeight), Texture2D.whiteTexture);
 
-                // 2. Vẽ Lõi đỏ
-                GUI.color = Color.red;
+                // 2. Vẽ Lõi màu (Đỏ cho quái, Xanh cho đệ tử)
+                GUI.color = isAlly ? Color.green : Color.red;
                 float heathRatio = (float)currentHealth / maxHealth;
                 GUI.DrawTexture(new Rect(startX, startY, barWidth * heathRatio, barHeight), Texture2D.whiteTexture);
                 
