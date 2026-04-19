@@ -25,6 +25,26 @@ public class PlayerMovement : MonoBehaviour
         float moveX = 0f;
         float moveY = 0f;
 
+        // --- HỒI MÁU NHANH (Phím H) ---
+#if ENABLE_INPUT_SYSTEM
+        if (Keyboard.current != null && Keyboard.current.hKey.wasPressedThisFrame)
+#else
+        if (Input.GetKeyDown(KeyCode.H))
+#endif
+        {
+            PlayerStats stats = GetComponent<PlayerStats>();
+            if (stats != null)
+            {
+                int potIdx = -1;
+                for (int i = 0; i < stats.inventory.Count; i++)
+                {
+                    if (stats.inventory[i].data != null && stats.inventory[i].data.itemName.Contains("Bình Máu")) { potIdx = i; break; }
+                }
+                if (potIdx != -1) stats.UseConsumable(potIdx);
+                else if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "HẾT THUỐC!", Color.gray);
+            }
+        }
+
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current != null)
         {

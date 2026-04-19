@@ -3,10 +3,8 @@ using UnityEngine;
 // Gắn cái này vô cục vàng hoặc vật phẩm rơi ra từ quái
 public class ItemDrop : MonoBehaviour
 {
-    private string itemName = "Vàng";
-    private bool isItem = false; // false = Vàng ăn liền, true = Đồ bỏ túi
-
-    // Màu sắc hiển thị
+    public ItemData itemData;
+    private bool isItem = false; 
     private Color glowColor = Color.yellow;
     private SpriteRenderer sr;
     private float pulseTimer = 0f;
@@ -23,18 +21,20 @@ public class ItemDrop : MonoBehaviour
 
         if (luc <= 10) // 10% — Rớt trang bị
         {
-            string[] items = { "Huyết Kiếm", "Áo Da Lộn", "Mũ Sắt", "Giày Siêu Tốc", "Nhẫn Kim Cương", "Dây Chuyền Bạc", "Khiên Gỗ" };
-            itemName = items[Random.Range(0, items.Length)];
-            isItem = true;
-            glowColor = new Color(0f, 1f, 1f); // Cyan = đồ hiếm
+            // Tự động load một món đồ ngẫu nhiên từ Resources nếu chưa gán thủ công
+            if (itemData == null) {
+                ItemData[] allItems = Resources.LoadAll<ItemData>("Items");
+                if (allItems.Length > 0) itemData = allItems[Random.Range(0, allItems.Length)];
+            }
+            isItem = (itemData != null);
+            glowColor = new Color(0f, 1f, 1f); 
         }
-        else if (luc <= 40) // 30% — Rớt vàng (11 → 40)
+        else if (luc <= 40) // 30% — Rớt vàng
         {
-            itemName = "Vàng";
             isItem = false;
-            glowColor = new Color(1f, 0.9f, 0f); // Vàng
+            glowColor = new Color(1f, 0.9f, 0f); 
         }
-        else // 60% — Không có gì
+        else 
         {
             Destroy(gameObject);
             return;
@@ -74,9 +74,9 @@ public class ItemDrop : MonoBehaviour
                 }
                 else
                 {
-                    stats.PickUpItem(itemName);
+                    stats.PickUpItem(itemData);
                     if (GameUI.instance != null)
-                        GameUI.instance.ShowDamage(transform.position, "+" + itemName, Color.cyan);
+                        GameUI.instance.ShowDamage(transform.position, "+" + itemData.itemName, Color.cyan);
                 }
                 Destroy(gameObject);
                 break;

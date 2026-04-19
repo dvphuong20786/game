@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5070170192127086435}
   - component: {fileID: 4283909837360678648}
   - component: {fileID: 7580772672571433862}
-  - component: {fileID: 1748923708148183470}
   - component: {fileID: 6959509101004090592}
   - component: {fileID: 3557646737352220893}
+  - component: {fileID: 3158136949833707080}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -117,44 +117,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1748923708148183470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3461562732398988852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eadf729e165f71048a838d8e48e9e18c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  isPlayer: 0
-  characterName: Archer
-  level: 1
-  currentExp: 0
-  expToNextLevel: 100
-  maxHealth: 100
-  currentHealth: 0
-  statPoints: 0
-  skillPoints: 0
-  gold: 0
-  STR: 5
-  VIT: 5
-  AGI: 5
-  inventory: []
-  unlockedSkills: []
-  eqHead: "Tr\u1ED1ng"
-  eqBody: "Tr\u1ED1ng"
-  eqLegs: "Tr\u1ED1ng"
-  eqWeaponMain: "Tay Kh\xF4ng"
-  eqWeaponOff: "Tr\u1ED1ng"
-  eqRing1: "Tr\u1ED1ng"
-  eqRing2: "Tr\u1ED1ng"
-  eqNecklace: "Tr\u1ED1ng"
-  eqAncientGold: "Tr\u1ED1ng"
-  bonusDamage: 0
-  bonusDefense: 0
 --- !u!114 &6959509101004090592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,6 +130,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CompanionAI
   type: 1
+  skillHoVe: {fileID: 11400000, guid: 397a35c067398f84c80e9e24aa8f420f, type: 2}
+  skillTriThuong: {fileID: 11400000, guid: 6c675256157a43a4b8eb4ed68be9e2bf, type: 2}
+  leashDistance: 8
+  protectionRange: 10
 --- !u!50 &3557646737352220893
 Rigidbody2D:
   serializedVersion: 5
@@ -195,3 +161,70 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &3158136949833707080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3461562732398988852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753243c7d9cd37a4e9bfe25b577b957e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  isPlayer: 0
+  characterName: Archer
+  characterRank: D
+  activeBuffs: []
+  level: 1
+  currentExp: 0
+  expToNextLevel: 100
+  maxHealth: 100
+  currentHealth: 0
+  statPoints: 0
+  skillPoints: 0
+  gold: 0
+  STR: 5
+  VIT: 5
+  AGI: 5
+  inventory: []
+  unlockedSkills: []
+  eqHead:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqBody:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqLegs:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqWeaponMain:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqWeaponOff:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqRing1:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqRing2:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqNecklace:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqAncientGold:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  bonusDamage: 0
+  bonusDefense: 0

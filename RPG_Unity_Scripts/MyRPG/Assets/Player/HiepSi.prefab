@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2901630255482609124}
   - component: {fileID: 5533901888050533748}
-  - component: {fileID: 4166131968498678693}
   - component: {fileID: 3422245050085005075}
-  - component: {fileID: 1017499218701430844}
   - component: {fileID: 951570056032765124}
+  - component: {fileID: 8576331290580570780}
+  - component: {fileID: 4551640067966813071}
   m_Layer: 0
   m_Name: HiepSi
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.84, y: -0.1, z: 0}
-  m_LocalScale: {x: 0.13825743, y: 0.13825743, z: 0.13825743}
+  m_LocalScale: {x: 0.31081352, y: 0.31081352, z: 0.31081352}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -95,20 +95,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &4166131968498678693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259703537872983251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29654867bf7af2c478e339ecf7b8bfb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  attackDamage: 25
-  attackRange: 2
 --- !u!114 &3422245050085005075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,44 +108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 5
---- !u!114 &1017499218701430844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1259703537872983251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eadf729e165f71048a838d8e48e9e18c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  isPlayer: 1
-  characterName: "Hi\u1EC7p S\u0129"
-  level: 1
-  currentExp: 0
-  expToNextLevel: 100
-  maxHealth: 100
-  currentHealth: 0
-  statPoints: 0
-  skillPoints: 0
-  gold: 0
-  STR: 5
-  VIT: 5
-  AGI: 5
-  inventory: []
-  unlockedSkills: []
-  eqHead: "Tr\u1ED1ng"
-  eqBody: "Tr\u1ED1ng"
-  eqLegs: "Tr\u1ED1ng"
-  eqWeaponMain: "Tay Kh\xF4ng"
-  eqWeaponOff: "Tr\u1ED1ng"
-  eqRing1: "Tr\u1ED1ng"
-  eqRing2: "Tr\u1ED1ng"
-  eqNecklace: "Tr\u1ED1ng"
-  eqAncientGold: "Tr\u1ED1ng"
-  bonusDamage: 0
-  bonusDefense: 0
 --- !u!50 &951570056032765124
 Rigidbody2D:
   serializedVersion: 5
@@ -187,3 +135,89 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8576331290580570780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259703537872983251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032f37531fe81dd45b1c41cb31787dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  attackDamage: 10
+  attackRange: 1.2
+  equippedSkills:
+  - {fileID: 11400000, guid: 9fec052d7a1483c488df4d7c6b6a3732, type: 2}
+  - {fileID: 11400000, guid: 397a35c067398f84c80e9e24aa8f420f, type: 2}
+  - {fileID: 11400000, guid: d65d3035474ed544f8e373956c77098f, type: 2}
+  - {fileID: 11400000, guid: 6c675256157a43a4b8eb4ed68be9e2bf, type: 2}
+--- !u!114 &4551640067966813071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259703537872983251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753243c7d9cd37a4e9bfe25b577b957e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  isPlayer: 1
+  characterName: "Hi\u1EC7p S\u0129"
+  characterRank: D
+  activeBuffs: []
+  level: 1
+  currentExp: 0
+  expToNextLevel: 100
+  maxHealth: 100
+  currentHealth: 0
+  statPoints: 0
+  skillPoints: 0
+  gold: 0
+  STR: 5
+  VIT: 5
+  AGI: 5
+  inventory: []
+  unlockedSkills: []
+  eqHead:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqBody:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqLegs:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqWeaponMain:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqWeaponOff:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqRing1:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqRing2:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqNecklace:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  eqAncientGold:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  bonusDamage: 0
+  bonusDefense: 0

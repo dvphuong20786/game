@@ -18,9 +18,14 @@ public class CompanionAI : MonoBehaviour
     private SpriteRenderer sr;
 
     private float attackTimer;
-    private float skillTimer;
-    private float regenTimer; // YC: Hồi máu tự động
-    private Vector3 followOffset; // Khoảng cách lệch để không đứng đè lên chủ
+    private float regenTimer; 
+    private Vector3 followOffset; 
+    
+    [Header("Kỹ năng Assets")]
+    public SkillData skillHoVe;
+    public SkillData skillTriThuong;
+
+    private Dictionary<string, float> cdTimers = new Dictionary<string, float>();
 
     void Start()
     {
@@ -28,14 +33,28 @@ public class CompanionAI : MonoBehaviour
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         
-        // Tìm chủ nhân
-        PlayerStats[] allStats = FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
-        foreach (var s in allStats) if (s.isPlayer) { master = s; break; }
+        // --- ÉP BUỘC ĐỆ TỬ KHÔNG PHẢI LÀ PLAYER CHÍNH ---
+        if (stats != null) stats.isPlayer = false;
 
-        // Tạo một độ lệch ngẫu nhiên để khi 4 đệ tử đi theo sẽ không bị trùng khít
+        // Tìm chủ nhân (chỉ tìm người có isPlayer = true thực sự)
+        PlayerStats[] allStats = FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        foreach (var s in allStats) {
+            if (s.isPlayer) { master = s; break; }
+        }
+
+        // Khởi tạo Cooldown
+        if (!cdTimers.ContainsKey("HoVe")) cdTimers["HoVe"] = 0f;
+        if (!cdTimers.ContainsKey("TriThuong")) cdTimers["TriThuong"] = 0f;
+
+        // Tự động nạp kỹ năng nếu Inspector bị trống
+        if (skillHoVe == null) skillHoVe = Resources.Load<SkillData>("Skills/HoVe");
+        if (skillTriThuong == null) skillTriThuong = Resources.Load<SkillData>("Skills/TriThuong");
+
+        // Tạo một độ lệch ngẫu nhiên
         followOffset = new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0);
 
-        if (stats != null) stats.isPlayer = false;
+        // TỰ ĐĂNG KÝ VỚI MANAGER
+        if (CompanionManager.instance != null) CompanionManager.instance.RegisterCompanion(this);
     }
 
     // --- CÀI ĐẶT KHOẢNG CÁCH THÔNG MINH ---
@@ -44,7 +63,28 @@ public class CompanionAI : MonoBehaviour
 
     void Update()
     {
+        // --- TỰ ĐỘNG TÌM LẠI CHỦ NHÂN NẾU BỊ LẠC ---
+        if (master == null) {
+            PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+            foreach (var s in all) if (s.isPlayer) { master = s; break; }
+        }
+
         if (stats == null || master == null || stats.currentHealth <= 0) return;
+
+        // Cập nhật bộ đếm hồi chiêu (Đảm bảo an toàn Key)
+        if (!cdTimers.ContainsKey("HoVe")) cdTimers["HoVe"] = 0;
+        if (!cdTimers.ContainsKey("TriThuong")) cdTimers["TriThuong"] = 0;
+
+        if (cdTimers["HoVe"] > 0) cdTimers["HoVe"] -= Time.deltaTime;
+        if (cdTimers["TriThuong"] > 0) cdTimers["TriThuong"] -= Time.deltaTime;
+
+        // --- TỰ ĐỘNG TUNG CHIÊU KHI HẾT HỒI (Ưu tiên kiểm tra liên tục) ---
+        if (skillHoVe != null && cdTimers["HoVe"] <= 0) { 
+            if (TryCastHoVe()) cdTimers["HoVe"] = skillHoVe.baseCooldown; 
+        }
+        if (skillTriThuong != null && cdTimers["TriThuong"] <= 0) { 
+            if (TryCastTriThuong()) cdTimers["TriThuong"] = skillTriThuong.baseCooldown; 
+        }
 
         float distToMaster = Vector2.Distance(transform.position, master.transform.position);
 
@@ -101,10 +141,12 @@ public class CompanionAI : MonoBehaviour
                 regenTimer = 0;
             }
         }
+    }
 
-        // --- LOGIC KỸ NĂNG HỖ TRỢ ---
-        skillTimer += Time.deltaTime;
-        if (skillTimer >= 5f) { CastSupportSkills(); skillTimer = 0; }
+    public float GetCooldown(string skillKey)
+    {
+        if (cdTimers.ContainsKey(skillKey)) return cdTimers[skillKey];
+        return 0;
     }
 
     void MoveToMaster()
@@ -132,32 +174,55 @@ public class CompanionAI : MonoBehaviour
         }
     }
 
-    void CastSupportSkills()
+    bool TryCastTriThuong()
     {
-        if (stats == null || master == null) return;
-        if (stats.unlockedSkills.Contains("❤ Trị Thương (Lv6)"))
+        if (stats == null || master == null || skillTriThuong == null) return false;
+        int sLv = stats.GetSkillLevel(skillTriThuong.skillName);
+        if (sLv <= 0) return false;
+
+        bool masterHurt = master.currentHealth < (master.maxHealth * 0.8f);
+        bool selfHurt = stats.currentHealth < (stats.maxHealth * 0.8f);
+
+        if (masterHurt || selfHurt)
         {
-            int healAmt = 15 + (stats.VIT / 2);
+            // Hồi máu: baseHealOrDef + (VIT/2) + Level*valueIncrease
+            int healAmt = skillTriThuong.baseHealOrDef + (stats.VIT / 2) + (sLv * skillTriThuong.valueIncreasePerLevel);
             master.currentHealth = Mathf.Min(master.currentHealth + healAmt, master.maxHealth);
             stats.currentHealth = Mathf.Min(stats.currentHealth + healAmt, stats.maxHealth);
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "❤ +" + healAmt, Color.green);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "❤ REC +" + healAmt, Color.green);
+            return true;
         }
-
-        if (stats.unlockedSkills.Contains("🛡 Hộ Vệ (Lv3)"))
-        {
-            if (Vector2.Distance(transform.position, master.transform.position) < 4f)
-            {
-                master.bonusDefense += 10;
-                StartCoroutine(RemoveBuff(master, 10, 4.5f));
-                if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "🛡 HỘ VỆ", Color.cyan);
-            }
-        }
+        return false;
     }
 
-    IEnumerator RemoveBuff(PlayerStats targetStats, int amt, float delay)
+    bool TryCastHoVe()
+    {
+        if (stats == null || master == null || skillHoVe == null) return false;
+        int sLv = stats.GetSkillLevel(skillHoVe.skillName);
+        if (sLv <= 0) return false;
+
+        if (Vector2.Distance(transform.position, master.transform.position) < 4f)
+        {
+            // Thủ tăng: baseHealOrDef + Level*valueIncrease
+            int bonusDef = skillHoVe.baseHealOrDef + (sLv * skillHoVe.valueIncreasePerLevel);
+            master.bonusDefense += bonusDef;
+            if (!master.activeBuffs.Contains("🛡 Hộ Vệ")) master.activeBuffs.Add("🛡 Hộ Vệ");
+            
+            StartCoroutine(RemoveBuff(master, bonusDef, 4.5f, "🛡 Hộ Vệ"));
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(master.transform.position, "🛡 HỘ VỆ +" + bonusDef, Color.cyan);
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator RemoveBuff(PlayerStats targetStats, int amt, float delay, string buffName)
     {
         yield return new WaitForSeconds(delay);
-        if (targetStats != null) targetStats.bonusDefense -= amt;
+        if (targetStats != null) 
+        {
+            targetStats.bonusDefense -= amt;
+            if (targetStats.activeBuffs.Contains(buffName)) targetStats.activeBuffs.Remove(buffName);
+        }
     }
 
     private Monster FindNearestMonster(float r)

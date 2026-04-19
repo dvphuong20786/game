@@ -1,39 +1,17 @@
-# Kế hoạch: Nâng cấp UI Quản lý Đội hình (Multi-Companion HUD)
+# Kế hoạch: Dọn dẹp mã nguồn & Xử lý lỗi trùng lặp
 
-Hiện tại hệ thống UI chỉ nhận diện 1 đệ tử đầu tiên. Tôi sẽ nâng cấp để bạn có thể quản lý tối đa 4 đệ tử cùng lúc với đầy đủ thanh máu và chỉ số.
+Hiện tại Unity đang báo lỗi vì có 3 file `PlayerStats.cs` khác nhau trong dự án. Kế hoạch này giúp dọn dẹp rác và đảm bảo Unity chỉ nhận diện 1 file duy nhất.
 
-## User Review Required
+## Các thay đổi dự kiến
 
-> [!IMPORTANT]
-> **Danh sách Đệ tử**: Tôi sẽ thay đổi cách UI tìm kiếm đệ tử. Thay vì chỉ tìm 1 người, nó sẽ quét toàn bộ đội ngũ và hiển thị danh sách thanh máu bên trái.
-> **Sửa lỗi Máu 0/175**: Tôi sẽ thêm lệnh "Cấp cứu" vào `PlayerStats` để đảm bảo đệ tử vừa được thuê sẽ có máu đầy đủ ngay lập tức.
+### 1. Dọn dẹp [DELETE]
+- Xóa file cũ tại: `F:\WORK\GAME\RPG_Unity_Scripts\MyRPG\Assets\Player\PlayerStats.cs`
+- Xóa file trung gian tại: `F:\WORK\GAME\RPG_Unity_Scripts\PlayerStats.cs` (Nếu bạn đồng ý chỉ giữ trong Assets).
 
-## Proposed Changes
+### 2. Thống nhất [MODIFY]
+- Cập nhật phiên bản mới nhất (có đầy đủ Atk/Def/HP) vào file: `F:\WORK\GAME\RPG_Unity_Scripts\MyRPG\Assets\PlayerStats.cs`.
+- Đây sẽ là file duy nhất Unity dùng để chạy game.
 
----
-
-### [Component] Giao diện người dùng (GameUI.cs)
-
-#### [MODIFY] [GameUI.cs](file:///f:/WORK/GAME/RPG_Unity_Scripts/GameUI.cs)
-- Thay đổi biến `companion` đơn lẻ thành `List<PlayerStats> companions`.
-- Cập nhật `TryFindPlayer()` để thu thập toàn bộ đệ tử trong Scene (không giới hạn 1 người).
-- Cập nhật `DrawHUD()` để vẽ nhiều thanh máu đệ tử xếp chồng lên nhau (cách nhau 90px).
-- Nâng cấp nút đổi nhân vật để có thể xoay vòng qua: Người chơi -> Đệ tử 1 -> Đệ tử 2 -> ...
-
----
-
-### [Component] Chỉ số nhân vật (PlayerStats.cs)
-
-#### [MODIFY] [PlayerStats.cs](file:///f:/WORK/GAME/RPG_Unity_Scripts/PlayerStats.cs)
-- Cải thiện logic khởi tạo trong `Start()` để đảm bảo `currentHealth` luôn bằng `maxHealth` khi mới sinh ra cho đệ tử.
-
----
-
-## Verification Plan
-
-### Manual Verification
-- Bạn chạy game, thuê 3 Archers.
-- **Kết quả mong đợi**: 
-    1. Xuất hiện 3 thanh máu đệ tử bên trái màn hình.
-    2. Máu của họ phải hiện đầy đủ (ví dụ 175/175), không được là 0/175.
-    3. Bạn có thể nhấn nút "XEM ĐỆ TỬ" trong túi đồ để soi đồ của từng người một.
+## Xác minh
+- Sau khi xóa, chỉ còn duy nhất 1 file `PlayerStats.cs` trong dự án.
+- Kiểm tra Console của Unity: Toàn bộ lỗi "already defines a member" sẽ biến mất.

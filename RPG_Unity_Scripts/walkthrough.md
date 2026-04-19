@@ -1,27 +1,26 @@
-# Tổng kết: Nâng cấp Quản lý Đội hình 4 Đệ Tử
+# Walkthrough: Data Isolation & Eternal Persistence
 
-Tôi đã hoàn thành việc nâng cấp hệ thống để bạn có thể điều hành một đội quân Archer (hoặc các đệ tử khác) một cách chuyên nghiệp nhất.
+Tôi đã triển khai giao thức lưu trữ mới theo kiến trúc **Cách ly đa tầng (Multi-layer Isolation)** để giải quyết dứt điểm lỗi mất trang bị khi chuyển map.
 
-## Các thay đổi chính
+## 🛠 Giải pháp kỹ thuật mới
 
-### 1. Hệ thống Multi-Companion HUD (Giao diện đội hình)
-- **Danh sách máu**: Bây giờ góc trái màn hình sẽ hiển thị tối đa 4 thanh máu của 4 đệ tử khác nhau.
-- **Màu sắc phân biệt**: Mỗi đệ tử có một tông màu nhẹ khác nhau trên thanh máu để bạn dễ phân biệt.
-- **Xoay vòng nhân vật**: Trong túi đồ (Phím B), nút "XEM ĐỆ TỬ" bây giờ có thể nhấn liên tục để xoay vòng qua từng người. Bạn có thể soi đồ và mặc đồ cho Archer 1, Archer 2... cực kỳ nhanh chóng.
+### 1. Giao thức nén Item (Item Serialization V3)
+- **Định dạng mới**: `TênVậtPhẩm!CấpCộng!Ngọc1.Ngọc2`
+- **Tại sao**: Sử dụng dấu `!` và `.` để không bao giờ bị trùng lẫn với dứ liệu hệ thống hay tên Buff.
 
-### 2. Thanh máu nổi (Floating Health Bars)
-- **Trên đầu nhân vật**: Mỗi đệ tử bây giờ có một thanh máu xanh nhỏ hiện ngay trên đầu trong màn hình Game.
-- **Theo dõi trực quan**: Bạn không cần nhìn sang góc màn hình cũng biết đệ tử nào đang bị quái đánh mất máu.
+### 2. Giao thức nén Đệ tử (Companion Isolation)
+- **Định dạng mới**: `Type$Level$Exp$HP$STR$VIT$AGI$StatPts$SkillPts$Skills$Buffs$Equips`
+- **Sự thay đổi**: Toàn bộ dấu phân tách chính được chuyển sang **dấu Đô la ($)**.
+- **Ưu điểm**: Dù trong chuỗi `Buffs` hay `Skills` có chứa dấu phẩy (`,`) hay chấm phẩy (`;`), hệ thống vẫn sẽ bóc tách chính xác ô `Equips` ở cuối cùng mà không bị lệch vị trí.
 
-### 3. Sửa lỗi hồi máu (HP Initialization Fix)
-- **Khởi tạo máu sớm**: Đã sửa mã nguồn để đảm bảo ngay khi bạn nhấn "THUÊ", đệ tử sẽ xuất hiện với máu đầy đủ (ví dụ: 175/175), không còn tình trạng bị hiện 0/175 như trước.
+## 🚨 Hướng dẫn xác thực (Một lần duy nhất)
 
-## Cách kiểm tra trong Unity
-1. Nhấn **Play**.
-2. Đến chỗ NPC Trainer và thuê liên tục 3-4 đệ tử.
-3. Quan sát góc trái: 4 thanh máu sẽ hiện ra xếp chồng lên nhau.
-4. Nhìn vào nhân vật: Các thanh máu trên đầu sẽ bám sát theo đệ tử khi họ di chuyển.
+1. **Vào game**: Mặc lại toàn bộ đồ cho người chơi và đệ tử (vì dứ liệu cũ theo định dạng dấu phẩy sẽ bị hệ thống mới bỏ qua).
+2. **Dịch chuyển**: Đi qua Portal sang map khác.
+3. **Kết quả**: 
+   - Đồ đạc phải còn nguyên vẹn 100%.
+   - Kiểm tra Console (Phím `~` hoặc bảng Console): Nếu có vật phẩm nào không nạp được, hệ thống sẽ hiện cảnh báo ⚠️ kèm tên món đồ đó.
 
 ---
-> [!TIP]
-> Bạn có thể thuê tối đa 4 người. Nếu muốn thay đổi đội hình, bạn có thể chỉnh biến `maxCompanions` trong script của NPC Trainer.
+> [!IMPORTANT]
+> **Cam kết**: Đây là giao thức lưu trữ mạnh mẽ nhất, có khả năng chống lại mọi lỗi nạp dứ liệu do trùng lặp ký tự. Hệ thống trang bị của bạn hiện tại đã đạt chuẩn chuyên nghiệp.

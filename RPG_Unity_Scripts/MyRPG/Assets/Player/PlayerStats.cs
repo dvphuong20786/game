@@ -3,56 +3,60 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // ===========================
-// Hệ thống Chỉ số & RPG Cơ bản
-// Gán vào Người chơi (Player) và Đệ Tử (Companion)
+// HỆ THỐNG CHỈ SỐ, RANK & TRANG BỊ NÂNG CAO
 // ===========================
 public class PlayerStats : MonoBehaviour
 {
-    // Chỉ có Người chơi thật mới giữ Singleton này
     public static PlayerStats instance;
 
-    [Header("Loại Nhân Vật")]
-    public bool isPlayer = true; // Tích vào nếu là người chơi chính
+    [Header("Loại Nhân Vật & Rank")]
+    public bool isPlayer = true;
     public string characterName = "Hiệp Sĩ";
+    public string characterRank = "D"; // Rank: D, C, B, A, S
+
+    [Header("Trạng thái Buff")]
+    public List<string> activeBuffs = new List<string>();
 
     void Awake()
     {
         if (isPlayer)
         {
-            if (instance == null) 
-            { 
+            if (instance == null) { 
                 instance = this; 
-                DontDestroyOnLoad(gameObject);
-                // Đăng ký tự động lưu khi chuyển map
+                DontDestroyOnLoad(gameObject); 
                 SceneManager.sceneLoaded += OnSceneLoaded;
+                Debug.Log("🛡️ [PLAYERSTATS]: Khởi tạo HIỆP SĨ CHÍNH (Persisted): " + characterName);
             }
-            else { Destroy(gameObject); return; }
+            else { 
+                Debug.Log("⚠️ [PLAYERSTATS]: Phát hiện HIỆP SĨ NHÂN BẢN! Đang tự hủy bản sao map mới...");
+                gameObject.SetActive(false); // Vô hiệu hóa ngay lập tức
+                Destroy(gameObject); 
+                return; 
+            }
         }
-        
-        // KHỞI TẠO MÁU SỚM ĐỂ TRÁNH LỖI UI 0/HP
+        else {
+            Debug.Log("👥 [PLAYERSTATS]: Khởi tạo Đồng đội: " + characterName);
+        }
         CalculateBonus();
         currentHealth = maxHealth;
     }
 
-    void OnDestroy()
-    {
-        if (isPlayer) SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    // Tự động load data khi vào Scene mới
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (isPlayer && PlayerPrefs.HasKey("Level"))
+    void OnDestroy() { if (isPlayer) SceneManager.sceneLoaded -= OnSceneLoaded; }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) 
+    { 
+        if (isPlayer && instance == this) 
         {
-            LoadGame();
-            
-            // TRIỆU HỒI ĐỆ TỬ KHI CHUYỂN MAP
-            if (CompanionManager.instance != null)
-            {
-                CompanionManager.instance.LoadAndSpawnCompanions(transform);
+            // Quét và xóa mọi bản sao khác "vô tình" xuất hiện trong map mới
+            PlayerStats[] allPlayers = FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+            foreach (var p in allPlayers) {
+                if (p != this && p.isPlayer) {
+                    Debug.Log("🚫 [PlayerStats] Đã phát hiện và xóa bản sao Hiệp sĩ tại map mới.");
+                    p.gameObject.SetActive(false);
+                    Destroy(p.gameObject);
+                }
             }
-            
-            Debug.Log($"[Save] ✅ Đã tải dữ liệu & Đội ngũ vào Scene: {scene.name}");
+
+            if (PlayerPrefs.HasKey("Level")) LoadGame(); 
         }
     }
 
@@ -63,26 +67,36 @@ public class PlayerStats : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    [Header("Tiềm năng & Vàng")]
+    [Header("Tiềm năng & Tài nguyên")]
     public int statPoints = 0;
     public int skillPoints = 0;
-    public int gold = 0; // Đệ tử có thể dùng chung gold với Player
+    public int gold = 0;
     public int STR = 5; public int VIT = 5; public int AGI = 5;
 
-    [Header("Kho đồ & Kỹ năng")]
-    public List<string> inventory = new List<string>();
-    public List<string> unlockedSkills = new List<string>();
+    [System.Serializable]
+    public class SkillProgress { 
+        public SkillData data; public int level; 
+        public SkillProgress(SkillData d, int l) { data = d; level = l; }
+    }
 
-    [Header("Trang bị Đang Mặc")]
-    public string eqHead = "Trống";
-    public string eqBody = "Trống";
-    public string eqLegs = "Trống";
-    public string eqWeaponMain = "Tay Không";
-    public string eqWeaponOff = "Trống";
-    public string eqRing1 = "Trống";
-    public string eqRing2 = "Trống";
-    public string eqNecklace = "Trống";
-    public string eqAncientGold = "Trống";
+    [Header("Kho đồ & Kỹ năng (DẠNG MỚI)")]
+    public List<ItemInstance> inventory = new List<ItemInstance>();
+    public List<SkillProgress> unlockedSkills = new List<SkillProgress>();
+
+    public List<ItemInstance> SharedInventory {
+        get { if (isPlayer) return inventory; if (instance != null) return instance.inventory; return inventory; }
+    }
+
+    [Header("Trang bị Đang Mặc (DẠNG MỚI)")]
+    public ItemInstance eqHead;
+    public ItemInstance eqBody;
+    public ItemInstance eqLegs;
+    public ItemInstance eqWeaponMain;
+    public ItemInstance eqWeaponOff;
+    public ItemInstance eqRing1;
+    public ItemInstance eqRing2;
+    public ItemInstance eqNecklace;
+    public ItemInstance eqAncientGold;
 
     [Header("Sức mạnh Tăng Cường")]
     public int bonusDamage = 0;
@@ -90,326 +104,353 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        if (isPlayer)
-        {
-            // Nếu đã có save thì tải, không thì giữ nguyên giá trị mặc định
-            if (PlayerPrefs.HasKey("Level"))
-            {
-                LoadGame();
-                Debug.Log("[Save] 📂 Đã tải dữ liệu game.");
-            }
-            else
-            {
-                CalculateBonus();
-                currentHealth = maxHealth;
-            }
-        }
-        else
-        {
-            // Đệ tử
-            CalculateBonus();
-            currentHealth = maxHealth;
-            if (characterName == "Hiệp Sĩ" || characterName == "") characterName = "Đệ Tử";
-        }
+        if (isPlayer) { if (PlayerPrefs.HasKey("Level")) LoadGame(); else { CalculateBonus(); currentHealth = maxHealth; } }
+        else { CalculateBonus(); currentHealth = maxHealth; }
     }
 
+    // --- LOGIC CHIẾN ĐẤU ---
     public void TakeDamage(int damage)
     {
-        // VIT tăng phòng thủ tự nhiên
         int giapTuNhien = VIT / 2;
         int thucTe = damage - bonusDefense - giapTuNhien;
         if (thucTe < 1) thucTe = 1;
         currentHealth -= thucTe;
-        
-        if (GameUI.instance != null) 
-            GameUI.instance.ShowDamage(transform.position, "-" + thucTe, isPlayer ? Color.red : new Color(1f, 0.5f, 0.5f));
-            
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            if (isPlayer) Debug.Log("💀 GAME OVER!");
-            else Debug.Log("🛡 Đệ tử đã gục ngã!");
-        }
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "-" + thucTe, isPlayer ? Color.red : new Color(1f, 0.5f, 0.5f));
+        if (currentHealth <= 0) currentHealth = 0;
     }
 
-    public void AddGold(int amount) 
-    { 
-        if (!isPlayer && instance != null) instance.gold += amount;
-        else gold += amount; 
-    }
-
-    public void AddExp(int amount) 
-    { 
-        currentExp += amount; 
-        if (currentExp >= expToNextLevel) LevelUp(); 
-    }
-
-    // Hàm tĩnh để chia sẻ EXP cho cả Player và Companion
-    public static void ShareExp(int amount)
-    {
-        PlayerStats p = instance;
-        PlayerStats c = null;
-        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
-        foreach(var s in all) if(!s.isPlayer) { c = s; break; }
-
-        if (p != null && c != null)
-        {
-            p.AddExp(amount / 2);
-            c.AddExp(amount / 2);
-        }
-        else if (p != null)
-        {
-            p.AddExp(amount);
-        }
-        else if (c != null)
-        {
-            c.AddExp(amount);
-        }
-    }
-
+    public void AddExp(int amount) { currentExp += amount; while (currentExp >= expToNextLevel) LevelUp(); }
     void LevelUp()
     {
         currentExp -= expToNextLevel; level++;
         expToNextLevel = (int)(expToNextLevel * 1.2f) + 50;
-        statPoints += 5; // Tặng 5 điểm tiềm năng mỗi cấp
-        if (level % 3 == 0) skillPoints++; // Tặng điểm kỹ năng mỗi 3 cấp
+        statPoints += 5; if (level % 3 == 0) skillPoints++;
+        CalculateBonus(); currentHealth = maxHealth;
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "LÊN CẤP " + level + "!", Color.yellow);
+    }
+
+    // --- HỆ THỐNG ĐỘT PHÁ RANK ---
+    public void PromoteCharacter()
+    {
+        int cost = GetPromoteCost();
+        string soulName = GetRequiredSoulName();
         
+        // KIỂM TRA ĐIỀU KIỆN
+        if (gold < cost) {
+             if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "THIẾU VÀNG!", Color.red);
+             return; 
+        }
+
+        // Kiểm tra Linh hồn trong túi đồ chung
+        ItemInstance soulItem = null;
+        foreach(var item in SharedInventory) {
+            if (item != null && item.data != null && item.data.itemName == soulName) {
+                soulItem = item;
+                break;
+            }
+        }
+
+        if (soulItem == null) {
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "THIẾU: " + soulName, Color.red);
+            return;
+        }
+
+        float failChance = GetPromoteFailChance();
+        if (Random.value < failChance) {
+            gold -= cost / 2; // Thất bại mất nửa tiền
+            SharedInventory.Remove(soulItem); // Mất cả linh hồn
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "ĐỘT PHÁ THẤT BẠI!", Color.red);
+            return;
+        }
+
+        gold -= cost;
+        SharedInventory.Remove(soulItem); // Thành công cũng mất linh hồn
+
+        if      (characterRank == "D") characterRank = "C";
+        else if (characterRank == "C") characterRank = "B";
+        else if (characterRank == "B") characterRank = "A";
+        else if (characterRank == "A") characterRank = "S";
+
         CalculateBonus();
         currentHealth = maxHealth;
-        
-        if (GameUI.instance != null)
-            GameUI.instance.ShowDamage(transform.position, (isPlayer ? "✨ " : "🐕 ") + "LÊN CẤP " + level + "!", Color.yellow);
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "✨ ĐỘT PHÁ RANK " + characterRank + "!", Color.cyan);
     }
 
-    public void AddStat(string statName)
-    {
-        if (statPoints <= 0) return;
-        if (statName == "STR") STR++;
-        else if (statName == "VIT") VIT++;
-        else if (statName == "AGI") AGI++;
-        statPoints--;
-        CalculateBonus();
+    public string GetRequiredSoulName() {
+        if (isPlayer) return "Linh hồn Hiệp sĩ";
+        // Đối với đệ tử, lấy tên Class của họ
+        return "Linh hồn " + characterName;
     }
 
-    public void PickUpItem(string itemName) { inventory.Add(itemName); }
+    public int GetPromoteCost() {
+        if (characterRank == "D") return 500;
+        if (characterRank == "C") return 2000;
+        if (characterRank == "B") return 10000;
+        if (characterRank == "A") return 50000;
+        return 0;
+    }
+
+    float GetPromoteFailChance() {
+        if (characterRank == "D") return 0.1f;
+        if (characterRank == "C") return 0.25f;
+        if (characterRank == "B") return 0.4f;
+        if (characterRank == "A") return 0.6f;
+        return 0;
+    }
+
+    // --- HỆ THỐNG TRANG BỊ ---
+    public void PickUpItem(ItemData data) { SharedInventory.Add(new ItemInstance(data)); }
 
     public void EquipItem(int index, string subSlot = "")
     {
-        if (index < 0 || index >= inventory.Count) return;
-        string newItem = inventory[index];
-        string oldItem = "Trống";
+        if (index < 0 || index >= SharedInventory.Count) return;
+        ItemInstance newItem = SharedInventory[index];
+        if (newItem.data == null) return;
+        
+        ItemInstance oldItem = null;
+        var data = newItem.data;
 
-        if (newItem.Contains("Mũ")) { oldItem = eqHead; eqHead = newItem; }
-        else if (newItem.Contains("Áo")) { oldItem = eqBody; eqBody = newItem; }
-        else if (newItem.Contains("Giày")) { oldItem = eqLegs; eqLegs = newItem; }
-        else if (newItem.Contains("Dây")) { oldItem = eqNecklace; eqNecklace = newItem; }
-        else if (newItem.Contains("Vàng Cổ")) { oldItem = eqAncientGold; eqAncientGold = newItem; }
-        else if (newItem.Contains("Nhẫn"))
-        {
-            if (subSlot == "Ring1") { oldItem = eqRing1; eqRing1 = newItem; }
-            else { oldItem = eqRing2; eqRing2 = newItem; }
+        if (data.type == ItemData.ItemType.Armor) {
+             if (data.itemName.Contains("Mũ")) { oldItem = eqHead; eqHead = newItem; }
+             else if (data.itemName.Contains("Áo")) { oldItem = eqBody; eqBody = newItem; }
+             else if (data.itemName.Contains("Giày")) { oldItem = eqLegs; eqLegs = newItem; }
         }
-        else if (newItem.Contains("Khiên"))
-        {
-            if (IsTwoHanded(eqWeaponMain)) { Debug.Log("Vũ khí 2 tay không thể dùng Khiên!"); return; }
-            oldItem = eqWeaponOff; eqWeaponOff = newItem;
+        else if (data.type == ItemData.ItemType.Accessory) {
+             if (data.itemName.Contains("Dây")) { oldItem = eqNecklace; eqNecklace = newItem; }
+             else if (data.itemName.Contains("Vàng Cổ")) { oldItem = eqAncientGold; eqAncientGold = newItem; }
+             else if (data.itemName.Contains("Nhẫn")) {
+                if (subSlot == "Ring1") { oldItem = eqRing1; eqRing1 = newItem; }
+                else { oldItem = eqRing2; eqRing2 = newItem; }
+             }
         }
-        else // Vũ khí
-        {
-            if (IsTwoHanded(newItem))
-            {
-                if (eqWeaponOff != "Trống") { inventory.Add(eqWeaponOff); eqWeaponOff = "Trống"; }
-            }
-            oldItem = eqWeaponMain; eqWeaponMain = newItem;
-        }
+        else if (data.itemName.Contains("Khiên")) { oldItem = eqWeaponOff; eqWeaponOff = newItem; }
+        else if (data.type == ItemData.ItemType.Weapon) { oldItem = eqWeaponMain; eqWeaponMain = newItem; }
 
-        inventory.RemoveAt(index);
-        if (oldItem != "Trống" && oldItem != "Tay Không") inventory.Add(oldItem);
+        SharedInventory.RemoveAt(index);
+        if (oldItem != null) SharedInventory.Add(oldItem);
         CalculateBonus();
     }
 
     public void Unequip(string slot)
     {
-        string item = "Trống";
-        if (slot == "Head") { item = eqHead; eqHead = "Trống"; }
-        else if (slot == "Body") { item = eqBody; eqBody = "Trống"; }
-        else if (slot == "Legs") { item = eqLegs; eqLegs = "Trống"; }
-        else if (slot == "WepMain") { item = eqWeaponMain; eqWeaponMain = "Tay Không"; }
-        else if (slot == "WepOff") { item = eqWeaponOff; eqWeaponOff = "Trống"; }
-        else if (slot == "Ring1") { item = eqRing1; eqRing1 = "Trống"; }
-        else if (slot == "Ring2") { item = eqRing2; eqRing2 = "Trống"; }
-        else if (slot == "Neck") { item = eqNecklace; eqNecklace = "Trống"; }
-        else if (slot == "Ancient") { item = eqAncientGold; eqAncientGold = "Trống"; }
+        ItemInstance item = null;
+        if (slot == "Head") { item = eqHead; eqHead = null; }
+        else if (slot == "Body") { item = eqBody; eqBody = null; }
+        else if (slot == "Legs") { item = eqLegs; eqLegs = null; }
+        else if (slot == "WepMain") { item = eqWeaponMain; eqWeaponMain = null; }
+        else if (slot == "WepOff") { item = eqWeaponOff; eqWeaponOff = null; }
+        else if (slot == "Ring1") { item = eqRing1; eqRing1 = null; }
+        else if (slot == "Ring2") { item = eqRing2; eqRing2 = null; }
+        else if (slot == "Neck") { item = eqNecklace; eqNecklace = null; }
+        else if (slot == "Ancient") { item = eqAncientGold; eqAncientGold = null; }
 
-        if (item != "Trống" && item != "Tay Không") { inventory.Add(item); CalculateBonus(); }
-    }
-
-    bool IsTwoHanded(string name) { return name.Contains("Đại") || name.Contains("2 Tay") || name.Contains("Huyết Kiếm"); }
-
-    public void SellItem(int index)
-    {
-        if (index < 0 || index >= inventory.Count) return;
-        int p = GetItemPrice(inventory[index]);
-        if (isPlayer) gold += p;
-        else if (instance != null) instance.gold += p;
-        inventory.RemoveAt(index);
-    }
-
-    public int GetItemPrice(string n)
-    {
-        if (n.Contains("Huyết Kiếm")) return 200;
-        if (n.Contains("Khiên")) return 50;
-        if (n.Contains("Nhẫn")) return 100;
-        if (n.Contains("Áo")) return 60;
-        if (n.Contains("Mũ")) return 40;
-        if (n.Contains("Giày")) return 35;
-        if (n.Contains("Dây")) return 80;
-        if (n.Contains("Vàng Cổ")) return 300;
-        if (n.Contains("Ngọc Đỏ")) return 150;
-        if (n.Contains("Ngọc Xanh")) return 150;
-        if (n.Contains("Ngọc Tím")) return 150;
-        return 15;
+        if (item != null) { SharedInventory.Add(item); CalculateBonus(); }
     }
 
     public void CalculateBonus()
     {
-        // STR tăng sát thương: 1 STR = 2 Dame
-        bonusDamage = STR * 2;
-        // VIT tăng máu: 1 VIT = 15 HP
-        maxHealth = 100 + (VIT * 15);
+        // Rank Bonus Multiplier
+        float rankMult = 1.0f;
+        if (characterRank == "C") rankMult = 1.2f;
+        else if (characterRank == "B") rankMult = 1.5f;
+        else if (characterRank == "A") rankMult = 2.0f;
+        else if (characterRank == "S") rankMult = 3.0f;
+
+        bonusDamage = (int)(STR * 2 * rankMult);
+        maxHealth = (int)((100 + (VIT * 15)) * rankMult + 50); // Cộng thêm base health cho cứng cáp
         bonusDefense = 0;
 
-        ApplyStats(eqHead); ApplyStats(eqBody); ApplyStats(eqLegs);
-        ApplyStats(eqWeaponMain); ApplyStats(eqWeaponOff);
-        ApplyStats(eqRing1); ApplyStats(eqRing2);
-        ApplyStats(eqNecklace); ApplyStats(eqAncientGold);
+        ApplyInstanceStats(eqHead); ApplyInstanceStats(eqBody); ApplyInstanceStats(eqLegs);
+        ApplyInstanceStats(eqWeaponMain); ApplyInstanceStats(eqWeaponOff);
+        ApplyInstanceStats(eqRing1); ApplyInstanceStats(eqRing2);
+        ApplyInstanceStats(eqNecklace); ApplyInstanceStats(eqAncientGold);
 
         if (currentHealth > maxHealth) currentHealth = maxHealth;
     }
 
-    void ApplyStats(string n)
-    {
-        if (n == "Trống" || n == "Tay Không") return;
-        if (n.Contains("Kiếm Gỗ")) bonusDamage += 8;
-        if (n.Contains("Kiếm Sắt")) bonusDamage += 15;
-        if (n.Contains("Huyết Kiếm")) bonusDamage += 40;
-        
-        if (n.Contains("Áo Da")) bonusDefense += 12;
-        if (n.Contains("Áo Giáp")) bonusDefense += 18;
-        
-        if (n.Contains("Mũ Sắt")) bonusDefense += 8;
-        if (n.Contains("Giày")) bonusDefense += 5;
-        
-        if (n.Contains("Khiên Gỗ")) bonusDefense += 10;
-        if (n.Contains("Khiên Sắt") || n.Contains("Khiên")) bonusDefense += 20;
-        
-        if (n.Contains("Nhẫn Kim Cương")) { bonusDamage += 5; bonusDefense += 5; }
-        if (n.Contains("Dây Chuyền Bạc")) maxHealth += 30;
-        if (n.Contains("Vàng Cổ")) { bonusDamage += 10; bonusDefense += 10; maxHealth += 50; }
-        
-        if (n.Contains("Ngọc Đỏ")) bonusDamage += 20;
-        if (n.Contains("Ngọc Xanh")) bonusDefense += 15;
-        if (n.Contains("Ngọc Tím")) maxHealth += 80;
+    void ApplyInstanceStats(ItemInstance inst) {
+        if (inst == null) return;
+        bonusDamage += inst.GetTotalAtk();
+        bonusDefense += inst.GetTotalDef();
+        maxHealth += inst.GetTotalHP();
     }
 
-    public void UseConsumable(int index)
-    {
-        if (index < 0 || index >= inventory.Count) return;
-        string item = inventory[index];
-        if (item.Contains("Bình Máu Nhỏ")) { currentHealth = Mathf.Min(currentHealth + 30, maxHealth); inventory.RemoveAt(index); }
-        else if (item.Contains("Bình Máu Lớn")) { currentHealth = Mathf.Min(currentHealth + 100, maxHealth); inventory.RemoveAt(index); }
-        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "💊 HỒI MÁU", Color.green);
-    }
-
-    public void LearnSkill(string skillName)
-    {
-        if (skillPoints > 0 && !unlockedSkills.Contains(skillName))
-        {
-            unlockedSkills.Add(skillName);
-            skillPoints--;
+    public void UseConsumable(int index) {
+        if (index < 0 || index >= SharedInventory.Count) return;
+        ItemInstance inst = SharedInventory[index];
+        if (inst.data != null && inst.data.type == ItemData.ItemType.Consumable) {
+            currentHealth = Mathf.Min(currentHealth + inst.data.healAmount, maxHealth); 
+            SharedInventory.RemoveAt(index); 
         }
     }
 
+    public int GetSkillLevel(string skillName) {
+        foreach (var s in unlockedSkills) if (s.data != null && s.data.skillName == skillName) return s.level;
+        return 0;
+    }
+
+    // --- LƯU & TẢI (HỖ TRỢ ITEM INSTANCE) ---
     public void SaveGame()
     {
         if (!isPlayer) return;
-        PlayerPrefs.SetInt("Level", level); 
-        PlayerPrefs.SetInt("Gold", gold);
-        PlayerPrefs.SetInt("HP", currentHealth);
-        PlayerPrefs.SetInt("MaxHP", maxHealth);
-        PlayerPrefs.SetInt("CurExp", currentExp);
-        PlayerPrefs.SetInt("ExpNext", expToNextLevel);
-        PlayerPrefs.SetInt("StatPts", statPoints);
-        PlayerPrefs.SetInt("SkillPts", skillPoints);
+        PlayerPrefs.SetInt("Level", level); PlayerPrefs.SetInt("Gold", gold);
+        PlayerPrefs.SetInt("HP", currentHealth); PlayerPrefs.SetInt("StatPts", statPoints);
+        PlayerPrefs.SetInt("SkillPts", skillPoints); PlayerPrefs.SetString("Rank", characterRank);
         PlayerPrefs.SetInt("STR", STR); PlayerPrefs.SetInt("VIT", VIT); PlayerPrefs.SetInt("AGI", AGI);
-        PlayerPrefs.SetString("Skills", string.Join(",", unlockedSkills));
-        PlayerPrefs.SetString("Inv", string.Join(",", inventory));
-        PlayerPrefs.SetString("WepM", eqWeaponMain); PlayerPrefs.SetString("WepO", eqWeaponOff);
-        PlayerPrefs.SetString("R1", eqRing1); PlayerPrefs.SetString("R2", eqRing2);
-        PlayerPrefs.SetString("Head", eqHead); PlayerPrefs.SetString("Body", eqBody);
-        PlayerPrefs.SetString("Legs", eqLegs); PlayerPrefs.SetString("Neck", eqNecklace);
-        PlayerPrefs.SetString("Anc", eqAncientGold);
-        PlayerPrefs.SetString("CharName", characterName);
         
-        // LƯU LUÔN ĐỘI NGŨ ĐỆ TỬ
-        if (CompanionManager.instance != null)
-        {
-            CompanionManager.instance.SaveCompanions();
-        }
+        // Lưu Inventory theo định dạng: Name:Plus:Gems;...
+        List<string> invS = new List<string>();
+        foreach(var inst in inventory) invS.Add(SerializeInstance(inst));
+        PlayerPrefs.SetString("InvV2", string.Join(";", invS));
+
+        // Lưu Equip
+        PlayerPrefs.SetString("E_Head", SerializeInstance(eqHead));
+        PlayerPrefs.SetString("E_Body", SerializeInstance(eqBody));
+        PlayerPrefs.SetString("E_Legs", SerializeInstance(eqLegs));
+        PlayerPrefs.SetString("E_WMain", SerializeInstance(eqWeaponMain));
+        PlayerPrefs.SetString("E_WOff", SerializeInstance(eqWeaponOff));
+        PlayerPrefs.SetString("E_R1", SerializeInstance(eqRing1));
+        PlayerPrefs.SetString("E_R2", SerializeInstance(eqRing2));
+        PlayerPrefs.SetString("E_Neck", SerializeInstance(eqNecklace));
+        PlayerPrefs.SetString("E_Anc", SerializeInstance(eqAncientGold));
+
+        // 1. Lưu Kỹ năng & Buff
+        List<string> skillDat = new List<string>();
+        foreach(var sk in unlockedSkills) if(sk.data != null) skillDat.Add(sk.data.name + ":" + sk.level);
+        PlayerPrefs.SetString("SavedSkills", string.Join(";", skillDat));
+        PlayerPrefs.SetString("SavedBuffs", string.Join(",", activeBuffs));
+
+        // 2. Lưu Đệ tử đi kèm
+        if (CompanionManager.instance != null) CompanionManager.instance.SaveCompanions();
 
         PlayerPrefs.Save();
-        Debug.Log("[Save] 💾 Đã lưu game!");
+        Debug.Log("💾 [PLAYERSTATS]: Đã lưu TOÀN BỘ dữ liệu (Skills, Buffs, Companions).");
     }
 
     public void LoadGame()
     {
-        if (!isPlayer || !PlayerPrefs.HasKey("Level")) return;
-        level       = PlayerPrefs.GetInt("Level");
-        gold        = PlayerPrefs.GetInt("Gold");
-        currentExp  = PlayerPrefs.GetInt("CurExp", 0);
-        expToNextLevel = PlayerPrefs.GetInt("ExpNext", 100);
-        statPoints  = PlayerPrefs.GetInt("StatPts", 0);
+        if (!isPlayer) return;
+        level = PlayerPrefs.GetInt("Level", 1);
+        gold = PlayerPrefs.GetInt("Gold", 0);
+        statPoints = PlayerPrefs.GetInt("StatPts", 0);
         skillPoints = PlayerPrefs.GetInt("SkillPts", 0);
-        STR = PlayerPrefs.GetInt("STR", 5);
-        VIT = PlayerPrefs.GetInt("VIT", 5);
-        AGI = PlayerPrefs.GetInt("AGI", 5);
-        eqWeaponMain = PlayerPrefs.GetString("WepM", "Tay Không");
-        eqWeaponOff  = PlayerPrefs.GetString("WepO", "Trống");
-        eqRing1 = PlayerPrefs.GetString("R1", "Trống");
-        eqRing2 = PlayerPrefs.GetString("R2", "Trống");
-        eqHead  = PlayerPrefs.GetString("Head", "Trống");
-        eqBody  = PlayerPrefs.GetString("Body", "Trống");
-        eqLegs  = PlayerPrefs.GetString("Legs", "Trống");
-        eqNecklace   = PlayerPrefs.GetString("Neck", "Trống");
-        eqAncientGold= PlayerPrefs.GetString("Anc", "Trống");
-        if (PlayerPrefs.HasKey("CharName")) characterName = PlayerPrefs.GetString("CharName");
-        
-        string skillsRaw = PlayerPrefs.GetString("Skills", "");
-        unlockedSkills = skillsRaw == "" ? new List<string>() : new List<string>(skillsRaw.Split(','));
-        
-        string invRaw = PlayerPrefs.GetString("Inv", "");
-        inventory = invRaw == "" ? new List<string>() : new List<string>(invRaw.Split(','));
-        
+        characterRank = PlayerPrefs.GetString("Rank", "D");
+        STR = PlayerPrefs.GetInt("STR", 5); VIT = PlayerPrefs.GetInt("VIT", 5); AGI = PlayerPrefs.GetInt("AGI", 5);
+
+        inventory.Clear();
+        string[] iv = PlayerPrefs.GetString("InvV2", "").Split(';');
+        foreach(var s in iv) { var inst = DeserializeInstance(s); if(inst != null) inventory.Add(inst); }
+
+        eqHead = DeserializeInstance(PlayerPrefs.GetString("E_Head"));
+        eqBody = DeserializeInstance(PlayerPrefs.GetString("E_Body"));
+        eqLegs = DeserializeInstance(PlayerPrefs.GetString("E_Legs"));
+        eqWeaponMain = DeserializeInstance(PlayerPrefs.GetString("E_WMain"));
+        eqWeaponOff = DeserializeInstance(PlayerPrefs.GetString("E_WOff"));
+        eqRing1 = DeserializeInstance(PlayerPrefs.GetString("E_R1"));
+        eqRing2 = DeserializeInstance(PlayerPrefs.GetString("E_R2"));
+        eqNecklace = DeserializeInstance(PlayerPrefs.GetString("E_Neck"));
+        eqAncientGold = DeserializeInstance(PlayerPrefs.GetString("E_Anc"));
+
         CalculateBonus();
         currentHealth = PlayerPrefs.GetInt("HP", maxHealth);
+
+        // 1. Tải Kỹ năng & Buff
+        unlockedSkills.Clear();
+        string skStr = PlayerPrefs.GetString("SavedSkills", "");
+        if (!string.IsNullOrEmpty(skStr)) {
+            foreach(var sPart in skStr.Split(';')) {
+                var sSub = sPart.Split(':');
+                if (sSub.Length == 2) {
+                    SkillData sData = Resources.Load<SkillData>("Skills/" + sSub[0]);
+                    if (sData != null) unlockedSkills.Add(new SkillProgress(sData, int.Parse(sSub[1])));
+                }
+            }
+        }
+        string buffStr = PlayerPrefs.GetString("SavedBuffs", "");
+        activeBuffs = new List<string>(buffStr.Split(new char[]{','}, System.StringSplitOptions.RemoveEmptyEntries));
+
+        // 2. Tải và triệu hồi Đệ tử
+        if (CompanionManager.instance != null) {
+            CompanionManager.instance.LoadAndSpawnCompanions(transform);
+        }
+        
+        Debug.Log("📂 [PLAYERSTATS]: Tải dữ liệu hoàn tất! Đã khôi phục Skills & Buffs.");
     }
 
-    // Đặt lại toàn bộ dữ liệu về mặc định (Dành cho nút New Game)
+    public string SerializeInstance(ItemInstance inst) {
+        if (inst == null || inst.data == null) return "";
+        string gems = "";
+        foreach(var g in inst.sockets) if(g != null) gems += (gems==""?"":".") + g.name;
+        return $"{inst.data.name}!{inst.plusLevel}!{gems}";
+    }
+
+    public ItemInstance DeserializeInstance(string data) {
+        if (string.IsNullOrEmpty(data)) return null;
+        string[] p = data.Split('!');
+        if (p.Length < 2) return null;
+        string itemName = p[0].Trim();
+        ItemData b = Resources.Load<ItemData>("Items/" + itemName);
+        if (b == null) {
+            Debug.LogWarning("⚠️ [LoadItem] Không tìm thấy dữ liệu trong Resources/Items: " + itemName);
+            return null;
+        }
+        ItemInstance inst = new ItemInstance(b);
+        inst.plusLevel = int.Parse(p[1]);
+        if (p.Length > 2 && !string.IsNullOrEmpty(p[2])) {
+            foreach(var gName in p[2].Split('.')) {
+                ItemData gem = Resources.Load<ItemData>("Items/" + gName.Trim());
+                if (gem != null) inst.sockets.Add(gem);
+            }
+        }
+        return inst;
+    }
+
+    public void AddGold(int amount) { gold += amount; SaveGame(); }
+
+    public void AddStat(string stat) {
+        if (statPoints <= 0) return;
+        if (stat == "STR") STR++;
+        else if (stat == "VIT") VIT++;
+        else if (stat == "AGI") AGI++;
+        statPoints--;
+        CalculateBonus();
+    }
+
+    public static void ShareExp(int totalExp) {
+        PlayerStats[] all = Object.FindObjectsByType<PlayerStats>(FindObjectsSortMode.None);
+        List<PlayerStats> targets = new List<PlayerStats>();
+        foreach (var s in all) if (s.gameObject.activeInHierarchy) targets.Add(s);
+        int share = totalExp / Mathf.Max(1, targets.Count);
+        foreach (var s in targets) s.AddExp(share);
+    }
+
+    public void SellItem(int index) {
+        if (index < 0 || index >= inventory.Count) return;
+        gold += Mathf.Max(1, inventory[index].data.price / 2);
+        inventory.RemoveAt(index);
+        CalculateBonus();
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "ĐÃ BÁN!", Color.yellow);
+    }
+
+    public void LearnSkill(SkillData skill)
+    {
+        if (skillPoints < 1) return;
+        SkillProgress target = null;
+        foreach (var s in unlockedSkills) if (s.data == skill) { target = s; break; }
+
+        if (target == null) {
+            unlockedSkills.Add(new SkillProgress(skill, 1));
+            skillPoints--;
+        } else if (target.level < 10) {
+            target.level++;
+            skillPoints--;
+        }
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "✨ KỸ NĂNG MỚI!", Color.cyan);
+    }
+
     public void ResetGame()
     {
-        if (!isPlayer) return;
         PlayerPrefs.DeleteAll();
-        PlayerPrefs.SetString("SavedComps", ""); // Xóa danh sách đệ tử
-        level = 1; gold = 0; currentExp = 0; expToNextLevel = 100;
-        statPoints = 0; skillPoints = 0; STR = 5; VIT = 5; AGI = 5;
-        inventory.Clear(); unlockedSkills.Clear();
-        eqHead = "Trống"; eqBody = "Trống"; eqLegs = "Trống";
-        eqWeaponMain = "Tay Không"; eqWeaponOff = "Trống";
-        eqRing1 = "Trống"; eqRing2 = "Trống";
-        eqNecklace = "Trống"; eqAncientGold = "Trống";
-        CalculateBonus();
-        currentHealth = maxHealth;
-        Debug.Log("[Save] 🗑️ Đã xóa dữ liệu - Bắt đầu game mới!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
-

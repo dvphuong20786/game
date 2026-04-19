@@ -17,3 +17,4 @@ thêm giá bán mỗi món trang bị.
 15. quái vật tấn công cả đệ tử.
 16. kiểm tra lại toàn bộ item. tôi vẫn thấy nhiều item nhặt được trong túi đồ không hiện chỉ số. yêu cầu tất cả item phải hiện chỉ số.
 17. trang bị hiện nay trên người player không cách nào đưa cho đệ tử mặc. hãy sửa lại điều này. người chơi có thể trang bị cho đệ tử. những vật phẩm đang ở hành trang của player. 
+18. hiện danh sách kỹ năng đã học có countdown thời gian có thể sử dụng của đệ tử trên thanh máu. còn hiện icon những kỹ năng được buff bên phải bên cạnh cột máu. 

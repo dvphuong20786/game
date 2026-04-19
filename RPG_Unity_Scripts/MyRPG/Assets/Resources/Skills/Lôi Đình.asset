@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb44af2e9bc66ce46aaf971408720054, type: 3}
+  m_Name: "L\xF4i \u0110\xECnh"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "L\xF4i \u0110\xECnh"
+  icon: {fileID: 0}
+  baseCooldown: 8
+  levelDescriptions:
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 1)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 2)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 3)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 4)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 5)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 6)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 7)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 8)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 9)"
+  - "G\u1ECDi s\u1EA5m s\xE9t \u0111\xE1nh t\u1EEB tr\xEAn tr\u1EDDi xu\u1ED1ng di\u1EC7n
+    r\u1ED9ng. (C\u1EA5p 10)"
+  baseDamageMultiplier: 3
+  damageIncreasePerLevel: 0.5
+  rangeIncreasePerLevel: 0.2
+  baseHealOrDef: 0
+  valueIncreasePerLevel: 0

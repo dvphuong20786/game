@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb44af2e9bc66ce46aaf971408720054, type: 3}
+  m_Name: "Ch\xE9m Gi\xF3"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "Ch\xE9m Gi\xF3"
+  icon: {fileID: 0}
+  baseCooldown: 4
+  levelDescriptions:
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 1)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 2)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 3)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 4)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 5)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 6)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 7)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 8)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 9)"
+  - "Ch\xE9m gi\xF3 c\u1EF1c m\u1EA1nh g\xE2y s\xE1t th\u01B0\u01A1ng AOE xung quanh.
+    (C\u1EA5p 10)"
+  baseDamageMultiplier: 2
+  damageIncreasePerLevel: 0.2
+  rangeIncreasePerLevel: 0.1
+  baseHealOrDef: 0
+  valueIncreasePerLevel: 0

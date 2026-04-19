@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb44af2e9bc66ce46aaf971408720054, type: 3}
+  m_Name: "H\u1ED9 V\u1EC7"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "H\u1ED9 V\u1EC7"
+  icon: {fileID: 0}
+  baseCooldown: 10
+  levelDescriptions:
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 1)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 2)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 3)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 4)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 5)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 6)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 7)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 8)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 9)"
+  - "T\u0103ng ph\xF2ng th\u1EE7 cho \u0111\u1ED3ng \u0111\u1ED9i \u0111\u1EE9ng
+    g\u1EA7n. (C\u1EA5p 10)"
+  baseDamageMultiplier: 0
+  damageIncreasePerLevel: 0
+  rangeIncreasePerLevel: 0
+  baseHealOrDef: 10
+  valueIncreasePerLevel: 2

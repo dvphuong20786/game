@@ -25,39 +25,32 @@ public class NPCShop : MonoBehaviour
     // ===== DANH SÁCH HÀNG HÓA =====
     class ShopItem
     {
-        public string name;
-        public int price;
-        public string description;
-        public ShopItem(string n, int p, string d) { name = n; price = p; description = d; }
+        public ItemData data;
+        public int priceOverride; // Nếu muốn đặt giá khác với giá gốc của Item
+        public ShopItem(ItemData d, int p = -1) { data = d; priceOverride = p; }
+        public int GetPrice() { return priceOverride > 0 ? priceOverride : (data != null ? data.price : 0); }
     }
 
-    private List<ShopItem> shopInventory = new List<ShopItem>
-    {
-        // Tiêu hao
-        new ShopItem("Bình Máu Nhỏ",     50,  "Hồi 30 HP. Dùng ngay từ túi đồ"),
-        new ShopItem("Bình Máu Lớn",     150, "Hồi 100 HP. Dùng ngay từ túi đồ"),
-        // Vũ khí
-        new ShopItem("Kiếm Gỗ",          80,  "⚔ +8 Tấn công | Vũ khí 1 tay"),
-        new ShopItem("Kiếm Sắt",         200, "⚔ +15 Tấn công | Vũ khí 1 tay"),
-        // Giáp
-        new ShopItem("Mũ Sắt",           60,  "🛡 +5 Phòng thủ"),
-        new ShopItem("Áo Da Lộn",        100, "🛡 +12 Phòng thủ"),
-        new ShopItem("Áo Giáp",          220, "🛡 +18 Phòng thủ"),
-        new ShopItem("Giày Siêu Tốc",    75,  "🛡 +3 Phòng thủ"),
-        // Khiên
-        new ShopItem("Khiên Gỗ",         120, "🛡 +10 Phòng thủ | Chỉ dùng với vũ khí 1 tay"),
-        // Trang sức
-        new ShopItem("Nhẫn Kim Cương",   250, "⚔ +5 Tấn công | 🛡 +5 Phòng thủ"),
-        new ShopItem("Dây Chuyền Bạc",   180, "❤ +30 HP tối đa"),
-        // Ngọc khảm
-        new ShopItem("Ngọc Đỏ",          300, "⚔ +20 Tấn công (khảm vào tên đồ)"),
-        new ShopItem("Ngọc Xanh",        300, "🛡 +15 Phòng thủ (khảm vào tên đồ)"),
-        new ShopItem("Ngọc Tím",         300, "❤ +80 HP tối đa (khảm vào tên đồ)"),
-    };
+    private List<ShopItem> shopInventory = new List<ShopItem>();
 
     void Start()
     {
         FindMainPlayer();
+        InitializeShop();
+    }
+
+    void InitializeShop()
+    {
+        // LỌC: Shop này chỉ bán Thuốc, Ngọc và đồ Quest
+        ItemData[] allItems = Resources.LoadAll<ItemData>("Items");
+        foreach(var item in allItems) {
+            if (item.type == ItemData.ItemType.Consumable || 
+                item.type == ItemData.ItemType.Gem || 
+                item.type == ItemData.ItemType.Quest) 
+            {
+                shopInventory.Add(new ShopItem(item));
+            }
+        }
     }
 
     void FindMainPlayer()
@@ -181,23 +174,31 @@ public class NPCShop : MonoBehaviour
         for (int i = 0; i < shopInventory.Count; i++)
         {
             var item = shopInventory[i];
+            if (item.data == null) continue;
             float rowY = i * 55;
 
             // Nền hàng
             GUI.color = (i % 2 == 0) ? new Color(0.12f, 0.12f, 0.18f) : new Color(0.08f, 0.08f, 0.13f);
             GUI.DrawTexture(new Rect(0, rowY, w - 20, 50), Texture2D.whiteTexture);
 
+            // Icon hàng
+            if (item.data.icon != null) {
+                GUI.color = Color.white;
+                GUI.DrawTexture(new Rect(5, rowY + 5, 40, 40), item.data.icon.texture);
+            }
+
             // Tên + mô tả
             GUI.color = Color.white;
             GUIStyle nameS = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold };
-            GUI.Label(new Rect(10, rowY + 5, 380, 22), item.name, nameS);
+            GUI.Label(new Rect(55, rowY + 5, 350, 22), item.data.itemName, nameS);
             GUI.color = new Color(0.7f, 0.7f, 0.7f);
-            GUI.Label(new Rect(10, rowY + 28, 380, 18), item.description, new GUIStyle(GUI.skin.label) { fontSize = 10 });
+            GUI.Label(new Rect(55, rowY + 28, 350, 18), item.data.description, new GUIStyle(GUI.skin.label) { fontSize = 10 });
 
             // Giá
-            bool canAfford = player.gold >= item.price;
+            int price = item.GetPrice();
+            bool canAfford = player.gold >= price;
             GUI.color = canAfford ? new Color(1f, 0.85f, 0f) : new Color(0.6f, 0.3f, 0.3f);
-            GUI.Label(new Rect(430, rowY + 15, 100, 25), item.price + " 💰");
+            GUI.Label(new Rect(430, rowY + 15, 100, 25), price + " 💰");
 
             // Nút MUA
             if (canAfford)
@@ -245,18 +246,25 @@ public class NPCShop : MonoBehaviour
 
         for (int i = player.inventory.Count - 1; i >= 0; i--)
         {
-            string itemName = player.inventory[i];
-            int sellPrice = Mathf.Max(1, player.GetItemPrice(itemName) / 2); // Bán được 50% giá mua
+            ItemInstance item = player.inventory[i];
+            if (item == null || item.data == null) continue;
+            int sellPrice = Mathf.Max(1, item.data.price / 2); 
             float rowY = (player.inventory.Count - 1 - i) * 55;
 
             // Nền
             GUI.color = new Color(0.12f, 0.08f, 0.08f);
             GUI.DrawTexture(new Rect(0, rowY, w - 20, 50), Texture2D.whiteTexture);
 
+            // Icon đồ
+            if (item.data != null && item.data.icon != null) {
+                GUI.color = Color.white;
+                GUI.DrawTexture(new Rect(5, rowY + 5, 40, 40), item.data.icon.texture);
+            }
+
             // Tên đồ
+            GUIStyle colName = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold };
             GUI.color = Color.white;
-            GUIStyle nameS = new GUIStyle(GUI.skin.label) { fontSize = 13 };
-            GUI.Label(new Rect(10, rowY + 15, 400, 22), itemName, nameS);
+            GUI.Label(new Rect(55, rowY + 15, 300, 20), item.GetDisplayName(), colName);
 
             // Giá thu
             GUI.color = new Color(1f, 0.7f, 0.2f);
@@ -279,8 +287,8 @@ public class NPCShop : MonoBehaviour
         if (player.inventory.Count > 0 && GUI.Button(new Rect(sx + w - 180, sy + h - 50, 165, 35), "💸 BÁN TẤT CẢ"))
         {
             int total = 0;
-            foreach (string it in player.inventory)
-                total += Mathf.Max(1, player.GetItemPrice(it) / 2);
+            foreach (ItemInstance it in player.inventory)
+                if(it != null && it.data != null) total += Mathf.Max(1, it.data.price / 2);
             player.gold += total;
             player.inventory.Clear();
             if (GameUI.instance != null)
@@ -289,25 +297,18 @@ public class NPCShop : MonoBehaviour
     }
 
     // ===== XỬ LÝ MUA HÀNG =====
-    void BuyItem(ShopItem item)
+    void BuyItem(ShopItem sItem)
     {
-        if (player.gold < item.price) return;
-        player.gold -= item.price;
+        int price = sItem.GetPrice();
+        if (player.gold < price) return;
+        player.gold -= price;
 
-        // Bình máu — dùng luôn nếu HP thiếu, ngược lại bỏ túi
-        if (item.name.Contains("Bình Máu") && player.currentHealth < player.maxHealth)
-        {
-            player.inventory.Add(item.name);
-        }
-        else
-        {
-            player.inventory.Add(item.name);
-        }
+        player.inventory.Add(new ItemInstance(sItem.data));
 
         if (GameUI.instance != null)
-            GameUI.instance.ShowDamage(player.transform.position, "Mua: " + item.name, Color.cyan);
+            GameUI.instance.ShowDamage(player.transform.position, "Mua: " + sItem.data.itemName, Color.cyan);
 
-        Debug.Log($"🛒 Mua: {item.name} (-{item.price} Vàng). Còn lại: {player.gold} Vàng");
+        Debug.Log($"🛒 Mua: {sItem.data.itemName} (-{price} Vàng). Còn lại: {player.gold} Vàng");
     }
 
     // Vẽ vòng tròn tầm tương tác trong Scene View

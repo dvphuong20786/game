@@ -5,140 +5,174 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-// Gắn script này vào nhân vật Player cùng với PlayerStats
+// ===========================
+// HỆ THỐNG CHIẾN ĐẤU NGƯỜI CHƠI (NÂNG CẤP 4 SLOTS)
+// Cho phép sử dụng mọi loại kỹ năng (Tấn công, Buff, Heal) bằng phím 1, 2, 3, 4
+// ===========================
 public class PlayerCombat : MonoBehaviour
 {
-    [Header("Thông số sức mạnh")]
-    public int attackDamage = 10;   // YC#10: Giảm từ 25 → 10 cho cân bằng
-    public float attackRange = 1.2f; // Giảm từ 1.8 xuống 1.2 theo yêu cầu mới
+    [Header("Thông số tấn công cơ bản")]
+    public int attackDamage = 10;
+    public float attackRange = 1.2f;
 
     private Animator anim;
+    private PlayerStats stats;
+
+    [Header("4 Ô Kỹ Năng (Kéo Asset vào đây)")]
+    public SkillData[] equippedSkills = new SkillData[4];
+
+    // Quản lý hồi chiêu theo từng Slot
+    private float[] skillCooldowns = new float[4];
+
+    // Biến cho hiệu ứng Buff tạm thời
+    private float buffTimer = 0f;
+    private int buffDefAmount = 0;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        stats = GetComponent<PlayerStats>();
     }
 
     void Update()
     {
+        // 1. Cập nhật đếm ngược hồi chiêu
+        for (int i = 0; i < 4; i++)
+        {
+            if (skillCooldowns[i] > 0) skillCooldowns[i] -= Time.deltaTime;
+        }
+
+        // 2. Cập nhật thời gian hiệu lực của Buff
+        if (buffTimer > 0)
+        {
+            buffTimer -= Time.deltaTime;
+            if (buffTimer <= 0) {
+                stats.bonusDefense -= buffDefAmount;
+                buffDefAmount = 0;
+                if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, " hết Buff!", Color.gray);
+            }
+        }
+
+        // 3. Phân tích phím bấm
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current != null)
         {
             if (Keyboard.current.spaceKey.wasPressedThisFrame) Attack();
-            if (Keyboard.current.digit1Key.wasPressedThisFrame) CastSkill_ChemGio();
-            if (Keyboard.current.digit2Key.wasPressedThisFrame) CastSkill_LoiDinh();
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) TryCastSkill(0);
+            if (Keyboard.current.digit2Key.wasPressedThisFrame) TryCastSkill(1);
+            if (Keyboard.current.digit3Key.wasPressedThisFrame) TryCastSkill(2);
+            if (Keyboard.current.digit4Key.wasPressedThisFrame) TryCastSkill(3);
         }
 #else
         if (Input.GetKeyDown(KeyCode.Space)) Attack();
-        if (Input.GetKeyDown(KeyCode.Alpha1)) CastSkill_ChemGio();
-        if (Input.GetKeyDown(KeyCode.Alpha2)) CastSkill_LoiDinh();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) TryCastSkill(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) TryCastSkill(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) TryCastSkill(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) TryCastSkill(3);
 #endif
     }
 
-    // ===== ĐÁNH THƯỜNG: Chỉ trúng 1 quái GẦN NHẤT =====
-    // YC#9: Đánh thường KHÔNG đánh AOE, chỉ hit 1 mục tiêu gần nhất
+    // Đánh thường (Gần nhất)
     void Attack()
     {
         if (anim != null) anim.SetTrigger("Attack");
+        int finalDmg = attackDamage + (stats != null ? stats.bonusDamage : 0);
 
-        int tongDame = attackDamage;
-        PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats != null) tongDame += stats.bonusDamage;
-
-        // Tìm 1 quái GẦN NHẤT trong tầm
         Monster target = FindNearestMonster(attackRange);
-        if (target != null)
-        {
-            target.TakeDamage(tongDame);
-            Debug.Log($"⚔️ Chém thường → {target.monsterName}: -{tongDame} dame");
-        }
-        else
-        {
-            Debug.Log("⚔️ Vung kiếm nhưng không trúng ai.");
-        }
+        if (target != null) target.TakeDamage(finalDmg);
     }
 
-    // ===== KỸ NĂNG 1: Chém Gió (Lv3) — ĐÁNH TẤT CẢ quái xung quanh =====
-    // Phím số 1
-    void CastSkill_ChemGio()
+    // Kiểm tra và tung kỹ năng
+    void TryCastSkill(int slotIndex)
     {
-        PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats == null || !stats.unlockedSkills.Contains("Chém Gió (Lv3)"))
+        if (slotIndex < 0 || slotIndex >= equippedSkills.Length) return;
+        SkillData skill = equippedSkills[slotIndex];
+
+        if (skill == null) return;
+
+        // Kiểm tra Level
+        int sLv = (stats != null) ? stats.GetSkillLevel(skill.skillName) : 0;
+        if (sLv <= 0)
         {
-            Debug.Log("❌ Bạn chưa học Chém Gió! (Cần Lv3)");
-            // Hiện thông báo trên màn hình
-            if (GameUI.instance != null)
-                GameUI.instance.ShowDamage(transform.position, "Chưa học kỹ năng!", Color.gray);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "Chưa học kỹ năng!", Color.gray);
             return;
         }
 
-        if (anim != null) anim.SetTrigger("Attack");
-
-        // Chém Gió: AOE x2 dame, tầm xa hơn
-        int skillDame = (attackDamage + stats.bonusDamage) * 2;
-        HitAllMonstersInRange(skillDame, attackRange + 1.5f);
-        if (GameUI.instance != null)
-            GameUI.instance.ShowDamage(transform.position, "💨 CHÉM GIÓ!", Color.yellow);
-        Debug.Log($"💨 CHÉM GIÓ! Đánh AOE {skillDame} dame trong tầm {attackRange + 1.5f}");
-    }
-
-    // ===== KỸ NĂNG 2: Lôi Đình (Lv6) — ĐÁNH TẤT CẢ, tầm rất rộng =====
-    // Phím số 2
-    void CastSkill_LoiDinh()
-    {
-        PlayerStats stats = GetComponent<PlayerStats>();
-        if (stats == null || !stats.unlockedSkills.Contains("Lôi Đình (Lv6)"))
+        // Kiểm tra Hồi chiêu
+        if (skillCooldowns[slotIndex] > 0)
         {
-            Debug.Log("❌ Bạn chưa học Lôi Đình! (Cần Lv6)");
-            if (GameUI.instance != null)
-                GameUI.instance.ShowDamage(transform.position, "Chưa học kỹ năng!", Color.gray);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, $"⌛ {skillCooldowns[slotIndex]:F1}s", Color.white);
             return;
         }
 
-        if (anim != null) anim.SetTrigger("Attack");
-
-        // Lôi Đình: AOE x3 dame, tầm cực rộng
-        int skillDame = (attackDamage + stats.bonusDamage) * 3;
-        HitAllMonstersInRange(skillDame, attackRange + 3f);
-        if (GameUI.instance != null)
-            GameUI.instance.ShowDamage(transform.position, "⚡ LÔI ĐÌNH!", new Color(0.5f, 0.5f, 1f));
-        Debug.Log($"⚡ LÔI ĐÌNH! AOE {skillDame} dame trong tầm {attackRange + 3f}");
+        // TUNG CHIÊU
+        ExecuteSkill(skill, sLv);
+        skillCooldowns[slotIndex] = skill.baseCooldown;
     }
 
-    // ===== HÀM TÌM QUÁI GẦN NHẤT =====
+    void ExecuteSkill(SkillData skill, int level)
+    {
+        if (anim != null) anim.SetTrigger("Attack");
+
+        string sName = skill.skillName;
+
+        // A. KỸ NĂNG TẤN CÔNG (Gây AOE)
+        if (sName.Contains("Chém Gió") || sName.Contains("Lôi Đình")) {
+            int dameGoc = attackDamage + (stats != null ? stats.bonusDamage : 0);
+            float mult = skill.baseDamageMultiplier + (level * skill.damageIncreasePerLevel);
+            int skillDame = (int)(dameGoc * mult);
+            float rangeAdd = sName.Contains("Lôi Đình") ? 3f : 1.5f;
+            float range = attackRange + rangeAdd + (level * skill.rangeIncreasePerLevel);
+            
+            HitAllMonstersInRange(skillDame, range);
+            ShowSkillFX(sName, Color.yellow);
+        }
+        // B. KỸ NĂNG HỒI MÁU (Tri Thương)
+        else if (sName.Contains("Trị Thương")) {
+            int heal = skill.baseHealOrDef + (level * skill.valueIncreasePerLevel);
+            stats.currentHealth = Mathf.Min(stats.currentHealth + heal, stats.maxHealth);
+            ShowSkillFX("HỒI MÁU!", Color.green);
+        }
+        // C. KỸ NĂNG TĂNG THỦ (Hộ Vệ)
+        else if (sName.Contains("Hộ Vệ")) {
+            int def = skill.baseHealOrDef + (level * skill.valueIncreasePerLevel);
+            // Cộng giáp tạm thời
+            if (buffTimer > 0) stats.bonusDefense -= buffDefAmount; // Reset buff cũ nếu đang có
+            buffDefAmount = def;
+            stats.bonusDefense += buffDefAmount;
+            buffTimer = 10f; // Buff trong 10 giây
+            ShowSkillFX("GIÁP HỘ VỆ!", Color.cyan);
+        }
+    }
+
+    void ShowSkillFX(string text, Color col)
+    {
+        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, text, col);
+    }
+
     Monster FindNearestMonster(float range)
     {
-        Monster[] allMonsters = FindObjectsByType<Monster>(FindObjectsSortMode.None);
-        Monster nearest = null;
-        float minDist = float.MaxValue;
-
-        foreach (Monster m in allMonsters)
-        {
-            if (m.isAlly) continue; // Bỏ qua đồng minh
-            float dist = Vector2.Distance(transform.position, m.transform.position);
-            if (dist <= range && dist < minDist)
-            {
-                minDist = dist;
-                nearest = m;
-            }
+        Monster[] all = FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        Monster nearest = null; float minDist = float.MaxValue;
+        foreach (Monster m in all) {
+            if (m.isAlly) continue;
+            float d = Vector2.Distance(transform.position, m.transform.position);
+            if (d <= range && d < minDist) { minDist = d; nearest = m; }
         }
         return nearest;
     }
 
-    // ===== HÀM ĐÁNH TẤT CẢ TRONG TẦM (AOE — Dùng cho Kỹ năng) =====
     void HitAllMonstersInRange(int damage, float range)
     {
-        Monster[] allMonsters = FindObjectsByType<Monster>(FindObjectsSortMode.None);
-        int hitCount = 0;
-        foreach (Monster m in allMonsters)
-        {
-            if (m.isAlly) continue; // Không đánh đệ tử/đồng minh
-            if (Vector2.Distance(transform.position, m.transform.position) <= range)
-            {
+        Monster[] all = FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        foreach (Monster m in all) {
+            if (!m.isAlly && Vector2.Distance(transform.position, m.transform.position) <= range)
                 m.TakeDamage(damage);
-                hitCount++;
-            }
         }
-        Debug.Log($"[AOE] Trúng {hitCount} quái.");
+    }
+
+    public float GetSkillCooldown(int slotIndex) {
+        if (slotIndex >= 0 && slotIndex < skillCooldowns.Length) return skillCooldowns[slotIndex];
+        return 0;
     }
 }
