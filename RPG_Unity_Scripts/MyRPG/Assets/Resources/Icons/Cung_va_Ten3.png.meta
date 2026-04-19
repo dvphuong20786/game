@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: f8747dd969beec54c9046030b5831f02
+guid: 5d9bace8fce0b414a97b8072f0e60bfb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6601497081044727555
-    second: Cung_va_Ten6_0
-  - first:
-      213: -5807205096721793290
-    second: Cung_va_Ten6_1
+      213: 3813210199887129405
+    second: Cung_va_Ten 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -129,12 +126,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cung_va_Ten6_0
+      name: Cung_va_Ten 1_0
       rect:
         serializedVersion: 2
         x: 11
         y: 0
-        width: 1515
+        width: 1502
         height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -144,30 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: df80d8a8165c264a0800000000000000
-      internalID: -6601497081044727555
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Cung_va_Ten6_1
-      rect:
-        serializedVersion: 2
-        x: 147
-        y: 536
-        width: 6
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6fe3f008bb9a86fa0800000000000000
-      internalID: -5807205096721793290
+      spriteID: d3b2b2a397e3be430800000000000000
+      internalID: 3813210199887129405
       vertices: []
       indices: 
       edges: []
@@ -186,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Cung_va_Ten6_0: -6601497081044727555
-      Cung_va_Ten6_1: -5807205096721793290
+      Cung_va_Ten 1_0: 3813210199887129405
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
