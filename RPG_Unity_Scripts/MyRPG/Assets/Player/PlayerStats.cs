@@ -106,6 +106,12 @@ public class PlayerStats : MonoBehaviour
     {
         if (isPlayer) { if (PlayerPrefs.HasKey("Level")) LoadGame(); else { CalculateBonus(); currentHealth = maxHealth; } }
         else { CalculateBonus(); currentHealth = maxHealth; }
+
+        // --- TỰ ĐỘNG THIẾT LẬP HIỂN THỊ VŨ KHÍ (MỚI) ---
+        GameObject weaponHand = new GameObject("WeaponVisualHand");
+        weaponHand.transform.SetParent(this.transform);
+        weaponHand.transform.localPosition = new Vector3(0.3f, 0, 0); // Vị trí tay
+        weaponHand.AddComponent<WeaponVisual>().stats = this;
     }
 
     // --- LOGIC CHIẾN ĐẤU ---
@@ -223,8 +229,20 @@ public class PlayerStats : MonoBehaviour
                 else { oldItem = eqRing2; eqRing2 = newItem; }
              }
         }
-        else if (data.itemName.Contains("Khiên")) { oldItem = eqWeaponOff; eqWeaponOff = newItem; }
-        else if (data.type == ItemData.ItemType.Weapon) { oldItem = eqWeaponMain; eqWeaponMain = newItem; }
+        else if (data.itemName.Contains("Khiên")) { 
+            // Nếu đang cầm vũ khí 2 tay thì phải tháo ra trước (YÊU CẦU MỤC 7)
+            if (eqWeaponMain != null && eqWeaponMain.data != null && eqWeaponMain.data.isTwoHanded) {
+                UnequipItem("WepMain");
+            }
+            oldItem = eqWeaponOff; eqWeaponOff = newItem; 
+        }
+        else if (data.type == ItemData.ItemType.Weapon) { 
+            // Nếu là vũ khí 2 tay thì tháo Khiên ra (YÊU CẦU MỤC 7)
+            if (data.isTwoHanded) {
+                UnequipItem("WepOff");
+            }
+            oldItem = eqWeaponMain; eqWeaponMain = newItem; 
+        }
 
         SharedInventory.RemoveAt(index);
         // Đưa món đồ vào túi chung

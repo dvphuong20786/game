@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "M\u0169_S\u1EAFt"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "M\u0169 S\u1EAFt"
+  icon: {fileID: 8227207433426634624, guid: 21de47f073a523147a0e81ae4d9139a2, type: 3}
+  description: "M\u0169 chi\u1EBFn binh b\u1EA3o v\u1EC7 v\xF9ng \u0111\u1EA7u."
+  price: 1200
+  type: 1
+  atkBonus: 0
+  defBonus: 15
+  hpBonus: 50
+  healAmount: 0

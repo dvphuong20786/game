@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "\xC1o_Gi\xE1p_S\u1EAFt"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "\xC1o Gi\xE1p S\u1EAFt"
+  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
+  description: "Gi\xE1p t\u1EA5m b\u1EB1ng th\xE9p ki\xEAn c\u1ED1."
+  price: 2500
+  type: 1
+  atkBonus: 0
+  defBonus: 40
+  hpBonus: 200
+  healAmount: 0

@@ -206,11 +206,28 @@ public class Monster : MonoBehaviour
         // 1. Chia sẻ EXP cho đội ngũ
         PlayerStats.ShareExp(expReward);
 
-        // 2. Rớt đồ ra đất (Prefab)
-        if (itemDropPrefab != null)
-        {
-            Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
-            Debug.Log("Quái vật đã rớt ra chiến lợi phẩm!");
+        // --- HỆ THỐNG RƠI ĐỒ "CÁI BANG" (Mục 3) ---
+        int lucky = Random.Range(1, 101);
+
+        // 30% Rơi Vàng
+        if (lucky <= 30) {
+            if (itemDropPrefab != null) {
+                GameObject drop = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
+                ItemDrop idrop = drop.GetComponent<ItemDrop>();
+                if (idrop != null) idrop.itemData = null; // Để trống = Rơi Vàng
+            }
+        }
+        // 10% Rơi Đồ Rác
+        else if (lucky <= 40) {
+            if (itemDropPrefab != null) {
+                GameObject drop = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
+                ItemDrop idrop = drop.GetComponent<ItemDrop>();
+                if (idrop != null) {
+                    // Lấy đồ rác ngẫu nhiên từ Resources
+                    ItemData[] trashItems = Resources.LoadAll<ItemData>("Items");
+                    if (trashItems.Length > 0) idrop.itemData = trashItems[Random.Range(0, trashItems.Length)];
+                }
+            }
         }
 
         // 3. Tiêu hủy cái xác

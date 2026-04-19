@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "Th\u1EE7y_tinh_\u0110\u1ECF_IV"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Th\u1EE7y tinh \u0110\u1ECF IV"
+  icon: {fileID: 0}
+  description: "Ng\u1ECDc Th\u1EE7y tinh \u0110\u1ECF b\u1EADc IV. Linh kh\xED h\u1ED9i
+    t\u1EE5."
+  price: 100
+  type: 5
+  atkBonus: 100
+  defBonus: 0
+  hpBonus: 0
+  isTwoHanded: 0
+  healAmount: 0

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "Bao_T\u1EA3i_R\xE1ch"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Bao T\u1EA3i R\xE1ch"
+  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
+  description: "M\u1ED9t chi\u1EBFc bao t\u1EA3i v\xE1 v\xEDu \u0111\u1EC3 che th\xE2n."
+  price: 200
+  type: 1
+  atkBonus: 0
+  defBonus: 40
+  hpBonus: 200
+  isTwoHanded: 0
+  healAmount: 0

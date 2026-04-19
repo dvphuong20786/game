@@ -24,27 +24,36 @@ public class MasterItemGenerator : EditorWindow
         string path = "Assets/Resources/Items";
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-        // 1. ĐÚC NGỌC ĐỎ (CÔNG)
-        CreateGems("Ngọc Đỏ", "Ngoc_Do", ItemData.ItemType.Gem, 10, 0, 0, 200);
+        // 1. ĐÚC NGỌC "RẺ RÁCH" (Mảnh kính vụn)
+        CreateGems("Thủy tinh Đỏ", "Ngoc_Do", ItemData.ItemType.Gem, 10, 0, 0, 10);
+        CreateGems("Đá cuội Xanh", "Ngoc_Xanh", ItemData.ItemType.Gem, 0, 5, 0, 8);
+        CreateGems("Nhựa vụn Tím", "Ngoc_Tim", ItemData.ItemType.Gem, 0, 0, 50, 5);
+
+        // 2. ĐÚC THỨC ĂN "NHẶT ĐƯỢC"
+        CreateItem("Bánh Mì Mốc", "Thuc_Pham", ItemData.ItemType.Consumable, 0, 0, 0, 20, "Mẩu bánh mì nhặt ở bãi rác, hồi 20 HP.", 5);
+        CreateItem("Xương Gặm Dở", "Thuc_Pham", ItemData.ItemType.Consumable, 0, 0, 0, 50, "Miếng xương còn sót lại tí thịt cháy.", 12);
+
+        // 3. ĐÚC LINH HỒN (Vía)
+        CreateItem("Vía Hiệp sĩ", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Tàn dư linh hồn nghèo khổ.", 500);
+        CreateItem("Vía Archer", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Linh hồn kẻ bắn trộm.", 500);
+        CreateItem("Vía Smile_detu", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Linh hồn bùn đất.", 500);
+
+        // 4. ĐÚC VŨ KHÍ TẦM XA
+        CreateItem("Nỏ Gỗ Mục", "Cung_va_Ten", ItemData.ItemType.Weapon, 20, 0, 0, 0, "Cái nỏ cổ lỗ sĩ sắp gãy.", 150, true);
+
+        // 5. ĐÚC TRANG BỊ CÁI BANG (9 SLOT)
+        CreateItem("Dao Phay Gỉ", "Huyet_Kiem", ItemData.ItemType.Weapon, 150, 0, 0, 0, "Thanh sắt gỉ bám đầy bùn đất.", 500);
+        CreateItem("Bao Tải Rách", "Ao_Giap", ItemData.ItemType.Armor, 0, 40, 200, 0, "Một chiếc bao tải vá víu để che thân.", 200);
+        CreateItem("Nồi Rỉ Sét", "Mu_Sat", ItemData.ItemType.Armor, 0, 15, 50, 0, "Cái nồi thủng đáy dùng làm mũ.", 100);
+        CreateItem("Dép Rơm", "Giay_Chien_Than", ItemData.ItemType.Armor, 10, 10, 10, 0, "Đôi dép rơm đi bộ mòn cả gót.", 50);
+        CreateItem("Dây Thép Buộc", "Nhan_Vang", ItemData.ItemType.Accessory, 20, 5, 20, 0, "Một đoạn dây thép uốn thành nhẫn.", 80);
+        CreateItem("Sợi Dây Thừng", "Day_Chuyen", ItemData.ItemType.Accessory, 5, 5, 100, 0, "Sợi dây thừng nhặt ở bến tàu.", 100);
         
-        // 2. ĐÚC NGỌC XANH (THỦ)
-        CreateGems("Ngọc Xanh", "Ngoc_Xanh", ItemData.ItemType.Gem, 0, 5, 0, 150);
-        
-        // 3. ĐÚC NGỌC TÍM (MÁU)
-        CreateGems("Ngọc Tím", "Ngoc_Tim", ItemData.ItemType.Gem, 0, 0, 50, 100);
+        CreateItem("Nắp Thùng Rác", "Ao_Giap", ItemData.ItemType.Armor, 0, 30, 0, 0, "Nắp thùng rác méo mó bảo vệ tay.", 150);
+        CreateItem("Hòn Đá Bùn", "Nhan_Vang", ItemData.ItemType.Accessory, 50, 50, 50, 0, "Vật phẩm tổ truyền của kẻ ăn xin.", 1000);
 
-        // 4. ĐÚC THỨC ĂN
-        CreateItem("Bánh Mì", "Thuc_Pham", ItemData.ItemType.Consumable, 0, 0, 0, 20, "Bánh mì thơm ngon, hồi 20 HP.", 50);
-        CreateItem("Thịt Nướng", "Thuc_Pham", ItemData.ItemType.Consumable, 0, 0, 0, 50, "Thịt nướng mọng nước, hồi 50 HP.", 120);
-
-        // 5. ĐÚC LINH HỒN (Để đột phá RANK)
-        CreateItem("Linh hồn Hiệp sĩ", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Dùng để đột phá Rank cho Hiệp Sĩ.", 5000);
-        CreateItem("Linh hồn Archer", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Dùng để đột phá Rank cho Cung Thủ.", 5000);
-        CreateItem("Linh hồn Smile_detu", "Ngoc_Tim", ItemData.ItemType.Quest, 0, 0, 0, 0, "Dùng để đột phá Rank cho Slime.", 5000);
-
-        // 6. ĐÚC VŨ KHÍ TẦM XA (BOW) (MỚI)
-        CreateItem("Cung Gỗ", "Cung_va_Ten", ItemData.ItemType.Weapon, 20, 0, 0, 0, "Cung gỗ cơ bản cho Archer. Tầm xa: 6m.", 350);
-        CreateItem("Cung Thợ Săn", "Cung_va_Ten", ItemData.ItemType.Weapon, 45, 0, 0, 0, "Cung dành cho thợ săn chuyên nghiệp.", 1200);
+        // 6. ĐÚC BÌNH MÁU "HẾT DATE"
+        CreateItem("Nước Đỏ Đục", "Binh_Mau_Lon", ItemData.ItemType.Consumable, 0, 0, 0, 200, "Thứ nước màu đỏ không rõ nguồn gốc uốn vào hồi 200 HP.", 30);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -69,7 +78,7 @@ public class MasterItemGenerator : EditorWindow
         }
     }
 
-    void CreateItem(string name, string iconName, ItemData.ItemType type, int atk, int def, int hp, int heal, string desc, int price)
+    void CreateItem(string name, string iconName, ItemData.ItemType type, int atk, int def, int hp, int heal, string desc, int price, bool isTwoHanded = false)
     {
         ItemData item = ScriptableObject.CreateInstance<ItemData>();
         item.itemName = name;
@@ -80,6 +89,7 @@ public class MasterItemGenerator : EditorWindow
         item.healAmount = heal;
         item.description = desc;
         item.price = price;
+        item.isTwoHanded = isTwoHanded;
 
         // Tìm icon
         string iconPath = $"Assets/Resources/Icons/{iconName}.png";

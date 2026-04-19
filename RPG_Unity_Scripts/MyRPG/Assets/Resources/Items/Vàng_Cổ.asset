@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "V\xE0ng_C\u1ED5"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "V\xE0ng C\u1ED5"
+  icon: {fileID: -8806996033365208958, guid: 491497ea1ef67c140bede5b431d496ef, type: 3}
+  description: "Linh v\u1EADt c\u1ED5 x\u01B0a t\u0103ng to\xE0n b\u1ED9 ch\u1EC9
+    s\u1ED1 (T\u1EA1m d\xF9ng icon Nh\u1EABn)."
+  price: 10000
+  type: 3
+  atkBonus: 50
+  defBonus: 50
+  hpBonus: 50
+  healAmount: 0

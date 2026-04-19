@@ -17,6 +17,7 @@ public class ItemData : ScriptableObject
     public int atkBonus = 0;
     public int defBonus = 0;
     public int hpBonus = 0;
+    public bool isTwoHanded = false; // MỚI: Dành cho vũ khí 2 tay
 
     [Header("Dành cho Vật phẩm Tiêu thụ")]
     public int healAmount = 0;

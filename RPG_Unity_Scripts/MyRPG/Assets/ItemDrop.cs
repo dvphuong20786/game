@@ -13,34 +13,17 @@ public class ItemDrop : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        initialScale = transform.localScale; // Lưu lại kích thước ban đầu bạn đặt trong Unity
+        initialScale = transform.localScale;
 
-        // ===== TỈ LỆ RỚT ĐỒ =====
-        // ... (giữ nguyên)
-        int luc = Random.Range(1, 101);
-
-        if (luc <= 10) // 10% — Rớt trang bị
-        {
-            // Tự động load một món đồ ngẫu nhiên từ Resources nếu chưa gán thủ công
-            if (itemData == null) {
-                ItemData[] allItems = Resources.LoadAll<ItemData>("Items");
-                if (allItems.Length > 0) itemData = allItems[Random.Range(0, allItems.Length)];
-            }
-            isItem = (itemData != null);
-            glowColor = new Color(0f, 1f, 1f); 
-        }
-        else if (luc <= 40) // 30% — Rớt vàng
-        {
+        // Nếu itemData được gán từ bên ngoài (Quái vật gán), ta dùng luôn
+        if (itemData != null) {
+            isItem = true;
+            glowColor = new Color(0f, 1f, 1f); // Màu xanh cho trang bị
+        } else {
             isItem = false;
-            glowColor = new Color(1f, 0.9f, 0f); 
-        }
-        else 
-        {
-            Destroy(gameObject);
-            return;
+            glowColor = new Color(1f, 0.9f, 0f); // Màu vàng cho vàng
         }
 
-        // Gán màu ban đầu
         if (sr != null) sr.color = glowColor;
     }
 
