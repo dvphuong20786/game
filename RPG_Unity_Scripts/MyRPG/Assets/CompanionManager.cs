@@ -9,10 +9,10 @@ public class CompanionManager : MonoBehaviour
 {
     public static CompanionManager instance;
 
-    [Header("Companion Prefabs (Kéo thảo vào đây)")]
-    public GameObject warriorPrefab;
-    public GameObject archerPrefab;
-    public GameObject slimePrefab;
+    // Prefabs tự động nạp từ Resources/Companions
+    private GameObject warriorPrefab;
+    private GameObject archerPrefab;
+    private GameObject slimePrefab;
 
     private List<CompanionAI> activeCompanions = new List<CompanionAI>();
 
@@ -94,7 +94,11 @@ public class CompanionManager : MonoBehaviour
         foreach (string dat in compDatArr)
         {
             if (string.IsNullOrEmpty(dat)) continue;
-            string[] parts = dat.Split('$');
+            
+            // TỰ ĐỘNG NHẬN DIỆN ĐỊNH DẠNG (Dấu $ hoặc dấu ,)
+            char separator = dat.Contains("$") ? '$' : ',';
+            string[] parts = dat.Split(separator);
+            
             if (parts.Length < 4) continue;
 
             try {
@@ -125,12 +129,13 @@ public class CompanionManager : MonoBehaviour
         GameObject prefab = null;
         string typeName = type.ToString();
 
-        if (type == CompanionAI.CompanionType.Warrior) prefab = warriorPrefab;
-        else if (type == CompanionAI.CompanionType.Archer) prefab = archerPrefab;
-        else if (type == CompanionAI.CompanionType.Slime) prefab = slimePrefab;
+        // TỰ ĐỘNG NẠP TỪ RESOURCES (Bất tử xuyên map)
+        if (type == CompanionAI.CompanionType.Warrior) prefab = Resources.Load<GameObject>("Companions/HiepSi");
+        else if (type == CompanionAI.CompanionType.Archer) prefab = Resources.Load<GameObject>("Companions/Archer");
+        else if (type == CompanionAI.CompanionType.Slime) prefab = Resources.Load<GameObject>("Companions/Smile_detu");
 
         if (prefab == null) {
-            Debug.LogError($"❌ [CompanionManager] KHÔN_TÌM_THẤY_PREFAB cho loại: {typeName}. Hãy kiểm tra lại ô kéo thả trong CompanionManager!");
+            Debug.LogError($"❌ [CompanionManager] KHÔNG TÌM THẤY file trong Resources/Companions cho loại: {typeName}");
             return;
         }
 

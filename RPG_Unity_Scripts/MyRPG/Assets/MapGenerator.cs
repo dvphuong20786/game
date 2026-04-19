@@ -88,10 +88,20 @@ public class MapGenerator : MonoBehaviour
 
         Debug.Log("✅ Sinh bản đồ hoàn tất!");
 
+        // 5. ĐƯA NGƯỜI CHƠI VỀ VỊ TRÍ XUẤT PHÁT (2, 2)
+        if (PlayerStats.instance != null) {
+            PlayerStats.instance.transform.position = new Vector3(2 * tileSize, 2 * tileSize, 0);
+            Debug.Log("📍 [MapGenerator] Đã đưa Hiệp sĩ về vị trí xuất phát (2, 2).");
+            
+            // Đồng bộ đệ tử về theo (nếu có Manager)
+            if (CompanionManager.instance != null) {
+                CompanionManager.instance.LoadAndSpawnCompanions(PlayerStats.instance.transform);
+            }
+        }
+
         // TỰ ĐỘNG KẾT NỐI CAMERA
-        if (CameraFollow.instance != null)
-        {
-            CameraFollow.instance.SetTarget(null); // Force Camera tìm lại Player chính xác
+        if (CameraFollow.instance != null) {
+            CameraFollow.instance.SetTarget(null); 
         }
     }
 

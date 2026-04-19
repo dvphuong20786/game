@@ -174,10 +174,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6079570168498632972, guid: d60a64a3e3245a84fa7a5e91d74fb5b9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1597568985}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d60a64a3e3245a84fa7a5e91d74fb5b9, type: 3}
 --- !u!1001 &1089315482
 PrefabInstance:
@@ -381,25 +378,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4166131968498678693, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
-      propertyPath: attackRange
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4166131968498678693, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
-      propertyPath: attackDamage
-      value: 25
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1017499218701430844, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1259703537872983251, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2084589280}
-    - targetCorrespondingSourceObject: {fileID: 1259703537872983251, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2084589279}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
 --- !u!1001 &1462147731
 PrefabInstance:
@@ -466,26 +448,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2c44a821c3f3b94fa49995640f60009, type: 3}
---- !u!1 &1597568982 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6079570168498632972, guid: d60a64a3e3245a84fa7a5e91d74fb5b9, type: 3}
-  m_PrefabInstance: {fileID: 1084790699}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1597568985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597568982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30c255b921fbb2b4c8a2159b16ca10c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CompanionManager
-  warriorPrefab: {fileID: 2404086160469914645, guid: 534c7ce0e5f132e4d8568ca9afdb614f, type: 3}
-  archerPrefab: {fileID: 3461562732398988852, guid: 3131fa5639973cf49b4ef7c951d9d245, type: 3}
-  slimePrefab: {fileID: 5540972293565266389, guid: 5d58d5eb28886dd4b8c1fcf2951267d2, type: 3}
 --- !u!1001 &1647597308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -628,97 +590,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3807a955aea37cc49abe8fab4102ef84, type: 3}
---- !u!1 &2084589272 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1259703537872983251, guid: 11df4adb55d0742438259f4946a45bdd, type: 3}
-  m_PrefabInstance: {fileID: 1242325758}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2084589279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084589272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 753243c7d9cd37a4e9bfe25b577b957e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  isPlayer: 1
-  characterName: "Hi\u1EC7p S\u0129"
-  characterRank: D
-  activeBuffs: []
-  level: 1
-  currentExp: 0
-  expToNextLevel: 100
-  maxHealth: 100
-  currentHealth: 0
-  statPoints: 0
-  skillPoints: 0
-  gold: 0
-  STR: 5
-  VIT: 5
-  AGI: 5
-  inventory: []
-  unlockedSkills: []
-  eqHead:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqBody:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqLegs:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqWeaponMain:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqWeaponOff:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqRing1:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqRing2:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqNecklace:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  eqAncientGold:
-    data: {fileID: 0}
-    plusLevel: 0
-    sockets: []
-  bonusDamage: 0
-  bonusDefense: 0
---- !u!114 &2084589280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084589272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 032f37531fe81dd45b1c41cb31787dd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  attackDamage: 10
-  attackRange: 1.2
-  equippedSkills:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1001 &768021259575366634
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c6bb2e9505c994ca41829f6aa6b1d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPit
-  monsterPrefab: {fileID: 0}
+  monsterPrefab: {fileID: 5803218288227669120, guid: 1ae5b0d539a2cad4aa44cc19698cd249, type: 3}
   maxMonsters: 5
   thoiGianHoiSinh: 8
   spawnRadius: 5
