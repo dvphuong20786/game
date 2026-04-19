@@ -377,7 +377,9 @@ public class GameUI : MonoBehaviour
         GUI.DrawTexture(new Rect(x+5, y+30, 250 * expR, 8), Texture2D.whiteTexture);
 
         // Văn bản có bóng (Shadow) cho dễ đọc
-        string hpText = label + ": " + st.currentHealth + "/" + st.maxHealth;
+        // 1. Vẽ thanh máu và tên
+        string labelWithLevel = $"{label} [LV {st.level}]";
+        string hpText = labelWithLevel + ": " + st.currentHealth + "/" + st.maxHealth;
         GUIStyle hpStyle = new GUIStyle(GUI.skin.label){fontSize=13, fontStyle=FontStyle.Bold};
         DrawShadowLabel(new Rect(x+10, y+4, 240, 20), hpText, hpStyle, Color.white);
         
