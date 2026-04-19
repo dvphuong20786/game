@@ -37,6 +37,11 @@ public class Monster : MonoBehaviour
     public int expReward = 35; // Điểm kinh nghiệm cho người chơi khi chết
     public GameObject itemDropPrefab; // Bỏ vật phẩm (vd: Bình máu) vào ô này để nó rớt ra
 
+    [Header("Hiệu ứng Trạng thái (DOT)")]
+    private float poisonTimer = 0f;
+    private int poisonDps = 0;
+    private float poisonTickTimer = 0f;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -59,6 +64,29 @@ public class Monster : MonoBehaviour
         if (isAlly) return;
 
         attackTimer += Time.deltaTime;
+
+        // --- HỆ THỐNG ĐỘC (POISON DOT) (MỚI) ---
+        if (poisonTimer > 0)
+        {
+            poisonTimer -= Time.deltaTime;
+            poisonTickTimer += Time.deltaTime;
+            
+            // Mỗi 1 giây trừ máu một lần
+            if (poisonTickTimer >= 1f)
+            {
+                TakeDamage(poisonDps);
+                poisonTickTimer = 0f;
+                if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "🧪 -" + poisonDps, Color.green);
+            }
+
+            // Đổi màu quái vật sang xanh lá
+            if (sr != null) sr.color = new Color(0.5f, 1f, 0.5f);
+        }
+        else
+        {
+            // Trả về màu gốc
+            if (sr != null && sr.color != Color.white) sr.color = Color.white;
+        }
 
         // --- 1. XÁC ĐỊNH MỤC TIÊU ---
         PlayerStats target = pitTarget;
@@ -158,12 +186,17 @@ public class Monster : MonoBehaviour
         // Hiện số máu bị trừ bay lên trên đầu Quái
         if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "-" + damage, Color.white);
 
-        Debug.Log(monsterName + " bị chém " + damage + " máu! Còn lại: " + currentHealth);
+        Debug.Log(monsterName + " bị sát thương " + damage + "! Còn lại: " + currentHealth);
 
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (currentHealth <= 0) Die();
+    }
+
+    // --- KÍCH HOẠT TRẠNG THÁI ĐỘC ---
+    public void ApplyPoison(int dps = 5, float duration = 5f)
+    {
+        poisonDps = dps;
+        poisonTimer = duration;
+        Debug.Log(monsterName + " ĐÃ TRÚNG ĐỘC! " + dps + " dmg/s trong " + duration + "s");
     }
 
     void Die()

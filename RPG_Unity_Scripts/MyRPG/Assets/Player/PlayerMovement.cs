@@ -57,15 +57,13 @@ public class PlayerMovement : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 #endif
-
-        Vector3 movement = new Vector3(moveX, moveY, 0f).normalized;
+        Vector3 movement = new Vector3(moveX, moveY, 0).normalized;
+        bool isMoving = movement.magnitude > 0.01f;
         transform.Translate(movement * moveSpeed * Time.deltaTime);
 
         // ===== GỬI TÍN HIỆU ANIMATOR =====
         if (anim != null)
         {
-            bool isMoving = (moveX != 0 || moveY != 0);
-
             // Dùng CẢ HAI: Float Speed (để transition) và Bool IsMoving (để chắc chắn hơn)
             anim.SetFloat("Speed", isMoving ? 1f : 0f);
 

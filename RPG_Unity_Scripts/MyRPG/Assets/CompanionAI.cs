@@ -241,14 +241,38 @@ public class CompanionAI : MonoBehaviour
     {
         if (anim != null) anim.SetTrigger("Attack");
         int dmg = 15 + stats.bonusDamage;
-        target.TakeDamage(dmg);
-        
-        // Hiện hiệu ứng chữ bay cho đồng nhất
-        Color c = (type == CompanionType.Archer) ? Color.green : Color.yellow;
-        string icon = (type == CompanionType.Archer) ? "🏹" : (type == CompanionType.Slime ? "🟢" : "⚔️");
-        
-        if (GameUI.instance != null) 
-            GameUI.instance.ShowDamage(target.transform.position, icon + " -" + dmg, c);
+
+        // --- XỬ LÝ THEO LOẠI ĐỆ TỬ (Archer: Bắn cung, Slime: Phun Độc) ---
+        if (type == CompanionType.Archer)
+        {
+            // TẠO MŨI TÊN (Projectile)
+            GameObject arrowObj = new GameObject("Arrow_Projectile");
+            arrowObj.transform.position = transform.position;
+            Projectile proj = arrowObj.AddComponent<Projectile>();
+            
+            // Vẽ mũi tên đơn giản
+            SpriteRenderer arrowSR = arrowObj.AddComponent<SpriteRenderer>();
+            arrowSR.sprite = Resources.Load<Sprite>("Icons/Cung_va_Ten");
+            arrowSR.sortingOrder = 10;
+            arrowObj.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+
+            proj.Launch(target.transform, dmg, Color.white);
+        }
+        else if (type == CompanionType.Slime)
+        {
+            // Sát thương trực tiếp nhẹ và GÂY ĐỘC (YÊU CẦU MỤC 11)
+            target.TakeDamage(dmg / 2);
+            target.ApplyPoison(5 + (stats.level / 2), 5.0f); 
+
+            if (GameUI.instance != null) 
+                GameUI.instance.ShowDamage(target.transform.position, "🧪 TRÚNG ĐỘC!", Color.green);
+        }
+        else // Warrior (Hiệp sĩ) - Cận chiến
+        {
+            target.TakeDamage(dmg);
+            if (GameUI.instance != null) 
+                GameUI.instance.ShowDamage(target.transform.position, "⚔️ -" + dmg, Color.yellow);
+        }
     }
 
     void FlipSprite(float tx) { if (sr != null) sr.flipX = tx < transform.position.x; }

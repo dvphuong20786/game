@@ -133,7 +133,8 @@ public class PlayerStats : MonoBehaviour
     public void PromoteCharacter()
     {
         int cost = GetPromoteCost();
-        string soulName = GetRequiredSoulName();
+        string targetSoulName = GetRequiredSoulName();
+        int soulIdx = -1;
         
         // KIỂM TRA ĐIỀU KIỆN
         if (gold < cost) {
@@ -143,37 +144,36 @@ public class PlayerStats : MonoBehaviour
 
         // Kiểm tra Linh hồn trong túi đồ chung
         ItemInstance soulItem = null;
-        foreach(var item in SharedInventory) {
-            if (item != null && item.data != null && item.data.itemName == soulName) {
+        for(int i = 0; i < SharedInventory.Count; i++) {
+            var item = SharedInventory[i];
+            if (item != null && item.data != null && item.data.itemName == targetSoulName) {
                 soulItem = item;
+                soulIdx = i;
                 break;
             }
         }
 
         if (soulItem == null) {
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "THIẾU: " + soulName, Color.red);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "THIẾU LINH HỒN!", Color.magenta);
+            Debug.Log($"⚠️ Cần có {targetSoulName} trong túi đồ chung để đột phá!");
             return;
         }
 
-        float failChance = GetPromoteFailChance();
-        if (Random.value < failChance) {
-            gold -= cost / 2; // Thất bại mất nửa tiền
-            SharedInventory.Remove(soulItem); // Mất cả linh hồn
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "ĐỘT PHÁ THẤT BẠI!", Color.red);
-            return;
-        }
-
+        // Thực hiện đột phá
         gold -= cost;
-        SharedInventory.Remove(soulItem); // Thành công cũng mất linh hồn
-
+        SharedInventory.RemoveAt(soulIdx); // Tiêu thụ linh hồn
+        
+        string oldRank = characterRank;
         if      (characterRank == "D") characterRank = "C";
         else if (characterRank == "C") characterRank = "B";
         else if (characterRank == "B") characterRank = "A";
         else if (characterRank == "A") characterRank = "S";
 
+        statPoints += 20; // Thưởng điểm khi lên Rank
         CalculateBonus();
-        currentHealth = maxHealth;
-        if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "✨ ĐỘT PHÁ RANK " + characterRank + "!", Color.cyan);
+        
+        if (GameUI.instance != null)
+            GameUI.instance.ShowDamage(transform.position, $"✨ ĐỘT PHÁ {oldRank} -> {characterRank}!", Color.cyan);
     }
 
     public string GetRequiredSoulName() {
@@ -201,11 +201,11 @@ public class PlayerStats : MonoBehaviour
     // --- HỆ THỐNG TRANG BỊ ---
     public void PickUpItem(ItemData data) { SharedInventory.Add(new ItemInstance(data)); }
 
-    public void EquipItem(int index, string subSlot = "")
+    public bool EquipItem(int index, string subSlot = "")
     {
-        if (index < 0 || index >= SharedInventory.Count) return;
+        if (index < 0 || index >= SharedInventory.Count) return false;
         ItemInstance newItem = SharedInventory[index];
-        if (newItem.data == null) return;
+        if (newItem.data == null) return false;
         
         ItemInstance oldItem = null;
         var data = newItem.data;
@@ -227,8 +227,31 @@ public class PlayerStats : MonoBehaviour
         else if (data.type == ItemData.ItemType.Weapon) { oldItem = eqWeaponMain; eqWeaponMain = newItem; }
 
         SharedInventory.RemoveAt(index);
-        if (oldItem != null) SharedInventory.Add(oldItem);
+        // Đưa món đồ vào túi chung
+        SharedInventory.Add(oldItem);
         CalculateBonus();
+        return true;
+    }
+
+    // --- GỠ ĐỒ (UNEQUIP) (YÊU CẦU MỤC 5) ---
+    public void UnequipItem(string slot)
+    {
+        ItemInstance target = null;
+        if      (slot == "Head") { target = eqHead; eqHead = null; }
+        else if (slot == "Body") { target = eqBody; eqBody = null; }
+        else if (slot == "Legs") { target = eqLegs; eqLegs = null; }
+        else if (slot == "WepMain") { target = eqWeaponMain; eqWeaponMain = null; }
+        else if (slot == "WepOff")  { target = eqWeaponOff;  eqWeaponOff = null; }
+        else if (slot == "Ring1")   { target = eqRing1;      eqRing1 = null; }
+        else if (slot == "Ring2")   { target = eqRing2;      eqRing2 = null; }
+        else if (slot == "Neck")    { target = eqNecklace;   eqNecklace = null; }
+        else if (slot == "Ancient") { target = eqAncientGold; eqAncientGold = null; }
+
+        if (target != null) {
+            SharedInventory.Add(target);
+            CalculateBonus();
+            Debug.Log($"❌ Đã tháo {target.data.itemName} về túi đồ chung.");
+        }
     }
 
     public void Unequip(string slot)

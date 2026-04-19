@@ -284,32 +284,45 @@ public class GameUI : MonoBehaviour
         }
         if (inst == null || inst.data == null) return;
         var d = inst.data;
-        GUI.color = Color.yellow; GUI.Label(new Rect(x+10, y+10, 180, 45), inst.GetDisplayName(), new GUIStyle(GUI.skin.label){fontSize=12, fontStyle=FontStyle.Bold, wordWrap=true});
-        GUI.color = Color.white;
-        string s = d.description + $"\n⚔ Tấn công: +{inst.GetTotalAtk()}\n🛡 Phòng thủ: +{inst.GetTotalDef()}\n❤ HP: +{inst.GetTotalHP()}";
-        if (inst.sockets.Count > 0) { s += "\n💎 NGỌC:"; foreach(var g in inst.sockets) s += "\n - " + g.itemName; }
-        GUI.Label(new Rect(x+10, y+60, 180, 200), s, new GUIStyle(GUI.skin.label){fontSize=11, wordWrap=true});
+        
+        // 1. Tên và Giá (YÊU CẦU MỤC 5)
+        GUI.color = new Color(1f, 0.85f, 0.2f);
+        GUI.Label(new Rect(x+10, y+10, 180, 45), inst.GetDisplayName(), new GUIStyle(GUI.skin.label){fontSize=12, fontStyle=FontStyle.Bold, wordWrap=true});
+        GUI.color = new Color(1f, 0.7f, 0.2f);
+        GUI.Label(new Rect(x+10, y+45, 180, 20), $"💰 Giá: {d.price} Vàng", new GUIStyle(GUI.skin.label){fontSize=11, fontStyle=FontStyle.Italic});
 
+        // 2. Chỉ số
+        GUI.color = Color.white;
+        string s = d.description + $"\n⚔ ATK: +{inst.GetTotalAtk()}\n🛡 DEF: +{inst.GetTotalDef()}\n❤ HP: +{inst.GetTotalHP()}";
+        if (inst.sockets.Count > 0) { s += "\n💎 NGỌC:"; foreach(var g in inst.sockets) s += "\n - " + g.itemName; }
+        GUI.Label(new Rect(x+10, y+65, 180, 150), s, new GUIStyle(GUI.skin.label){fontSize=11, wordWrap=true});
+
+        float btnY = y + 210;
+
+        // 3. HÀNH ĐỘNG CHO ĐỒ TRONG TÚI
         if (fromInv) {
             if (d.type == ItemData.ItemType.Weapon || d.type == ItemData.ItemType.Armor || d.type == ItemData.ItemType.Accessory) {
-                GUI.color = Color.green; if (GUI.Button(new Rect(x+10, y+230, 180, 25), "🛡 MẶC ĐỒ")) { currentView.EquipItem(selectedItemIdx); ResetSelection(); }
-                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y+260, 180, 25), "🔨 THỢ RÈN (+)")) RPG_BlacksmithLogic.EnhanceItem(currentView, selectedItemIdx);
-            } else if (d.type == ItemData.ItemType.Consumable) {
-                GUI.color = Color.yellow; if (GUI.Button(new Rect(x+10, y+230, 180, 25), "🧪 SỬ DỤNG")) { currentView.UseConsumable(selectedItemIdx); ResetSelection(); }
-            } else if (d.type == ItemData.ItemType.Gem) {
-                GUI.color = Color.magenta; GUI.Label(new Rect(x+10, y+230, 180, 45), "💎 Mẹo: Chọn trang bị trong rương hoặc đang mặc, sau đó nhấn khảm viên này.", new GUIStyle(GUI.skin.label){fontSize=10, wordWrap=true, fontStyle=FontStyle.Italic});
-                // Thêm nút khảm nếu có đồ đang được chọn ở slot hoặc vị trí khác
-                if (selectedSlot != "") {
-                    GUI.color = Color.white;
-                    if (GUI.Button(new Rect(x+10, y+280, 180, 30), "➡ KHẢM VÀO " + selectedSlot.ToUpper())) {
-                         RPG_BlacksmithLogic.SocketIntoSlot(currentView, selectedSlot, selectedItemIdx);
-                         ResetSelection();
-                    }
+                GUI.color = new Color(0.3f, 0.6f, 1f); 
+                if (GUI.Button(new Rect(x+10, btnY, 180, 28), "🛡 MẶC CHO HIỆP SĨ")) { player.EquipItem(selectedItemIdx); ResetSelection(); }
+                btnY += 32;
+
+                foreach(var comp in companions) {
+                    if (comp == null) continue;
+                    GUI.color = new Color(0.3f, 0.8f, 0.4f); 
+                    if (GUI.Button(new Rect(x+10, btnY, 180, 25), $"🛡 {comp.characterName} MẶC")) { comp.EquipItem(selectedItemIdx); ResetSelection(); }
+                    btnY += 28;
                 }
+                GUI.color = Color.cyan; if (GUI.Button(new Rect(x+10, y + 365, 180, 25), "🔨 THỢ RÈN (+)")) RPG_BlacksmithLogic.EnhanceItem(player, selectedItemIdx);
+            } else if (d.type == ItemData.ItemType.Consumable) {
+                GUI.color = Color.yellow; if (GUI.Button(new Rect(x+10, btnY, 180, 30), "🧪 SỬ DỤNG")) { currentView.UseConsumable(selectedItemIdx); ResetSelection(); }
+            } else if (d.type == ItemData.ItemType.Gem) {
+                GUI.color = Color.magenta; GUI.Label(new Rect(x+10, btnY, 180, 45), "💎 Khảm: Chọn đồ trước, rồi nhấn nút khảm viên này.", new GUIStyle(GUI.skin.label){fontSize=10, wordWrap=true});
             }
-            GUI.color = Color.red; if (GUI.Button(new Rect(x+10, y+345, 180, 25), "💸 BÁN: +" + d.price + "G")) { currentView.SellItem(selectedItemIdx); ResetSelection(); }
-        } else {
-            GUI.color = new Color(1f, 0.5f, 0f); if (GUI.Button(new Rect(x+10, y+310, 180, 30), "⚔ GỠ RA")) { currentView.Unequip(selectedSlot); ResetSelection(); }
+        } 
+        // 4. HÀNH ĐỘNG CHO ĐỒ ĐANG MẶC
+        else {
+            GUI.color = new Color(0.8f, 0.2f, 0.2f);
+            if (GUI.Button(new Rect(x+10, btnY, 180, 35), "❌ GỠ BỎ")) { currentView.UnequipItem(selectedSlot); ResetSelection(); }
         }
     }
 
@@ -384,8 +397,10 @@ public class GameUI : MonoBehaviour
         DrawShadowLabel(new Rect(x+10, y+4, 240, 20), hpText, hpStyle, Color.white);
         
         GUIStyle infoStyle = new GUIStyle(GUI.skin.label){fontSize=12, fontStyle=FontStyle.Bold};
+        // SỬA: Màu vàng cam (Amber) đậm nét hơn để dễ đọc (YÊU CẦU MỤC 6)
+        GUI.color = new Color(1f, 0.75f, 0f); 
         string infoText = "💰 " + st.gold + " Vàng  [RANK " + st.characterRank + "]";
-        DrawShadowLabel(new Rect(x+5, y+60, 240, 25), infoText, infoStyle, Color.yellow);
+        DrawShadowLabel(new Rect(x+5, y+60, 240, 25), infoText, infoStyle, GUI.color);
 
         // ==========================================
         // 3. HIỂN THỊ KỸ NĂNG & COOLDOWN (DÀNH CHO NGƯỜI CHƠI & ĐỆ TỬ)

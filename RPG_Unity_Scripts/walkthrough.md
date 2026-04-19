@@ -1,26 +1,35 @@
-# Walkthrough: Data Isolation & Eternal Persistence
+# Walkthrough: Đại Tu Hệ Thống Vật Phẩm & Tiến Hóa Nhân Vật
 
-Tôi đã triển khai giao thức lưu trữ mới theo kiến trúc **Cách ly đa tầng (Multi-layer Isolation)** để giải quyết dứt điểm lỗi mất trang bị khi chuyển map.
+Bản cập nhật này tập trung vào việc hoàn thiện hệ thống Hòm đồ, khôi phục Ngọc ép đồ và triển khai cơ chế Đột phá Rank chuyên nghiệp.
 
-## 🛠 Giải pháp kỹ thuật mới
+## 🌟 Các tính năng mới
 
-### 1. Giao thức nén Item (Item Serialization V3)
-- **Định dạng mới**: `TênVậtPhẩm!CấpCộng!Ngọc1.Ngọc2`
-- **Tại sao**: Sử dụng dấu `!` và `.` để không bao giờ bị trùng lẫn với dứ liệu hệ thống hay tên Buff.
+### 1. Hệ thống Ngọc (Gems) & Thực phẩm
+- **15 loại Ngọc (Bậc I - V)**: Công (Đỏ), Thủ (Xanh), HP (Tím) với hiệu ứng cộng chỉ số tăng tiến.
+- **Vật phẩm tiêu thụ**: Bánh mì và Thịt nướng giúp hồi máu nhanh.
+- **Icon Premium**: Toàn bộ icon được thiết kế lại với phong cách hiện đại, lung linh.
 
-### 2. Giao thức nén Đệ tử (Companion Isolation)
-- **Định dạng mới**: `Type$Level$Exp$HP$STR$VIT$AGI$StatPts$SkillPts$Skills$Buffs$Equips`
-- **Sự thay đổi**: Toàn bộ dấu phân tách chính được chuyển sang **dấu Đô la ($)**.
-- **Ưu điểm**: Dù trong chuỗi `Buffs` hay `Skills` có chứa dấu phẩy (`,`) hay chấm phẩy (`;`), hệ thống vẫn sẽ bóc tách chính xác ô `Equips` ở cuối cùng mà không bị lệch vị trí.
+### 2. Đại tu Hòm đồ (Inventory UI)
+- **Thông tin chi tiết**: Hiện giá bán và chỉ số cộng thêm rõ ràng.
+- **Trang bị cho Đệ tử**: Người chơi có thể mặc đồ trực tiếp cho Archer/Slime ngay từ túi đồ của mình.
+- **Cơ chế Gỡ bỏ**: Đã có nút [❌ GỠ BỎ] để tháo trang bị đang mặc.
 
-## 🚨 Hướng dẫn xác thực (Một lần duy nhất)
-
-1. **Vào game**: Mặc lại toàn bộ đồ cho người chơi và đệ tử (vì dứ liệu cũ theo định dạng dấu phẩy sẽ bị hệ thống mới bỏ qua).
-2. **Dịch chuyển**: Đi qua Portal sang map khác.
-3. **Kết quả**: 
-   - Đồ đạc phải còn nguyên vẹn 100%.
-   - Kiểm tra Console (Phím `~` hoặc bảng Console): Nếu có vật phẩm nào không nạp được, hệ thống sẽ hiện cảnh báo ⚠️ kèm tên món đồ đó.
+### 3. Đột phá Rank Thần Cấp
+- **Linh hồn nhân vật**: Thêm các vật phẩm Linh hồn Hiệp sĩ, Archer, Slime.
+- **Tiến hóa**: Nhân vật cần Linh hồn + Vàng để nâng Rank (D -> C -> B -> A -> S).
+- **Phần thưởng**: Mỗi khi lên Rank sẽ được thưởng 20 điểm tiềm năng.
 
 ---
-> [!IMPORTANT]
-> **Cam kết**: Đây là giao thức lưu trữ mạnh mẽ nhất, có khả năng chống lại mọi lỗi nạp dứ liệu do trùng lặp ký tự. Hệ thống trang bị của bạn hiện tại đã đạt chuẩn chuyên nghiệp.
+
+## 🛠 Công cụ hỗ trợ mới
+Tôi đã tạo script **`MasterItemGenerator.cs`** tại `Assets/Editor`.
+- **Cách dùng**: Menu `⚒️ RPG Tools` -> `Lò Đúc Vật Phẩm Thần Cấp`.
+- **Tác dụng**: Nhấn 1 nút để tự động tạo ra toàn bộ 15 loại Ngọc, 2 loại thực phẩm và 3 loại Linh hồn vào `Resources/Items`.
+
+## ✅ Các sửa lỗi (Fixes)
+- **Animation**: Nhân vật không còn "chạy tại chỗ" khi đứng yên (Fix Mục 1).
+- **Màu sắc**: Chữ Vàng hiển thị tiền và Rank được đổi sang màu Vàng Cam (Amber) đậm nét, dễ đọc hơn (Fix Mục 6).
+
+---
+## 📂 Nhật ký thiết kế
+Mọi yêu cầu của bạn đã được lưu trữ và cập nhật trạng thái tại: [BẢN_THIẾT_KẾ_TOÀN_DIỆN.md](file:///f:/WORK/GAME/RPG_Unity_Scripts/B%E1%BA%A2N_THI%E1%BA%BET_K%E1%BA%BE_TO%C3%80N_DI%E1%BB%86N.md)

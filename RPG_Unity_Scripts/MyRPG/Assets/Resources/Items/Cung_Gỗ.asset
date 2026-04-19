@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: "Cung_G\u1ED7"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Cung G\u1ED7"
+  icon: {fileID: -8104679438138010064, guid: 8d3839392bce0fb49b85d9835d222a6e, type: 3}
+  description: "Cung g\u1ED7 c\u01A1 b\u1EA3n cho Archer. T\u1EA7m xa: 6m."
+  price: 350
+  type: 0
+  atkBonus: 20
+  defBonus: 0
+  hpBonus: 0
+  healAmount: 0

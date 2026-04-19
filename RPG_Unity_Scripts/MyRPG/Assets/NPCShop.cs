@@ -41,15 +41,10 @@ public class NPCShop : MonoBehaviour
 
     void InitializeShop()
     {
-        // LỌC: Shop này chỉ bán Thuốc, Ngọc và đồ Quest
+        // GỠ BỎ BỘ LỌC: Để Thương nhân bán TẤT CẢ đồ phục vụ mục đích TEST
         ItemData[] allItems = Resources.LoadAll<ItemData>("Items");
         foreach(var item in allItems) {
-            if (item.type == ItemData.ItemType.Consumable || 
-                item.type == ItemData.ItemType.Gem || 
-                item.type == ItemData.ItemType.Quest) 
-            {
-                shopInventory.Add(new ShopItem(item));
-            }
+            shopInventory.Add(new ShopItem(item));
         }
     }
 
