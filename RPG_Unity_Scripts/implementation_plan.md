@@ -1,17 +1,27 @@
-# Kế hoạch: Dọn dẹp mã nguồn & Xử lý lỗi trùng lặp
+# Implementation Plan: Ngôi Làng "Ổ Chuột Kinh Kỳ"
 
-Hiện tại Unity đang báo lỗi vì có 3 file `PlayerStats.cs` khác nhau trong dự án. Kế hoạch này giúp dọn dẹp rác và đảm bảo Unity chỉ nhận diện 1 file duy nhất.
+Mục tiêu: Tạo dựng bối cảnh ngôi làng khởi đầu nghèo khổ, đông đúc để khớp với hệ thống trang bị "Cái Bang".
 
-## Các thay đổi dự kiến
+## User Review Required
 
-### 1. Dọn dẹp [DELETE]
-- Xóa file cũ tại: `F:\WORK\GAME\RPG_Unity_Scripts\MyRPG\Assets\Player\PlayerStats.cs`
-- Xóa file trung gian tại: `F:\WORK\GAME\RPG_Unity_Scripts\PlayerStats.cs` (Nếu bạn đồng ý chỉ giữ trong Assets).
+> [!IMPORTANT]
+> **Đặc điểm mỹ thuật**:
+> - Sử dụng tông màu trầm, u tối (nâu đất, xám gỉ, vàng úa).
+> - Nhà cửa được dựng từ các vật liệu tái chế (bao rách, tôn gỉ, gỗ mục).
+> - **Cảm giác đông đúc**: Tạo ra bằng cách đặt nhiều vật cản (Props) và NPC ở các khoảng cách gần nhau.
 
-### 2. Thống nhất [MODIFY]
-- Cập nhật phiên bản mới nhất (có đầy đủ Atk/Def/HP) vào file: `F:\WORK\GAME\RPG_Unity_Scripts\MyRPG\Assets\PlayerStats.cs`.
-- Đây sẽ là file duy nhất Unity dùng để chạy game.
+## Proposed Changes
 
-## Xác minh
-- Sau khi xóa, chỉ còn duy nhất 1 file `PlayerStats.cs` trong dự án.
-- Kiểm tra Console của Unity: Toàn bộ lỗi "already defines a member" sẽ biến mất.
+### [Mỹ Thuật - Assets]
+- [NEW] Tạo ảnh mẫu **Nhà tranh rách nát** (Slum House).
+- [NEW] Tạo ảnh mẫu **Cổng làng cũ kỹ** (Broken Village Gate).
+- [NEW] Tạo bộ **Props đường phố** (Thùng gỗ mục, xe đẩy gãy, đống rác).
+
+### [Tài Liệu - Level Design]
+#### [MODIFY] [HUONG_DAN_TAO_MAP_TUNG_BUOC.md]
+- Thêm chương: "Bố cục ngôi làng ổ chuột".
+- Cách sắp xếp các lớp (Layers) để tạo cảm giác chật hẹp, ngột ngạt.
+
+## Verification Plan
+1. **Kiểm tra hình ảnh**: Đảm bảo các nhà cửa trông thật "nghèo" nhưng vẫn có nét nghệ thuật riêng.
+2. **Kiểm tra bố cục**: Hướng dẫn người dùng đặt các vật cản để tạo ra các lối đi lắt léo trong làng.

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "Nh\u1EF1a_v\u1EE5n_T\xEDm_IV"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Nh\u1EF1a v\u1EE5n T\xEDm IV"
-  icon: {fileID: 0}
+  icon: {fileID: -9096058485933590163, guid: cd48de8b244d90b4fa95b4d81b1dc7b1, type: 3}
   description: "Ng\u1ECDc Nh\u1EF1a v\u1EE5n T\xEDm b\u1EADc IV. Linh kh\xED h\u1ED9i
     t\u1EE5."
   price: 50

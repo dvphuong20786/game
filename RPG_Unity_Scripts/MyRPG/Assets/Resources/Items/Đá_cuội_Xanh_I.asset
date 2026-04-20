@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\u0110\xE1_cu\u1ED9i_Xanh_I"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "\u0110\xE1 cu\u1ED9i Xanh I"
-  icon: {fileID: 0}
+  icon: {fileID: 6903489823675116999, guid: 3c7ead428a0925040bbe825f70ed05bb, type: 3}
   description: "Ng\u1ECDc \u0110\xE1 cu\u1ED9i Xanh b\u1EADc I. Linh kh\xED h\u1ED9i
     t\u1EE5."
   price: 8

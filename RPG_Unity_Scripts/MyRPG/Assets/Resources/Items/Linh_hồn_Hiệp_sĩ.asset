@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
-  m_Name: "Linh_h\u1ED3n_Hi\u1EC7p_s\u0129"
+  m_Name: "Linh_H\u1ED3n_Hi\u1EC7p_S\u0129"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: "Linh h\u1ED3n Hi\u1EC7p s\u0129"
-  icon: {fileID: 0}
-  description: "D\xF9ng \u0111\u1EC3 \u0111\u1ED9t ph\xE1 Rank cho Hi\u1EC7p S\u0129."
-  price: 5000
+  itemName: "Linh H\u1ED3n Hi\u1EC7p S\u0129"
+  icon: {fileID: -9096058485933590163, guid: cd48de8b244d90b4fa95b4d81b1dc7b1, type: 3}
+  description: "T\xE0n d\u01B0 linh h\u1ED3n ngh\xE8o kh\u1ED5."
+  price: 500
+  requiredLevel: 0
   type: 4
   atkBonus: 0
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: "N\u1ECF_G\u1ED7_M\u1EE5c"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "N\u1ECF G\u1ED7 M\u1EE5c"
-  icon: {fileID: -8104679438138010064, guid: 8d3839392bce0fb49b85d9835d222a6e, type: 3}
-  description: "C\xE1i n\u1ECF c\u1ED5 l\u1ED7 s\u0129 s\u1EAFp g\xE3y."
+  icon: {fileID: -5807205096721793290, guid: f8747dd969beec54c9046030b5831f02, type: 3}
+  description: "C\xE1i n\u1ECF c\u0169 r\u01A1 l\u1ECFng s\u1EAFp g\xE3y."
   price: 150
+  requiredLevel: 0
   type: 0
   atkBonus: 20
   defBonus: 0

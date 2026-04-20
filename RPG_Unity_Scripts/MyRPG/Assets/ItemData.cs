@@ -11,13 +11,14 @@ public class ItemData : ScriptableObject
     [TextArea(3, 5)]
     public string description = "Mô tả vật phẩm...";
     public int price = 100;
+    public int requiredLevel = 0;
     public ItemType type = ItemType.Quest;
 
     [Header("Chỉ số cộng thêm")]
     public int atkBonus = 0;
     public int defBonus = 0;
     public int hpBonus = 0;
-    public bool isTwoHanded = false; // MỚI: Dành cho vũ khí 2 tay
+    public bool isTwoHanded = false;
 
     [Header("Dành cho Vật phẩm Tiêu thụ")]
     public int healAmount = 0;

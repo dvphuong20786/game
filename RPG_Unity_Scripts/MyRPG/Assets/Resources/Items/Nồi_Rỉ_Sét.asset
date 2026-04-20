@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 8227207433426634624, guid: 21de47f073a523147a0e81ae4d9139a2, type: 3}
   description: "C\xE1i n\u1ED3i th\u1EE7ng \u0111\xE1y d\xF9ng l\xE0m m\u0169."
   price: 100
+  requiredLevel: 0
   type: 1
   atkBonus: 0
   defBonus: 15

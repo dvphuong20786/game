@@ -23,13 +23,14 @@ public class GameUI : MonoBehaviour
     private GUIStyle slotLabelStyle;
     private GUIStyle statValueStyle;
 
-    private PlayerStats player;
+    public PlayerStats player;
+    public BlacksmithUI blacksmithUI;
     private List<PlayerStats> companions = new List<PlayerStats>();
     private int companionViewIdx = -1; 
     private PlayerStats currentView; 
     private PlayerCombat combat;
 
-    private bool isBagOpen = false;
+    public bool isBagOpen = false;
     private int currentTab = 0; 
     private int selectedItemIdx = -1;
     private string selectedSlot = "";
@@ -116,6 +117,9 @@ public class GameUI : MonoBehaviour
 
         DrawHUD();
 
+        if (blacksmithUI != null && blacksmithUI.isOpen) {
+            DrawBlacksmithWindow();
+        }
         if (isBagOpen)
         {
             Cursor.visible = true;
@@ -264,7 +268,14 @@ public class GameUI : MonoBehaviour
             GUI.DrawTexture(new Rect(0, i*42, 210, 38), Texture2D.whiteTexture);
             if (inv[i].data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(5, i*42+3, 32, 32), inv[i].data.icon.texture); }
             GUI.color = sel ? Color.yellow : Color.white;
-            if (GUI.Button(new Rect(40, i*42, 170, 38), inv[i].GetDisplayName(), GUI.skin.label)) { selectedItemIdx = i; selectedSlot = ""; }
+            if (GUI.Button(new Rect(40, i*42, 170, 38), inv[i].GetDisplayName(), GUI.skin.label)) { 
+                selectedItemIdx = i; selectedSlot = ""; 
+                // N?u dang m? th? r�n, nh?n v�o d? s? dua v�o slot (Y�U C?U M?I)
+                if (BlacksmithUI.instance != null && BlacksmithUI.instance.isOpen) {
+                    if (BlacksmithUI.instance.targetItem == null) BlacksmithUI.instance.SetTarget(i);
+                    else BlacksmithUI.instance.SetMaterial(i);
+                }
+            }
         }
         GUI.EndScrollView();
     }
@@ -495,6 +506,48 @@ public class GameUI : MonoBehaviour
         foreach (var d in damageTexts) {
             Vector3 p = c.WorldToScreenPoint(d.worldPos);
             if (p.z > 0) { GUI.color = new Color(d.color.r, d.color.g, d.color.b, d.alpha); GUI.Label(new Rect(p.x-50, Screen.height-p.y-25, 100, 30), d.text, dmgStyle); }
+        }
+    }
+
+    void DrawBlacksmithWindow() {
+        GUI.color = new Color(0, 0, 0, 0.7f);
+        GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), Texture2D.whiteTexture);
+        
+        float w = 500; float h = 400;
+        Rect r = new Rect(Screen.width/2 - w/2, Screen.height/2 - h/2, w, h);
+        GUI.color = new Color(0.15f, 0.1f, 0.05f, 0.95f);
+        GUI.DrawTexture(r, Texture2D.whiteTexture);
+        GUI.color = Color.white;
+        GUI.Label(new Rect(r.x, r.y+10, w, 30), "?? L� R�N C�I BANG", headerStyle);
+        if (GUI.Button(new Rect(r.xMax-40, r.y+5, 30, 25), "X")) BlacksmithUI.instance.Close();
+
+        // 1. � Trang b? Ch�nh
+        DrawBSSlot(r.x + 50, r.y + 60, "TRANG B?", BlacksmithUI.instance.targetItem, () => BlacksmithUI.instance.targetItem = null);
+        
+        // 2. � Nguy�n li?u/Ng?c
+        DrawBSSlot(r.x + 200, r.y + 60, "NG?C/R�C", BlacksmithUI.instance.materialItem, () => BlacksmithUI.instance.materialItem = null);
+
+        // 3. K?t qu? d? ki?n
+        GUI.color = Color.gray; GUI.Label(new Rect(r.x + 350, r.y+120, 100, 25), "?? K?T QU?");
+        
+        // N�t th?c hi?n
+        GUI.color = Color.yellow;
+        if (GUI.Button(new Rect(r.x + 150, r.y + 320, 200, 45), "?? B?T �?U LUY?N �?")) {
+            BlacksmithUI.instance.Execute();
+        }
+        GUI.color = Color.white;
+    }
+
+    void DrawBSSlot(float x, float y, string lbl, ItemInstance inst, System.Action onRemove) {
+        GUI.color = new Color(0.3f, 0.3f, 0.3f);
+        GUI.DrawTexture(new Rect(x, y, 70, 70), Texture2D.whiteTexture);
+        GUI.color = Color.white;
+        GUIStyle sS = new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter, fontSize=10};
+        if (inst == null) {
+            GUI.Label(new Rect(x, y, 70, 70), "[TRỐNG]\n" + lbl, sS);
+        } else {
+            if (GUI.Button(new Rect(x, y, 70, 70), inst.data.icon != null ? inst.data.icon.texture : null)) onRemove();
+            GUI.Label(new Rect(x, y+50, 70, 20), inst.GetDisplayName(), sS);
         }
     }
 }

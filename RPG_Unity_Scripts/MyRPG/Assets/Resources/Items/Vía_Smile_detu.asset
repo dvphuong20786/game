@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "V\xEDa_Smile_detu"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "V\xEDa Smile_detu"
-  icon: {fileID: 0}
+  icon: {fileID: -9096058485933590163, guid: cd48de8b244d90b4fa95b4d81b1dc7b1, type: 3}
   description: "Linh h\u1ED3n b\xF9n \u0111\u1EA5t."
   price: 500
   type: 4

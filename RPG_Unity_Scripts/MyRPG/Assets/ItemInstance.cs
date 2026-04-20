@@ -92,6 +92,43 @@ public static class RPG_BlacksmithLogic
         character.CalculateBonus();
     }
 
+    // --- HỆ THỐNG CHẾ TẠO (RECIPES) ---
+    public static ItemData CheckRecipe(ItemInstance main, ItemInstance mat) {
+        if (main == null || mat == null) return null;
+        string mainName = main.data.itemName;
+        string matName = mat.data.itemName;
+
+        // Công thức 1: Kiếm Nẹp Sắt (Lv 5)
+        if (mainName == "Dao Phay Gỉ" && matName == "Ngọc Thủy tinh Đỏ I") return Resources.Load<ItemData>("Items/Kiếm_Nẹp_Sắt");
+        
+        // Công thức 2: Giáp Tôn Gỉ (Lv 5)
+        if (mainName == "Bao Tải Rách" && matName == "Ngọc Thủy tinh Xanh I") return Resources.Load<ItemData>("Items/Giáp_Bao_Tải_Bọc_Tôn");
+
+        return null; // Không khớp công thức nào
+    }
+
+    public static void SocketByInventoryIndex(PlayerStats character, int targetIdx, int gemIdx)
+    {
+        var inv = character.SharedInventory;
+        if (targetIdx < 0 || gemIdx < 0 || targetIdx >= inv.Count || gemIdx >= inv.Count) return;
+        
+        ItemInstance target = inv[targetIdx];
+        ItemInstance gemIdxInst = inv[gemIdx];
+        
+        if (gemIdxInst.data.type != ItemData.ItemType.Gem || character.gold < 500) return;
+
+        character.gold -= 500;
+        if (Random.value <= 0.8f) {
+            target.sockets.Add(gemIdxInst.data);
+            inv.RemoveAt(gemIdx);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💎 KHẢM THÀNH CÔNG!", Color.cyan);
+        } else {
+            inv.RemoveAt(gemIdx);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💥 KHẢM THẤT BẠI!", Color.red);
+        }
+        character.CalculateBonus();
+    }
+
     public static void SocketIntoSlot(PlayerStats character, string slot, int gemIdx)
     {
         var inv = character.SharedInventory;

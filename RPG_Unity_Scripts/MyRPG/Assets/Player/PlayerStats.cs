@@ -211,7 +211,11 @@ public class PlayerStats : MonoBehaviour
     {
         if (index < 0 || index >= SharedInventory.Count) return false;
         ItemInstance newItem = SharedInventory[index];
-        if (newItem.data == null) return false;
+                if (newItem.data == null) return false;
+        if (level < newItem.data.requiredLevel) {
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "CHUA Ð? TRÌNH!", Color.red);
+            return false;
+        }
         
         ItemInstance oldItem = null;
         var data = newItem.data;

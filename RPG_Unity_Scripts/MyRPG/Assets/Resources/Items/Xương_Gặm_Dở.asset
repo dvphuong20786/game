@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: "X\u01B0\u01A1ng_G\u1EB7m_D\u1EDF"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "X\u01B0\u01A1ng G\u1EB7m D\u1EDF"
-  icon: {fileID: 0}
+  icon: {fileID: -6369545574175375314, guid: 95560c590958dea42925b63ed6c52107, type: 3}
   description: "Mi\u1EBFng x\u01B0\u01A1ng c\xF2n s\xF3t l\u1EA1i t\xED th\u1ECBt
     ch\xE1y."
   price: 12
+  requiredLevel: 0
   type: 2
   atkBonus: 0
   defBonus: 0

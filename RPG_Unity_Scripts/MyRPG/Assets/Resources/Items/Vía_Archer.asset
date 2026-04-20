@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "V\xEDa_Archer"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "V\xEDa Archer"
-  icon: {fileID: 0}
+  icon: {fileID: -9096058485933590163, guid: cd48de8b244d90b4fa95b4d81b1dc7b1, type: 3}
   description: "Linh h\u1ED3n k\u1EBB b\u1EAFn tr\u1ED9m."
   price: 500
   type: 4

@@ -1,7 +1,5 @@
-# Danh sách công việc: Dọn dẹp & Thống nhất mã nguồn
-
-- [x] Xóa file dư thừa tại: `MyRPG\Assets\Player\PlayerStats.cs`.
-- [x] Chuyển mã nguồn mới nhất vào: `MyRPG\Assets\PlayerStats.cs`.
-- [x] Xóa file trùng lặp tại thư mục gốc: `RPG_Unity_Scripts\PlayerStats.cs`.
-- [x] Kiểm tra Unity: Đảm bảo hết lỗi biên dịch.
-- [x] Cập nhật `walkthrough.md`.
+- [x] Phê duyệt kế hoạch xây dựng ngôi làng "Ổ Chuột".
+- [/] Thiết kế bố cục Map (Layout Design) chi tiết trong file hướng dẫn.
+- [ ] Soạn bộ Props danh sách (Thùng mục, Xe gãy, Bao rác) để trang trí.
+- [ ] Hướng dẫn cài đặt NPC Thợ rèn và Dân làng vào Map mới.
+- [ ] Tạo hình ảnh mỹ thuật cho nhà cửa (Đợi hồi Quota vẽ).

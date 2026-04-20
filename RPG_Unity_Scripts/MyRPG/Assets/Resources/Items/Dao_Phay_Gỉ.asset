@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: -1259444635990393367, guid: 255a7a7100cda3546b420a8d60990823, type: 3}
   description: "Thanh s\u1EAFt g\u1EC9 b\xE1m \u0111\u1EA7y b\xF9n \u0111\u1EA5t."
   price: 500
+  requiredLevel: 0
   type: 0
   atkBonus: 150
   defBonus: 0
