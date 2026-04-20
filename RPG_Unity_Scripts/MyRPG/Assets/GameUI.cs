@@ -295,22 +295,22 @@ public class GameUI : MonoBehaviour
         GUI.color = Color.gray; GUI.Label(new Rect(x+8, curY, 195, 30), d.description, new GUIStyle(GUI.skin.label){fontSize=9, wordWrap=true}); curY += 35;
         
         GUIStyle stType = new GUIStyle(GUI.skin.label){fontSize=10, fontStyle=FontStyle.Bold};
-        if (inst.GetBaseAtk() > 0) { GUI.color = Color.red; GUI.Label(new Rect(x+10, curY, 190, 18), "Tấn Công: " + inst.GetBaseAtk() + " (Gốc)", stType); curY += 18; }
-        if (inst.GetBaseDef() > 0) { GUI.color = Color.cyan; GUI.Label(new Rect(x+10, curY, 190, 18), "Phòng Thủ: " + inst.GetBaseDef() + " (Gốc)", stType); curY += 18; }
-        if (inst.GetBaseHp() > 0) { GUI.color = Color.green; GUI.Label(new Rect(x+10, curY, 190, 18), "Sinh Mệnh: " + inst.GetBaseHp() + " (Gốc)", stType); curY += 18; }
+        if (inst.GetBaseAtk() > 0) { GUI.color = Color.red; GUI.Label(new Rect(x+10, curY, 190, 18), "Tấn Công: " + inst.GetBaseAtk(), stType); curY += 18; }
+        if (inst.GetBaseDef() > 0) { GUI.color = Color.cyan; GUI.Label(new Rect(x+10, curY, 190, 18), "Phòng Thủ: " + inst.GetBaseDef(), stType); curY += 18; }
+        if (inst.GetBaseHp() > 0) { GUI.color = Color.green; GUI.Label(new Rect(x+10, curY, 190, 18), "Sinh Mệnh: " + inst.GetBaseHp(), stType); curY += 18; }
 
         if (inst.itemRank > 0) {
             curY += 5; GUI.color = Color.gray; GUI.DrawTexture(new Rect(x+10, curY, 190, 1), Texture2D.whiteTexture); curY += 4;
-            GUI.color = inst.GetRankColor(); GUI.Label(new Rect(x+10, curY, 190, 18), "Thuộc tính Hạng [" + inst.GetRankString() + "]", stType); curY += 18;
-            if (inst.rankBonusAtk > 0) { GUI.color = new Color(1f, 0.4f, 0.4f); GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusAtk + " Tấn Công (Bonus)", stType); curY += 18; }
-            if (inst.rankBonusDef > 0) { GUI.color = new Color(0.4f, 0.8f, 1f); GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusDef + " Phòng Thủ (Bonus)", stType); curY += 18; }
-            if (inst.rankBonusHp > 0)  { GUI.color = new Color(0.4f, 1f, 0.4f);  GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusHp + " Sinh Mệnh (Bonus)", stType); curY += 18; }
+            // Removed header row here
+            if (inst.rankBonusAtk > 0) { GUI.color = new Color(1f, 0.4f, 0.4f); GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusAtk + " Tấn Công", stType); curY += 18; }
+            if (inst.rankBonusDef > 0) { GUI.color = new Color(0.4f, 0.8f, 1f); GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusDef + " Phòng Thủ", stType); curY += 18; }
+            if (inst.rankBonusHp > 0)  { GUI.color = new Color(0.4f, 1f, 0.4f);  GUI.Label(new Rect(x+20, curY, 180, 18), "+ " + inst.rankBonusHp + " Sinh Mệnh", stType); curY += 18; }
         }
 
         // 3. PHÂN ĐOẠN NGỌC
         if (inst.sockets.Count > 0) {
             curY += 5; GUI.color = Color.gray; GUI.DrawTexture(new Rect(x+10, curY, 190, 1), Texture2D.whiteTexture); curY += 4;
-            GUI.color = Color.magenta; GUI.Label(new Rect(x+10, curY, 190, 18), "Ngọc Khảm (" + inst.sockets.Count + "/5)", stType); curY += 20;
+            // Removed header row here
             foreach (var gem in inst.sockets) {
                 if (gem == null) continue;
                 if (gem.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(x+12, curY+2, 14, 14), gem.icon.texture); }

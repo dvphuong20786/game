@@ -49,7 +49,9 @@ public class ItemInstance
     {
         if (data == null) return "Trống";
         string n = data.itemName;
-        if (itemRank > 0) n += " [" + GetRankString() + "]";
+        // Chỉ hiện Rank cho Trang bị (Vũ khí, Giáp, Phụ kiện)
+        bool isEquip = data.type == ItemData.ItemType.Weapon || data.type == ItemData.ItemType.Armor || data.type == ItemData.ItemType.Accessory;
+        if (isEquip) n = "[" + GetRankString() + "] " + n;
         if (plusLevel > 0) n += " +" + plusLevel;
         return n;
     }
@@ -163,30 +165,27 @@ public static class RPG_BlacksmithLogic
         return null; // Không khớp công thức nào
     }
 
-    public static void SocketByInventoryIndex(PlayerStats character, int targetIdx, int gemIdx)
+    public static void SocketItem(PlayerStats character, ItemInstance targetItem, ItemInstance gemItem)
     {
         var inv = character.SharedInventory;
-        if (targetIdx < 0 || gemIdx < 0 || targetIdx >= inv.Count || gemIdx >= inv.Count) return;
+        if (!inv.Contains(targetItem) || !inv.Contains(gemItem)) return;
         
-        ItemInstance target = inv[targetIdx];
-        ItemInstance gemIdxInst = inv[gemIdx];
-        
-        if (gemIdxInst.data.type != ItemData.ItemType.Gem || character.gold < 500) return;
+        if (gemItem.data.type != ItemData.ItemType.Gem || character.gold < 500) return;
 
         // Gioi han 5 ngoc
-        if (target.sockets.Count >= 5) {
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "TRANG BI DA DAY NGOC!", Color.red);
+        if (targetItem.sockets.Count >= 5) {
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "TRANG BỊ ĐÃ ĐẦY NGỌC!", Color.red);
             return;
         }
 
         character.gold -= 500;
         if (Random.value <= 0.8f) {
-            target.sockets.Add(gemIdxInst.data);
-            inv.RemoveAt(gemIdx);
+            targetItem.sockets.Add(gemItem.data);
+            inv.Remove(gemItem);
             if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💎 KHẢM THÀNH CÔNG!", Color.cyan);
         } else {
-            inv.RemoveAt(gemIdx);
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💥 KHẢM THẤT BẠI!", Color.red);
+            inv.Remove(gemItem);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💥 KHẢM THẤT BẠI (MẤT NGỌC)!", Color.red);
         }
         character.CalculateBonus();
     }

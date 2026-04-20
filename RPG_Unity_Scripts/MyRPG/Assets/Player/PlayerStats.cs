@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -426,27 +426,47 @@ public class PlayerStats : MonoBehaviour
         if (inst == null || inst.data == null) return "";
         string gems = "";
         foreach(var g in inst.sockets) if(g != null) gems += (gems==""?"":".") + g.name;
-        return $"{inst.data.name}!{inst.plusLevel}!{gems}";
+        // Format mới: name!plus!rank!bAtk!bDef!bHp!gems
+        return $"{inst.data.name}!{inst.plusLevel}!{inst.itemRank}!{inst.rankBonusAtk}!{inst.rankBonusDef}!{inst.rankBonusHp}!{gems}";
     }
 
     public ItemInstance DeserializeInstance(string data) {
         if (string.IsNullOrEmpty(data)) return null;
         string[] p = data.Split('!');
         if (p.Length < 2) return null;
+        
         string itemName = p[0].Trim();
         ItemData b = Resources.Load<ItemData>("Items/" + itemName);
-        if (b == null) {
-            Debug.LogWarning("⚠️ [LoadItem] Không tìm thấy dữ liệu trong Resources/Items: " + itemName);
-            return null;
-        }
+        if (b == null) return null;
+        
         ItemInstance inst = new ItemInstance(b);
         inst.plusLevel = int.Parse(p[1]);
-        if (p.Length > 2 && !string.IsNullOrEmpty(p[2])) {
-            foreach(var gName in p[2].Split('.')) {
-                ItemData gem = Resources.Load<ItemData>("Items/" + gName.Trim());
-                if (gem != null) inst.sockets.Add(gem);
+        
+        // Hỗ trợ định dạng mới (p.Length >= 6)
+        if (p.Length >= 6) {
+            inst.itemRank = int.Parse(p[2]);
+            inst.rankBonusAtk = int.Parse(p[3]);
+            inst.rankBonusDef = int.Parse(p[4]);
+            inst.rankBonusHp = int.Parse(p[5]);
+            
+            // Ngọc (gems) nằm ở p[6]
+            if (p.Length > 6 && !string.IsNullOrEmpty(p[6])) {
+                foreach(var gName in p[6].Split('.')) {
+                    ItemData gem = Resources.Load<ItemData>("Items/" + gName.Trim());
+                    if (gem != null) inst.sockets.Add(gem);
+                }
+            }
+        } 
+        else {
+            // Định dạng cũ: name!plus!gems (gems nằm ở p[2])
+            if (p.Length > 2 && !string.IsNullOrEmpty(p[2])) {
+                foreach(var gName in p[2].Split('.')) {
+                    ItemData gem = Resources.Load<ItemData>("Items/" + gName.Trim());
+                    if (gem != null) inst.sockets.Add(gem);
+                }
             }
         }
+        
         return inst;
     }
 
