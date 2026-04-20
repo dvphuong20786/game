@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Giap_Ton
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Gi\xE1p Bao T\u1EA3i B\u1ECDc T\xF4n"
+  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
+  description: "\xC1o bao t\u1EA3i n\u1EB9p t\xF4n g\xF2. (B\u1EADc 2)"
+  price: 1200
+  requiredLevel: 5
+  type: 1
+  atkBonus: 0
+  defBonus: 150
+  hpBonus: 1000
+  isTwoHanded: 0
+  healAmount: 0

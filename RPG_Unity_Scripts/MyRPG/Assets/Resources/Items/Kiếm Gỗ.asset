@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "Ki\u1EBFm G\u1ED7"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Ki\u1EBFm G\u1ED7"
-  icon: {fileID: 0}
+  icon: {fileID: -1259444635990393367, guid: 255a7a7100cda3546b420a8d60990823, type: 3}
   description: "V\u0169 kh\xED t\xE2n th\u1EE7"
   price: 50
+  requiredLevel: 0
   type: 0
   atkBonus: 8
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "Ng\u1ECDc_Xanh_III"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Ng\u1ECDc Xanh III"
-  icon: {fileID: 0}
+  icon: {fileID: 6903489823675116999, guid: 3c7ead428a0925040bbe825f70ed05bb, type: 3}
   description: "Ng\u1ECDc Ng\u1ECDc Xanh b\u1EADc III. Linh kh\xED h\u1ED9i t\u1EE5."
   price: 600
+  requiredLevel: 0
   type: 5
   atkBonus: 0
   defBonus: 20
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

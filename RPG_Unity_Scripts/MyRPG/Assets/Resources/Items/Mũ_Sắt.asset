@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "M\u0169_S\u1EAFt"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "M\u0169 S\u1EAFt"
-  icon: {fileID: 8227207433426634624, guid: 21de47f073a523147a0e81ae4d9139a2, type: 3}
+  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
   description: "M\u0169 chi\u1EBFn binh b\u1EA3o v\u1EC7 v\xF9ng \u0111\u1EA7u."
   price: 1200
+  requiredLevel: 0
   type: 1
   atkBonus: 0
   defBonus: 15
   hpBonus: 50
+  isTwoHanded: 0
   healAmount: 0

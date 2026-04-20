@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3933689034135819213}
   - component: {fileID: 1955295933280668581}
   - component: {fileID: 2433226533696384237}
+  - component: {fileID: 3495849617884430253}
   m_Layer: 0
   m_Name: NPC_Blacksmith
   m_TagString: Untagged
@@ -153,3 +154,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCBlacksmith
   npcName: "Th\u1EE3 R\xE8n Ba \u0110\xF4"
   interactRange: 2.5
+--- !u!114 &3495849617884430253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6489583036440752696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5770f406eea95b442a72ce2c846ec4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlacksmithUI
+  isOpen: 0
+  targetItem:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  materialItem:
+    data: {fileID: 0}
+    plusLevel: 0
+    sockets: []
+  targetIdx: -1
+  materialIdx: -1

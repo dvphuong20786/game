@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "RPG/Skill")]

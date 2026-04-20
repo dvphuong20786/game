@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "N\u1EAFp_Th\xF9ng_R\xE1c"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "N\u1EAFp Th\xF9ng R\xE1c"
-  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
+  icon: {fileID: 8227207433426634624, guid: 21de47f073a523147a0e81ae4d9139a2, type: 3}
   description: "N\u1EAFp th\xF9ng r\xE1c m\xF3p m\xE9o b\u1EA3o v\u1EC7 tay."
   price: 150
   requiredLevel: 0

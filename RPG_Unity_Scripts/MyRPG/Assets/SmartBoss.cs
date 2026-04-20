@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // ===========================
 // Gắn script này vào Boss cùng với Monster.cs

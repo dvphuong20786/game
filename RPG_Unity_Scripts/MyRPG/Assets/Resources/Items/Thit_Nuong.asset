@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Thit_Nuong
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Th\u1ECBt N\u01B0\u1EDBng"
+  icon: {fileID: -6369545574175375314, guid: 95560c590958dea42925b63ed6c52107, type: 3}
+  description: "Mi\u1EBFng th\u1ECBt n\u01B0\u1EDBng c\xF2n n\xF3ng, h\u1ED3i 80
+    HP."
+  price: 25
+  requiredLevel: 0
+  type: 2
+  atkBonus: 0
+  defBonus: 0
+  hpBonus: 0
+  isTwoHanded: 0
+  healAmount: 80

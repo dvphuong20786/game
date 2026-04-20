@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: "N\u01B0\u1EDBc \u0110\u1ECF \u0110\u1ED9c"
   icon: {fileID: -5985998337434525298, guid: 2d9e6623455014e4f8a9947ba3b702ae, type: 3}
   description: "Th\u1EE9 n\u01B0\u1EDBc m\xE0u \u0111\u1ECF kh\xF4ng r\xF5 ngu\u1ED3n
-    g\u1ED1c u\u1ED1ng v\xE0o h\u1ED3i 200 HP."
+    g\u1ED1c."
   price: 30
   requiredLevel: 0
   type: 2

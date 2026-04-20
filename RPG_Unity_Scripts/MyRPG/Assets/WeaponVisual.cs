@@ -1,55 +1,66 @@
 using UnityEngine;
 
-// Gắn script này vào một GameObject con của Player/Companion (ví dụ: đặt tên là "WeaponHand")
+// Gan script nay vao mot GameObject con cua Player/Companion (vi du: WeaponHand)
+// Chinh Scale cua GameObject WeaponHand trong Inspector cho phu hop voi tile size game
 public class WeaponVisual : MonoBehaviour
 {
-    public PlayerStats stats; // Gán PlayerStats của nhân vật vào đây
+    public PlayerStats stats;
+    [Tooltip("Scale vu khi (0.2 = nho, 0.4 = lon)")]
+    public float weaponScale = 0.22f;
+    [Tooltip("Offset ngang (duong = phai, am = trai)")]
+    public float xOffsetRight = 0.28f;
+    [Tooltip("Offset doc (am = xuong thap)")]
+    public float yOffset = -0.08f;
+
     private SpriteRenderer sr;
     private ItemData currentWeapon;
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        if (stats == null) stats = GetComponentInParent<PlayerStats>();
-        
-        // Cấu hình ban đầu cho SpriteRenderer vũ khí
         if (sr == null) sr = gameObject.AddComponent<SpriteRenderer>();
-        sr.sortingOrder = 10; // Đảm bảo hiện đè lên thân nhân vật
+        if (stats == null) stats = GetComponentInParent<PlayerStats>();
+
+        sr.sortingOrder = 5; // Hien de len than nhan vat
     }
 
     void Update()
     {
         if (stats == null) return;
 
-        // Kiểm tra xem vũ khí chính có thay đổi không
         ItemData newWeapon = (stats.eqWeaponMain != null) ? stats.eqWeaponMain.data : null;
-
         if (newWeapon != currentWeapon)
         {
             currentWeapon = newWeapon;
             UpdateVisual();
         }
 
-        // Tự động xoay vũ khí theo hướng nhân vật (Lật theo FlipX của thân)
-        SpriteRenderer parentSR = transform.parent.GetComponent<SpriteRenderer>();
+        // Lat theo huong nhan vat
+        SpriteRenderer parentSR = transform.parent != null ? transform.parent.GetComponent<SpriteRenderer>() : null;
         if (parentSR != null)
         {
             sr.flipX = parentSR.flipX;
-            // Chỉnh vị trí tay tùy theo hướng lật (nếu cần)
-            float xOffset = parentSR.flipX ? -0.3f : 0.3f;
-            transform.localPosition = new Vector3(xOffset, -0.1f, 0);
+            float xOff = parentSR.flipX ? -xOffsetRight : xOffsetRight;
+            transform.localPosition = new Vector3(xOff, yOffset, 0f);
         }
     }
 
     void UpdateVisual()
     {
-        if (currentWeapon != null)
+        if (currentWeapon != null && currentWeapon.icon != null)
         {
             sr.sprite = currentWeapon.icon;
             sr.enabled = true;
-            // Thu nhỏ vũ khí một chút để vừa tay nhân vật
-            transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-            Debug.Log($"⚔️ Đã hiển thị {currentWeapon.itemName} trên tay {stats.characterName}");
+            // Dat scale tuy loai vu khi
+            float s = weaponScale;
+            if (currentWeapon.type == ItemData.ItemType.Weapon)
+            {
+                bool isRanged = currentWeapon.itemName.Contains("Cung") ||
+                                currentWeapon.itemName.Contains("No") ||
+                                currentWeapon.itemName.Contains("Nu");
+                s = isRanged ? weaponScale * 1.2f : weaponScale;
+            }
+            transform.localScale = new Vector3(s, s, 1f);
         }
         else
         {

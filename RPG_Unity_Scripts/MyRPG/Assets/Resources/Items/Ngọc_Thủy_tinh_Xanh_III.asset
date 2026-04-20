@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
   m_Name: "Ng\u1ECDc_Th\u1EE7y_tinh_Xanh_III"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: "Ng\u1ECDc Th\u1EE7y tinh Xanh III"
+  itemName: "Ng\u1ECDc Th\u1EE7y Tinh Xanh III"
   icon: {fileID: 6903489823675116999, guid: 3c7ead428a0925040bbe825f70ed05bb, type: 3}
-  description: "Ng\u1ECDc Th\u1EE7y tinh Xanh b\u1EADc III. Linh kh\xED h\u1ED9i
+  description: "Ng\u1ECDc Th\u1EE7y Tinh Xanh III b\u1EADc III. Linh kh\xED h\u1ED9i
     t\u1EE5."
   price: 32
   requiredLevel: 0

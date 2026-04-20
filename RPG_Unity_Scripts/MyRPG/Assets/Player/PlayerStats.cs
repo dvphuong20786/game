@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -213,7 +213,7 @@ public class PlayerStats : MonoBehaviour
         ItemInstance newItem = SharedInventory[index];
                 if (newItem.data == null) return false;
         if (level < newItem.data.requiredLevel) {
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "CHUA �? TR�NH!", Color.red);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(transform.position, "CHUA �? TR�NH!", Color.red);
             return false;
         }
         
@@ -221,19 +221,19 @@ public class PlayerStats : MonoBehaviour
         var data = newItem.data;
 
         if (data.type == ItemData.ItemType.Armor) {
-             if (data.itemName.Contains("Mũ")) { oldItem = eqHead; eqHead = newItem; }
-             else if (data.itemName.Contains("Áo")) { oldItem = eqBody; eqBody = newItem; }
-             else if (data.itemName.Contains("Giày")) { oldItem = eqLegs; eqLegs = newItem; }
+             if (data.itemName.Contains("Mũ") || data.itemName.Contains("Nồi") || data.itemName.Contains("Nắp") ) { oldItem = eqHead; eqHead = newItem; }
+             else if (data.itemName.Contains("Áo") || data.itemName.Contains("Bao") || data.itemName.Contains("Giáp") ) { oldItem = eqBody; eqBody = newItem; }
+             else if (data.itemName.Contains("Giày") || data.itemName.Contains("Dép") ) { oldItem = eqLegs; eqLegs = newItem; }
         }
         else if (data.type == ItemData.ItemType.Accessory) {
-             if (data.itemName.Contains("Dây")) { oldItem = eqNecklace; eqNecklace = newItem; }
+             if (data.itemName.Contains("Dây") || data.itemName.Contains("Sợi") ) { oldItem = eqNecklace; eqNecklace = newItem; }
              else if (data.itemName.Contains("Vàng Cổ")) { oldItem = eqAncientGold; eqAncientGold = newItem; }
-             else if (data.itemName.Contains("Nhẫn")) {
+             else if (data.itemName.Contains("Nhẫn") || data.itemName.Contains("Đá") ) {
                 if (subSlot == "Ring1") { oldItem = eqRing1; eqRing1 = newItem; }
                 else { oldItem = eqRing2; eqRing2 = newItem; }
              }
         }
-        else if (data.itemName.Contains("Khiên")) { 
+        else if (data.itemName.Contains("Khiên") || data.itemName.Contains("Nắp") ) { 
             // Nếu đang cầm vũ khí 2 tay thì phải tháo ra trước (YÊU CẦU MỤC 7)
             if (eqWeaponMain != null && eqWeaponMain.data != null && eqWeaponMain.data.isTwoHanded) {
                 UnequipItem("WepMain");

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // ===========================
 // Điều khiển hoạt ảnh NPC: Đứng im, Đi bộ, Chào hỏi

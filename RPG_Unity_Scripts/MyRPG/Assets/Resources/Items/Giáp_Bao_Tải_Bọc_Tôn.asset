@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "Gi\xE1p_Bao_T\u1EA3i_B\u1ECDc_T\xF4n"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Gi\xE1p Bao T\u1EA3i B\u1ECDc T\xF4n"
-  icon: {fileID: -2793950401586511748, guid: a596e63bb41c52d40991b19b0468e039, type: 3}
+  icon: {fileID: -3528471466632330500, guid: d5ec96e38dfc94948a892c9360af3f92, type: 3}
   description: "\xC1o bao t\u1EA3i n\u1EB9p t\xF4n g\u1EC9. (Lv 5)"
   price: 1200
   requiredLevel: 5

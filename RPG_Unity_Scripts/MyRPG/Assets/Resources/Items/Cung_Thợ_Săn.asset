@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "Cung_Th\u1EE3_S\u0103n"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Cung Th\u1EE3 S\u0103n"
-  icon: {fileID: -8104679438138010064, guid: 8d3839392bce0fb49b85d9835d222a6e, type: 3}
+  icon: {fileID: -5807205096721793290, guid: f8747dd969beec54c9046030b5831f02, type: 3}
   description: "Cung d\xE0nh cho th\u1EE3 s\u0103n chuy\xEAn nghi\u1EC7p."
   price: 1200
+  requiredLevel: 0
   type: 0
   atkBonus: 45
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

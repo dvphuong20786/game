@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // Gắn cái này vô cục vàng hoặc vật phẩm rơi ra từ quái
 public class ItemDrop : MonoBehaviour

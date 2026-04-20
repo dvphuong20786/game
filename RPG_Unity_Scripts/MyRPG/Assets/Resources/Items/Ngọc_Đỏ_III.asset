@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: "Ng\u1ECDc_\u0110\u1ECF_III"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Ng\u1ECDc \u0110\u1ECF III"
-  icon: {fileID: 0}
+  icon: {fileID: -3942494661357690047, guid: 8e9c51bdff42a9e4ea8e582f7cff32ab, type: 3}
   description: "Ng\u1ECDc Ng\u1ECDc \u0110\u1ECF b\u1EADc III. Linh kh\xED h\u1ED9i
     t\u1EE5."
   price: 800
+  requiredLevel: 0
   type: 5
   atkBonus: 40
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

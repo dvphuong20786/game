@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Nhan_Vong_Co
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "Nh\u1EABn V\xF2ng C\u1ECF"
+  icon: {fileID: -8806996033365208958, guid: 491497ea1ef67c140bede5b431d496ef, type: 3}
+  description: "V\u1EADt ph\u1EA9m t\u1ED5 truy\u1EC1n c\u1EE7a k\u1EBB \u0103n xin."
+  price: 1000
+  requiredLevel: 0
+  type: 3
+  atkBonus: 50
+  defBonus: 50
+  hpBonus: 50
+  isTwoHanded: 0
+  healAmount: 0

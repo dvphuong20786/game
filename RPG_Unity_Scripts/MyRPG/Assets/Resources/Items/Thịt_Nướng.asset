@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "Th\u1ECBt_N\u01B0\u1EDBng"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Th\u1ECBt N\u01B0\u1EDBng"
-  icon: {fileID: 0}
+  icon: {fileID: -6369545574175375314, guid: 95560c590958dea42925b63ed6c52107, type: 3}
   description: "Th\u1ECBt n\u01B0\u1EDBng m\u1ECDng n\u01B0\u1EDBc, h\u1ED3i 50 HP."
   price: 120
+  requiredLevel: 0
   type: 2
   atkBonus: 0
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 50

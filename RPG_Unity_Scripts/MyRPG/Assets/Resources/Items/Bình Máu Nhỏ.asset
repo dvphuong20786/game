@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "B\xECnh M\xE1u Nh\u1ECF"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "B\xECnh M\xE1u Nh\u1ECF"
-  icon: {fileID: 0}
+  icon: {fileID: -5985998337434525298, guid: 2d9e6623455014e4f8a9947ba3b702ae, type: 3}
   description: "H\u1ED3i 30 HP"
   price: 20
+  requiredLevel: 0
   type: 2
   atkBonus: 0
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 30

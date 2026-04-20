@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: "Linh_h\u1ED3n_Smile_detu"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: "Linh h\u1ED3n Smile_detu"
-  icon: {fileID: 0}
+  icon: {fileID: -9096058485933590163, guid: cd48de8b244d90b4fa95b4d81b1dc7b1, type: 3}
   description: "D\xF9ng \u0111\u1EC3 \u0111\u1ED9t ph\xE1 Rank cho Slime."
   price: 5000
+  requiredLevel: 0
   type: 4
   atkBonus: 0
   defBonus: 0
   hpBonus: 0
+  isTwoHanded: 0
   healAmount: 0

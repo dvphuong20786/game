@@ -2,71 +2,89 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // ===========================
-// LỚP ITEM INSTANCE (BẢN SAO VẬT PHẨM)
-// Dùng để quản lý từng món đồ riêng biệt với cấp độ nâng cấp và ngọc khảm khác nhau
+// L?P ITEM INSTANCE (B?N SAO V?T PH?M)
+// Dng qu?n ly item voi H?ng (Rank), Cuong Hoa, va Ng?c.
 // ===========================
 [System.Serializable]
 public class ItemInstance
 {
-    public ItemData data;          // Tham chiếu đến dữ liệu gốc (Kiếm, Giáp...)
-    public int plusLevel = 0;      // Cấp cường hóa (+1, +2...)
-    public List<ItemData> sockets = new List<ItemData>(); // Danh sách ngọc đã khảm
+    public ItemData data;
+    public int plusLevel = 0;      // Cuong hoa (+1, +2...)
+    public int itemRank = 0;       // 0=F, 1=E, 2=D, 3=C, 4=B, 5=A, 6=S
+    public List<ItemData> sockets = new List<ItemData>();
+    
+    // Dong chi so phu tu Hang (Rank)
+    public int rankBonusAtk = 0;
+    public int rankBonusDef = 0;
+    public int rankBonusHp = 0;
 
     public ItemInstance(ItemData source)
     {
         data = source;
         plusLevel = 0;
+        itemRank = 0; // Mac dinh la F
         sockets = new List<ItemData>();
+        GenerateRankBonus();
     }
 
-    // Lấy tên hiển thị kèm cấp độ nâng cấp
+    public string GetRankString() {
+        string[] ranks = {"F", "E", "D", "C", "B", "A", "S"};
+        return itemRank >= 0 && itemRank < ranks.Length ? ranks[itemRank] : "F";
+    }
+
+    public Color GetRankColor() {
+        switch(itemRank) {
+            case 0: return Color.white;
+            case 1: return Color.green;
+            case 2: return new Color(0.2f, 0.6f, 1f); // Blue
+            case 3: return new Color(0.7f, 0.2f, 1f); // Purple
+            case 4: return Color.yellow;
+            case 5: return new Color(1f, 0.5f, 0f); // Orange
+            case 6: return Color.red;
+            default: return Color.white;
+        }
+    }
+
     public string GetDisplayName()
     {
         if (data == null) return "Trống";
-        return data.itemName + (plusLevel > 0 ? " +" + plusLevel : "");
+        string n = data.itemName;
+        if (itemRank > 0) n += " [" + GetRankString() + "]";
+        if (plusLevel > 0) n += " +" + plusLevel;
+        return n;
     }
 
-    // Tính toán sức tấn công cuối cùng (Gốc + Cường hóa + Ngọc)
-    public int GetTotalAtk()
-    {
-        if (data == null) return 0;
-        int bonus = data.atkBonus;
-        // Mỗi cấp cộng thêm 10% chỉ số gốc
-        bonus += (int)(data.atkBonus * 0.1f * plusLevel);
-        // Cộng chỉ số từ ngọc khảm (Ví dụ: Ngọc Đỏ tăng ATK)
-        foreach (var gem in sockets) {
-            if (gem != null) bonus += gem.atkBonus;
+    public void GenerateRankBonus() {
+        // Reset chi so
+        rankBonusAtk = 0; rankBonusDef = 0; rankBonusHp = 0;
+        if (itemRank == 0) return; // Hang F khong co dong
+        
+        // Random ra "itemRank" so luong dong
+        for (int i=0; i<itemRank; i++) {
+            int type = Random.Range(0, 3);
+            int power = (itemRank * 2) + Random.Range(1, 5);
+            if (type == 0) rankBonusAtk += power;
+            else if (type == 1) rankBonusDef += power;
+            else rankBonusHp += power * 5;
         }
-        return bonus;
     }
 
-    // Tính toán phòng thủ cuối cùng
-    public int GetTotalDef()
-    {
-        if (data == null) return 0;
-        int bonus = data.defBonus;
-        bonus += (int)(data.defBonus * 0.1f * plusLevel);
-        foreach (var gem in sockets) {
-            if (gem != null) bonus += gem.defBonus;
-        }
-        return bonus;
-    }
+    // --- XU LY CHI SO CHI TIET ---
+    public int GetBaseAtk() { return data != null ? data.atkBonus + (int)(data.atkBonus * 0.1f * plusLevel) : 0; }
+    public int GetBaseDef() { return data != null ? data.defBonus + (int)(data.defBonus * 0.1f * plusLevel) : 0; }
+    public int GetBaseHp() { return data != null ? data.hpBonus + (int)(data.hpBonus * 0.1f * plusLevel) : 0; }
 
-    // Tính toán HP cuối cùng
-    public int GetTotalHP()
-    {
-        if (data == null) return 0;
-        int bonus = data.hpBonus;
-        bonus += (int)(data.hpBonus * 0.1f * plusLevel);
-        foreach (var gem in sockets) {
-            if (gem != null) bonus += gem.hpBonus;
-        }
-        return bonus;
-    }
+    public int GetGemAtk() { int b=0; foreach(var g in sockets) if(g!=null) b+=g.atkBonus; return b; }
+    public int GetGemDef() { int b=0; foreach(var g in sockets) if(g!=null) b+=g.defBonus; return b; }
+    public int GetGemHp() { int b=0; foreach(var g in sockets) if(g!=null) b+=g.hpBonus; return b; }
+
+    public int GetTotalAtk() { return GetBaseAtk() + rankBonusAtk + GetGemAtk(); }
+    public int GetTotalDef() { return GetBaseDef() + rankBonusDef + GetGemDef(); }
+    public int GetTotalHP() { return GetBaseHp() + rankBonusHp + GetGemHp(); }
 }
 
 // ===========================
-// HỆ THỐNG LOGIC THỢ RÈN (Hợp nhất để sửa lỗi Load Asset)
+// H? TH?NG LOGIC TH? REN (H?p nh?t d? s?a l?i Load Asset)
 // ===========================
 public static class RPG_BlacksmithLogic
 {
@@ -92,6 +110,41 @@ public static class RPG_BlacksmithLogic
         character.CalculateBonus();
     }
 
+    // --- GHÉP ĐỒ LÊN HẠNG (RANK UP) ---
+    public static void MergeItem(PlayerStats character, int targetIdx, int matIdx)
+    {
+        var inv = character.SharedInventory;
+        if (targetIdx < 0 || matIdx < 0 || targetIdx >= inv.Count || matIdx >= inv.Count) return;
+        
+        ItemInstance main = inv[targetIdx];
+        ItemInstance mat = inv[matIdx];
+
+        if (main.data == null || mat.data == null) return;
+        if (main.data.itemName != mat.data.itemName || main.itemRank != mat.itemRank) return;
+        if (main.itemRank >= 6) return; // S la max
+        
+        int cost = (main.itemRank + 1) * 1000;
+        if (character.gold < cost) return;
+
+        character.gold -= cost;
+        
+        // Ti le cuc thap nhu yeu cau
+        // F->E: 40%, E->D: 30%, D->C: 20%, C->B: 15%, B->A: 10%, A->S: 5%
+        float[] rates = {0.4f, 0.3f, 0.2f, 0.15f, 0.1f, 0.05f, 0f};
+        float successRate = rates[main.itemRank];
+
+        if (Random.value <= successRate) {
+            main.itemRank++;
+            main.GenerateRankBonus(); // Random dong phu
+            inv.RemoveAt(matIdx);
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "🚀 ĐỘT PHÁ LÊN HẠNG " + main.GetRankString(), Color.yellow);
+        } else {
+            inv.RemoveAt(matIdx); // Xap mat do
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💥 ĐỘT PHÁ THẤT BẠI (MẤT ĐỒ)", Color.red);
+        }
+        character.CalculateBonus();
+    }
+
     // --- HỆ THỐNG CHẾ TẠO (RECIPES) ---
     public static ItemData CheckRecipe(ItemInstance main, ItemInstance mat) {
         if (main == null || mat == null) return null;
@@ -103,6 +156,9 @@ public static class RPG_BlacksmithLogic
         
         // Công thức 2: Giáp Tôn Gỉ (Lv 5)
         if (mainName == "Bao Tải Rách" && matName == "Ngọc Thủy tinh Xanh I") return Resources.Load<ItemData>("Items/Giáp_Bao_Tải_Bọc_Tôn");
+
+        // Cong thuc 3: Cung Tho San
+        if (mainName == "Nỏ Gỗ Mục" && matName == "Ngọc Thủy tinh Tím I") return Resources.Load<ItemData>("Items/Cung_Thợ_Săn");
 
         return null; // Không khớp công thức nào
     }
@@ -117,41 +173,15 @@ public static class RPG_BlacksmithLogic
         
         if (gemIdxInst.data.type != ItemData.ItemType.Gem || character.gold < 500) return;
 
+        // Gioi han 5 ngoc
+        if (target.sockets.Count >= 5) {
+            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "TRANG BI DA DAY NGOC!", Color.red);
+            return;
+        }
+
         character.gold -= 500;
         if (Random.value <= 0.8f) {
             target.sockets.Add(gemIdxInst.data);
-            inv.RemoveAt(gemIdx);
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💎 KHẢM THÀNH CÔNG!", Color.cyan);
-        } else {
-            inv.RemoveAt(gemIdx);
-            if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💥 KHẢM THẤT BẠI!", Color.red);
-        }
-        character.CalculateBonus();
-    }
-
-    public static void SocketIntoSlot(PlayerStats character, string slot, int gemIdx)
-    {
-        var inv = character.SharedInventory;
-        if (character == null || gemIdx < 0 || gemIdx >= inv.Count) return;
-        ItemInstance gem = inv[gemIdx];
-        if (gem.data == null || gem.data.type != ItemData.ItemType.Gem || character.gold < 500) return;
-
-        ItemInstance target = null;
-        if      (slot == "Head") target = character.eqHead;
-        else if (slot == "Body") target = character.eqBody;
-        else if (slot == "Legs") target = character.eqLegs;
-        else if (slot == "WepMain") target = character.eqWeaponMain;
-        else if (slot == "WepOff") target = character.eqWeaponOff;
-        else if (slot == "Ring1") target = character.eqRing1;
-        else if (slot == "Ring2") target = character.eqRing2;
-        else if (slot == "Neck") target = character.eqNecklace;
-        else if (slot == "Ancient") target = character.eqAncientGold;
-
-        if (target == null) return;
-
-        character.gold -= 500;
-        if (Random.value <= 0.7f) {
-            target.sockets.Add(gem.data);
             inv.RemoveAt(gemIdx);
             if (GameUI.instance != null) GameUI.instance.ShowDamage(character.transform.position, "💎 KHẢM THÀNH CÔNG!", Color.cyan);
         } else {
