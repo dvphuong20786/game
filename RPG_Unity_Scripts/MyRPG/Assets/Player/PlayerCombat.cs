@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
@@ -22,7 +22,7 @@ public class PlayerCombat : MonoBehaviour
     public SkillData[] equippedSkills = new SkillData[4];
 
     // Quản lý hồi chiêu theo từng Slot
-    private float[] skillCooldowns = new float[4];
+    public float[] skillCooldowns = new float[4];
 
     // Biến cho hiệu ứng Buff tạm thời
     private float buffTimer = 0f;

@@ -26,3 +26,9 @@
 - [x] Sửa lỗi: Bình máu và Ngọc không hiển thị Rank.
 - [x] Lưu trữ tiến độ và yêu cầu vào file checklist (YÊU CẦU.md).
 - [x] SỬA LỖI: Vật phẩm Rank E bị mất khi load lại game (Đã nâng cấp Save/Load).
+
+## PHASE 20: ĐẠI TU GIAO DIỆN THEO PHONG CÁCH DARK FANTASY (Sắp làm)
+- [ ] Thay đổi tông màu chủ đạo sang tối, viền rỉ sét/cổ điển.
+- [ ] Thiết kế lại layout Lò Rèn/Túi đồ giống ảnh mẫu (cửa sổ riêng biệt, menu dọc/ngang).
+- [ ] Sửa lại nền các slot item thành dạng rách/cổ.
+- [ ] Cập nhật Font chữ và màu chữ cho phù hợp với phong cách 'nghèo rách'/Dark Fantasy.

@@ -54,6 +54,7 @@ public class MasterItemGenerator : EditorWindow
         CreateItem("Linh Hồn Slime",   "Linh_Hon_Slime",   "Ngoc_Tim", ItemData.ItemType.Quest, 0,0,0,0, "Linh hồn bùn xỉn.", 500);
 
         // === VŨ KHÍ ===
+        CreateItem("Gậy Tre Gãy",    "Gay_Tre_Gay",  "Gay_Tre_Gay", ItemData.ItemType.Weapon, 10,0,0,0, "Khúc tre già nứt toác dùng để tự vệ.", 40);
         CreateItem("Nỏ Gỗ Mục",      "No_Go_Muc",    "Cung_va_Ten", ItemData.ItemType.Weapon, 20,0,0,0, "Cái nỏ cũ rơ lỏng sắp gãy.", 150, true);
         CreateItem("Dao Phay Gỉ",    "Dao_Phay_Gi",  "Huyet_Kiem",  ItemData.ItemType.Weapon, 150,0,0,0,"Thanh sắt gỉ bám đầy bùn đất.", 500);
         CreateItem("Kiếm Nẹp Sắt",   "Kiem_Nep_Sat", "Huyet_Kiem",  ItemData.ItemType.Weapon, 350,0,0,0, "Kiếm rẻ nẹp thêm sắt. (Bậc 2)", 1500, false, 5);
@@ -62,12 +63,16 @@ public class MasterItemGenerator : EditorWindow
         // === GIÁP / ĐỒ CŨ ===
         CreateItem("Bao Tải Rách",    "Bao_Tai_Rach",   "Ao_Giap",        ItemData.ItemType.Armor,    0,40,200,0, "Một chiếc bao tải vá víu để che thân.", 200);
         CreateItem("Nồi Rỉ Sét",      "Noi_Ri_Set",     "Mu_Sat",         ItemData.ItemType.Armor,    0,15,50,0,  "Cái nồi thủng đáy dùng làm mũ.", 100);
+        CreateItem("Rổ Thủng",        "Ro_Thung",       "Ro_Thung",       ItemData.ItemType.Armor,    0,10,30,0,  "Cái rổ tre cũ nát để đội đầu.", 80);
         CreateItem("Dép Rơm",         "Dep_Rom",        "Giay_Chien_Than", ItemData.ItemType.Armor,    10,10,10,0, "Đôi dép rơm đi bộ mòn cả gót.", 50);
+        CreateItem("Ủng Cao Su Thủng", "Ung_Cao_Su_Thung", "Ung_Cao_Su_Thung", ItemData.ItemType.Armor, 5,20,100,0, "Đôi ủng cũ nát đầy bùn.", 120);
+        CreateItem("Áo Tơi Cũ",       "Ao_Toi_Cu",      "Ao_Toi_Cu",      ItemData.ItemType.Armor,    0,30,150,0, "Chiếc áo bằng rơm đã mục nát.", 180);
         CreateItem("Nắp Thùng Rác",   "Nap_Thung_Rac",  "Ao_Giap",        ItemData.ItemType.Armor,    0,30,0,0,   "Nắp thùng rác móp méo bảo vệ tay.", 150);
         CreateItem("Khiên Thép Cũ",   "Khien_Thep_Cu",  "Khien_Thep",     ItemData.ItemType.Armor,    0,80,100,0, "Tấm khiên thép cũ nhưng chắc chắn.", 800);
         CreateItem("Giáp Bao Tải Bọc Tôn", "Giap_Ton",  "Ao_Giap",        ItemData.ItemType.Armor,    0,150,1000,0, "Áo bao tải nẹp tôn gò. (Bậc 2)", 1200, false, 5);
 
         // === TRANG SỨC ===
+        CreateItem("Vòng Tay Dây Kẽm", "Vong_Tay_Day_Kem", "Vong_Tay_Day_Kem", ItemData.ItemType.Accessory, 5,5,10,0, "Sợi dây thép xoắn lại làm trang sức.", 60);
         CreateItem("Dây Thép Buộc",   "Day_Thep_Buoc", "Nhan_Vang",  ItemData.ItemType.Accessory, 20,5,20,0,   "Một đoạn dây thép uốn thành nhẫn.", 80);
         CreateItem("Sợi Dây Thừng",   "Soi_Day_Thung", "Day_Chuyen", ItemData.ItemType.Accessory, 5,5,100,0,   "Sợi dây thừng nhặt ở bến tàu.", 100);
         CreateItem("Nhẫn Vòng Cỏ",    "Nhan_Vong_Co",  "Nhan_Vang",  ItemData.ItemType.Accessory, 50,50,50,0,  "Vật phẩm tổ truyền của kẻ ăn xin.", 1000);

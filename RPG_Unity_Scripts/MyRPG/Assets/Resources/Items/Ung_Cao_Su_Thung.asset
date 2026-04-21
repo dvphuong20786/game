@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Ung_Cao_Su_Thung
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "\u1EE6ng Cao Su Th\u1EE7ng"
+  icon: {fileID: -3327847848805882654, guid: cec2df45d2463f643ab703e478d20099, type: 3}
+  description: "\u0110\xF4i \u1EE7ng c\u0169 n\xE1t \u0111\u1EA7y b\xF9n."
+  price: 120
+  requiredLevel: 0
+  type: 1
+  atkBonus: 5
+  defBonus: 20
+  hpBonus: 100
+  isTwoHanded: 0
+  healAmount: 0

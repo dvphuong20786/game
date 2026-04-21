@@ -120,6 +120,26 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 
 ## ✅ LỊCH SỬ CODE ĐÃ XONG (DO TÔI VIẾT)
 
+### 🎨 Phiên bản 21/04/2026 — Hoàn thành tích hợp 100% Asset Sliced
+- **Hệ thống Asset Slicer:** Tự động cắt 45 layer từ file ảnh sheet gốc thành các assets riêng lẻ trong chuyên mục `Resources/Sprites`.
+- **Background 4 Layer:** Dung hợp Dungeon → Light Overlay → Vignette → Particles tạo không gian 3D.
+- **Frame 9-Slice:** Dùng code tính toán vẽ 4 góc, 4 cạnh và lòng khung để đảm bảo giao diện không bị méo khi co giãn.
+- **Left Panel Pro:** 
+    - Silhouette nhân vật hiện mờ sau lưới trang bị 3x3.
+    - Avatar Circle bọc quanh chân dung nhân vật.
+    - 9 Slot trang bị dùng đúng icon placeholder (Mũ, Áo, Găng...) từ assets đã cắt.
+- **Inventory Pro:** Grid 4 cột, sử dụng `grid_bg.png` và hệ thống slot 3 trạng thái (Normal, Hover, Selected).
+- **Tooltip Pro:** Header bar, Divider bar và Text area nền đá cổ cực đẹp.
+- **Hiệu ứng Runes & Ornaments:** Trang trí Rune cổ ở 4 góc và họa tiết đầu/cuối của Master Panel.
+- **Bút Close & Tabs:** Tích hợp bộ nút bấm theo phong cách gothic.
+
+### 🎨 Phiên bản 21/04/2026 — Sửa lỗi Giao diện & Thêm ô Vòng cổ
+- **Tái cấu trúc 3x3:** Sắp xếp lại 9 ô trang bị theo lưới 3x3 cân xứng, giúp các ô Mũ, Giáp, Ủng nằm đúng vị trí đầu, thân, chân của nhân vật.
+- **Thêm ô Vòng cổ:** Bổ sung slot `AncientGold` (Vòng cổ) bị thiếu trong giao diện Pro (B).
+- **Hình nền Master Panel v3:** Tạo và tích hợp ảnh nền mới có hình bóng nhân vật được căn giữa chuẩn xác, khớp 100% với các ô trang bị.
+- **Cải thiện hiển thị:** Tăng độ tương phản cho các chữ gợi ý trong slot và cập nhật nhãn "Dây chuyền", "Vòng cổ" rõ ràng.
+- **Auto-Equip:** Hệ thống tự động nhận diện vật phẩm có tên "vòng cổ" để mặc vào đúng vị trí mới.
+
 ### 🐾 Giai đoạn Đệ Tử - RPG Companion (Cao cấp)
 - **Đệ tử như Người chơi:** Có đầy đủ 9 ô trang bị, túi đồ riêng, bảng kỹ năng và thăng cấp bằng EXP.
 - **Trí tuệ nhân tạo:** Tự động đi theo, tự tìm quái và **tự dùng tuyệt chiêu AOE** khi cần.
@@ -211,6 +231,15 @@ Làm bước này nếu bạn có bộ ảnh nhân vật:
 | 23 | Sprites Cỏ, Đất, Cây, Đá | ✅ Đã có | `AI_Generated_Sprites/` |
 | 24 | Sprites Nhà, Giếng, Hàng rào | ✅ Đã có | `AI_Generated_Sprites/` |
 | 25 | Hệ thống chuyển cảnh Portal | ✅ Đã có | `Portal.cs` |
+
+---
+
+## 🛡️ TIẾN ĐỘ NGOẠI LỆ: BOT TRADE VÀNG MT5 (21/04/2026)
+- ⏳ **Đang kiểm tra**: Lỗi tín hiệu giả (Fakeout) và lỗi kẹt trạng thái `isBreakUp_H4` khiến Bot sai lệnh.
+- 🔎 **Phân tích nguyên nhân**: 
+  1. Trạng thái thủng S/R (ví dụ `IsPhaHoTro_H4`) được nhớ dưới dạng biến Global nhưng điều kiện Reset quá khắt khe, dẫn đến tình trạng nhớ mãi mãi nếu giá không bật hẳn qua EMA. Khi Restart MT5, biến Global reset về `false` nên lỗi tạm thời biến mất.
+  2. Việc chỉ dùng 1 nến đóng cửa để xác nhận phá dải Hỗ trợ/Kháng cự gây ra các tín hiệu giả (Fakeout) khi rút râu.
+- 🚧 **Chưa code**: Đã tìm ra lỗi, đang báo cáo User trước khi chỉnh sửa. Không có file nào cần kéo vào Unity.
 
 ---
 

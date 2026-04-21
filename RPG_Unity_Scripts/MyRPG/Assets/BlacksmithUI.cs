@@ -112,53 +112,73 @@ public class BlacksmithUI : MonoBehaviour
     {
         if (!isOpen || player == null) return;
 
-        GUI.color = new Color(0, 0, 0, 0.72f);
+        // Dark fantasy shadow overlay
+        GUI.color = new Color(0, 0, 0, 0.4f);
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture);
 
-        float w = 740f, h = 540f;
-        Rect r = new Rect(Screen.width / 2f - w / 2f, Screen.height / 2f - h / 2f, w, h);
+        float panelW = 420f, panelH = 580f;
+        float gap = 40f;
+        float startX = Screen.width / 2f - panelW - gap / 2f;
+        float startY = Screen.height / 2f - panelH / 2f;
 
-        GUI.color = new Color(0.09f, 0.07f, 0.06f, 0.99f);
-        GUI.DrawTexture(r, Texture2D.whiteTexture);
-        GUI.color = new Color(0.8f, 0.6f, 0.1f);
-        GUI.DrawTexture(new Rect(r.x, r.y, w, 2), Texture2D.whiteTexture);
+        Rect leftRect = new Rect(startX, startY, panelW, panelH);
+        Rect rightRect = new Rect(startX + panelW + gap, startY, panelW, panelH);
 
-        GUI.color = Color.yellow;
-        GUI.Label(new Rect(r.x, r.y + 6, w, 28), "THỢ RÈN BA ĐÔ",
-            new GUIStyle(GUI.skin.label) { fontSize = 17, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
+        // Vẽ Khung Trái (Danh sách / Túi đồ)
+        DrawDarkFantasyPanel(leftRect);
+        
+        // Vẽ Khung Phải (Lò rèn / Thông tin)
+        DrawDarkFantasyPanel(rightRect);
+        
+        // Nút Đóng đè lên góc phải của rightRect
+        GUI.color = new Color(0.8f, 0.2f, 0.2f);
+        if (GUI.Button(new Rect(rightRect.xMax - 36, rightRect.y + 8, 28, 24), "X")) Close();
 
-        GUI.color = Color.red;
-        if (GUI.Button(new Rect(r.xMax - 36, r.y + 8, 28, 24), "X")) Close();
+        // Tiêu đề
+        GUI.color = new Color(0.8f, 0.7f, 0.4f); // Vàng cổ
+        GUI.Label(new Rect(leftRect.x, leftRect.y + 10, leftRect.width, 30), "DANH SÁCH", new GUIStyle(GUI.skin.label) { fontSize = 16, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
+        GUI.Label(new Rect(rightRect.x, rightRect.y + 10, rightRect.width, 30), "THỢ RÈN BA ĐÔ", new GUIStyle(GUI.skin.label) { fontSize = 16, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
 
-        // 5 TABS
-        float tabY = r.y + 36;
-        float tabW = 120f;
-        DrawTab(r.x + 5,          tabY, tabW, "MUA TRANG BỊ", 0, new Color(0.2f, 0.5f, 1f));
-        DrawTab(r.x + 5 + tabW,   tabY, tabW, "BÁN VẬT PHẨM", 1, new Color(1f, 0.6f, 0.1f));
-        DrawTab(r.x + 5 + tabW*2, tabY, tabW, "CƯỜNG HÓA",    2, new Color(0.2f, 0.8f, 0.3f));
-        DrawTab(r.x + 5 + tabW*3, tabY, tabW, "KHẢM NGỌC",    3, new Color(0.8f, 0.2f, 0.9f));
-        DrawTab(r.x + 5 + tabW*4, tabY, tabW, "CHẾ TẠO",      4, new Color(0.9f, 0.4f, 0.1f));
-        DrawTab(r.x + 5 + tabW*5, tabY, tabW, "GHÉP ĐỒ",      5, new Color(1f, 0.2f, 0.2f));
+        // TABS nằm ở Right Rect
+        float tabY = rightRect.y + 50;
+        float tabW = rightRect.width / 3f - 4f;
+        DrawTab(rightRect.x + 4,              tabY, tabW, "MUA TRANG BỊ", 0);
+        DrawTab(rightRect.x + 4 + tabW,       tabY, tabW, "BÁN VẬT PHẨM", 1);
+        DrawTab(rightRect.x + 4 + tabW * 2,   tabY, tabW, "CƯỜNG HÓA",    2);
+        DrawTab(rightRect.x + 4,              tabY + 35, tabW, "KHẢM NGỌC",    3);
+        DrawTab(rightRect.x + 4 + tabW,       tabY + 35, tabW, "CHẾ TẠO",      4);
+        DrawTab(rightRect.x + 4 + tabW * 2,   tabY + 35, tabW, "GHÉP ĐỒ",      5);
 
         GUI.color = Color.white;
-        float contentY = tabY + 32f;
+        float contentY = tabY + 75f; // Chừa chỗ cho 2 hàng tab
 
         switch (bsTab)
         {
-            case 0: DrawBuyTab(r, contentY); break;
-            case 1: DrawSellTab(r, contentY); break;
-            case 2: DrawEnhanceTab(r, contentY); break;
-            case 3: DrawSocketTab(r, contentY); break;
-            case 4: DrawCraftTab(r, contentY); break;
-            case 5: DrawMergeTab(r, contentY); break;
+            case 0: DrawBuyTabDF(leftRect, rightRect, contentY); break;
+            case 1: DrawSellTabDF(leftRect, rightRect, contentY); break;
+            case 2: DrawEnhanceTabDF(leftRect, rightRect, contentY); break;
+            case 3: DrawSocketTabDF(leftRect, rightRect, contentY); break;
+            case 4: DrawCraftTabDF(leftRect, rightRect, contentY); break;
+            case 5: DrawMergeTabDF(leftRect, rightRect, contentY); break;
         }
     }
 
-    void DrawTab(float x, float y, float w, string label, int idx, Color activeCol)
+    void DrawDarkFantasyPanel(Rect r) {
+        // Nền tối xù xì
+        GUI.color = new Color(0.08f, 0.08f, 0.08f, 0.98f);
+        GUI.DrawTexture(r, Texture2D.whiteTexture);
+        // Viền rỉ sét
+        GUI.color = new Color(0.25f, 0.2f, 0.15f);
+        GUI.DrawTexture(new Rect(r.x, r.y, r.width, 4), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(r.x, r.yMax-4, r.width, 4), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(r.x, r.y, 4, r.height), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(r.xMax-4, r.y, 4, r.height), Texture2D.whiteTexture);
+    }
+
+    void DrawTab(float x, float y, float w, string label, int idx)
     {
-        GUI.color = (bsTab == idx) ? activeCol : new Color(0.25f, 0.22f, 0.18f);
-        if (GUI.Button(new Rect(x, y, w - 2, 30), label,
-            new GUIStyle(GUI.skin.button) { fontSize = 10, fontStyle = FontStyle.Bold }))
+        GUI.color = (bsTab == idx) ? new Color(0.5f, 0.4f, 0.2f) : new Color(0.15f, 0.12f, 0.1f);
+        if (GUI.Button(new Rect(x, y, w, 30), label, new GUIStyle(GUI.skin.button) { fontSize = 11, fontStyle = FontStyle.Bold }))
         {
             bsTab = idx;
             ResetSlots();
@@ -167,18 +187,17 @@ public class BlacksmithUI : MonoBehaviour
         }
     }
 
-    void DrawBuyTab(Rect r, float contentY)
+    void DrawBuyTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
-        float previewW = 200f;
-        float listW = r.width - previewW - 20f;
-        int cols = 4;
+        // TRÁI: Dành cho Danh Sách Mua
         float slotSize = 88f, padding = 8f;
-
-        Rect scrollArea = new Rect(r.x + 5, contentY, listW, r.height - (contentY - r.y) - 10);
+        int cols = Mathf.FloorToInt((leftRect.width - 20) / (slotSize + padding));
         int rows = Mathf.CeilToInt((float)shopStock.Count / cols);
+        
+        Rect scrollArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
         Rect content = new Rect(0, 0, cols * (slotSize + padding), rows * (slotSize + padding + 20));
+        
         scrollBuy = GUI.BeginScrollView(scrollArea, scrollBuy, content);
-
         for (int i = 0; i < shopStock.Count; i++)
         {
             var item = shopStock[i];
@@ -186,9 +205,9 @@ public class BlacksmithUI : MonoBehaviour
             float sx = col * (slotSize + padding), sy = row * (slotSize + padding + 20);
             bool selected = (previewItem == item);
 
-            GUI.color = selected ? new Color(1f, 0.85f, 0.2f) : new Color(0.2f, 0.18f, 0.14f);
+            GUI.color = selected ? new Color(1f, 0.85f, 0.2f) : new Color(0.15f, 0.12f, 0.1f);
             GUI.DrawTexture(new Rect(sx, sy, slotSize, slotSize + 20), Texture2D.whiteTexture);
-
+            
             if (item.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx + 4, sy + 4, slotSize - 8, slotSize - 8), item.icon.texture); }
             else { GUI.color = GetTypeColor(item.type); GUI.DrawTexture(new Rect(sx + 4, sy + 4, slotSize - 8, slotSize - 8), Texture2D.whiteTexture); GUI.color = Color.white; GUI.Label(new Rect(sx + 4, sy + 20, slotSize - 8, 36), GetTypeIcon(item.type), new GUIStyle(GUI.skin.label) { fontSize = 26, alignment = TextAnchor.MiddleCenter }); }
 
@@ -196,45 +215,45 @@ public class BlacksmithUI : MonoBehaviour
             bool isEquip = item.type == ItemData.ItemType.Weapon || item.type == ItemData.ItemType.Armor || item.type == ItemData.ItemType.Accessory;
             string shopName = isEquip ? "[F] " + item.itemName : item.itemName;
             GUI.Label(new Rect(sx, sy + slotSize, slotSize, 20), shopName, new GUIStyle(GUI.skin.label) { fontSize = 8, alignment = TextAnchor.MiddleCenter, wordWrap = true });
+            
             GUI.color = Color.clear;
             if (GUI.Button(new Rect(sx, sy, slotSize, slotSize + 20), "")) previewItem = item;
         }
         GUI.EndScrollView();
 
-        // PREVIEW PANEL
-        Rect pv = new Rect(r.xMax - previewW - 5, contentY, previewW, r.height - (contentY - r.y) - 10);
-        GUI.color = new Color(0.12f, 0.1f, 0.16f);
-        GUI.DrawTexture(pv, Texture2D.whiteTexture);
-
+        // PHẢI: Thông tin và Mua
         if (previewItem != null)
         {
-            float py = pv.y + 10;
+            float py = contentY + 20;
+            float previewW = rightRect.width - 40;
+            float pvX = rightRect.x + 20;
+
             GUI.color = Color.white;
-            if (previewItem.icon != null) GUI.DrawTexture(new Rect(pv.x + previewW / 2 - 40, py, 80, 80), previewItem.icon.texture);
+            if (previewItem.icon != null) GUI.DrawTexture(new Rect(rightRect.x + rightRect.width / 2 - 40, py, 80, 80), previewItem.icon.texture);
             py += 90;
 
-            GUIStyle bold = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter, wordWrap = true };
+            GUIStyle bold = new GUIStyle(GUI.skin.label) { fontSize = 15, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter, wordWrap = true };
             GUI.color = Color.yellow;
-            bool isEquip = previewItem.type == ItemData.ItemType.Weapon || previewItem.type == ItemData.ItemType.Armor || previewItem.type == ItemData.ItemType.Accessory;
-            string shopNamePrev = isEquip ? "[F] " + previewItem.itemName : previewItem.itemName;
-            GUI.Label(new Rect(pv.x + 5, py, previewW - 10, 30), shopNamePrev, bold); py += 35;
+            bool isEq = previewItem.type == ItemData.ItemType.Weapon || previewItem.type == ItemData.ItemType.Armor || previewItem.type == ItemData.ItemType.Accessory;
+            string shopNamePrev = isEq ? "[F] " + previewItem.itemName : previewItem.itemName;
+            GUI.Label(new Rect(pvX, py, previewW, 30), shopNamePrev, bold); py += 35;
 
-            GUIStyle sm = new GUIStyle(GUI.skin.label) { fontSize = 10, wordWrap = true };
+            GUIStyle sm = new GUIStyle(GUI.skin.label) { fontSize = 12, wordWrap = true, alignment = TextAnchor.UpperCenter };
             GUI.color = Color.gray;
-            GUI.Label(new Rect(pv.x + 10, py, previewW - 20, 60), previewItem.description, sm); py += 70;
+            GUI.Label(new Rect(pvX, py, previewW, 60), previewItem.description, sm); py += 70;
 
             GUI.color = Color.white;
-            if (previewItem.atkBonus > 0) GUI.Label(new Rect(pv.x + 15, py, previewW - 30, 20), "Tấn Công: +" + previewItem.atkBonus, sm); py += 20;
-            if (previewItem.defBonus > 0) GUI.Label(new Rect(pv.x + 15, py, previewW - 30, 20), "Phòng Thủ: +" + previewItem.defBonus, sm); py += 20;
-            if (previewItem.hpBonus > 0) GUI.Label(new Rect(pv.x + 15, py, previewW - 30, 20), "Sinh Mệnh: +" + previewItem.hpBonus, sm); py += 25;
+            sm.alignment = TextAnchor.MiddleLeft;
+            if (previewItem.atkBonus > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Tấn Công: +" + previewItem.atkBonus, sm); py += 22;
+            if (previewItem.defBonus > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Phòng Thủ: +" + previewItem.defBonus, sm); py += 22;
+            if (previewItem.hpBonus > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Sinh Mệnh: +" + previewItem.hpBonus, sm); py += 30;
 
-            GUI.color = Color.yellow;
-            GUI.Label(new Rect(pv.x, py, previewW, 25), "Giá: " + previewItem.price + " Vàng", bold); py += 35;
+            GUI.color = new Color(0.8f, 0.7f, 0.4f);
+            GUI.Label(new Rect(pvX, py, previewW, 25), "Giá: " + previewItem.price + " Vàng", new GUIStyle(GUI.skin.label) { fontSize = 14, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter }); py += 40;
 
             bool canAfford = player.gold >= previewItem.price;
-            GUI.color = canAfford ? Color.green : Color.gray;
-            if (GUI.Button(new Rect(pv.x + 15, py, previewW - 30, 40), canAfford ? "MUA NGAY" : "KHÔNG ĐỦ VÀNG",
-                new GUIStyle(GUI.skin.button) { fontSize = 12, fontStyle = FontStyle.Bold }))
+            GUI.color = canAfford ? new Color(0.2f, 0.6f, 0.2f) : Color.grey;
+            if (GUI.Button(new Rect(pvX + 20, py, previewW - 40, 45), canAfford ? "MUA NGAY" : "KHÔNG ĐỦ VÀNG", new GUIStyle(GUI.skin.button) { fontSize = 14, fontStyle = FontStyle.Bold }))
             {
                 player.gold -= previewItem.price;
                 player.PickUpItem(previewItem);
@@ -242,316 +261,235 @@ public class BlacksmithUI : MonoBehaviour
         }
     }
 
-    void DrawSellTab(Rect r, float contentY)
+    void DrawSellTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
         List<ItemInstance> inv = player.SharedInventory;
-        float previewW = 200f;
-        float listW = r.width - previewW - 20f;
-        int cols = 4;
-        float slotSize = 80f, padding = 6f;
-
-        // MULTI-SELL TOGGLE
+        
+        // Nút Multi-Sell ở TRÁI
         GUI.color = isMultiSellMode ? Color.green : Color.white;
-        if (GUI.Button(new Rect(r.x + 5, contentY, 150, 22), isMultiSellMode ? "✔ BÁN NHIỀU (BẬT)" : "✖ BÁN NHIỀU (TẮT)")) {
+        if (GUI.Button(new Rect(leftRect.x + leftRect.width - 110, leftRect.y + 12, 100, 24), isMultiSellMode ? "BÁN NHIỀU: BẬT" : "BÁN NHIỀU: TẮT")) {
             isMultiSellMode = !isMultiSellMode;
             multiSellSelectedIdxs.Clear();
-            sellSelectedIdx = -1;
         }
-        GUI.color = Color.white;
 
-        Rect scrollArea = new Rect(r.x + 5, contentY + 25, listW, r.height - (contentY - r.y) - 35);
+        // TÚI ĐỒ Ở TRÁI
+        float slotSize = 68f, padding = 6f;
+        int cols = Mathf.FloorToInt((leftRect.width - 20) / (slotSize + padding));
         int rows = Mathf.CeilToInt((float)inv.Count / cols);
-        Rect content = new Rect(0, 0, cols * (slotSize + padding), Mathf.Max(200, rows * (slotSize + padding + 18)));
-        scrollSell = GUI.BeginScrollView(scrollArea, scrollSell, content);
-
+        
+        Rect scrollArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
+        scrollInv = GUI.BeginScrollView(scrollArea, scrollInv, new Rect(0, 0, cols * (slotSize + padding), rows * (slotSize + padding + 20)));
         for (int i = 0; i < inv.Count; i++)
         {
-            var inst = inv[i];
-            if (inst == null || inst.data == null) continue;
+            var inst = inv[i]; if (inst == null || inst.data == null) continue;
             int col = i % cols, row = i / cols;
-            float sx = col * (slotSize + padding), sy = row * (slotSize + padding + 18);
-
-            bool selected = isMultiSellMode ? multiSellSelectedIdxs.Contains(i) : (sellSelectedIdx == i);
-            GUI.color = selected ? (isMultiSellMode ? Color.green : new Color(1f, 0.6f, 0.1f)) : new Color(0.2f, 0.15f, 0.12f);
-            GUI.DrawTexture(new Rect(sx, sy, slotSize, slotSize + 18), Texture2D.whiteTexture);
-
-            if (inst.data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx + 4, sy + 4, slotSize - 8, slotSize - 8), inst.data.icon.texture); }
-            else { GUI.color = GetTypeColor(inst.data.type); GUI.DrawTexture(new Rect(sx + 4, sy + 4, slotSize - 8, slotSize - 8), Texture2D.whiteTexture); GUI.color = Color.white; GUI.Label(new Rect(sx + 4, sy + 18, slotSize - 8, 36), GetTypeIcon(inst.data.type), new GUIStyle(GUI.skin.label) { fontSize = 22, alignment = TextAnchor.MiddleCenter }); }
+            float sx = col * (slotSize + padding), sy = row * (slotSize + padding + 20);
             
-            for (int k=0; k<inst.sockets.Count && k<5; k++) {
-                float gx = sx + slotSize - 10; float gy = sy + 3 + (k * 7f);
-                if (inst.sockets[k].icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(gx, gy, 7, 7), inst.sockets[k].icon.texture); }
-                else { GUI.color = Color.magenta; GUI.DrawTexture(new Rect(gx, gy, 7, 7), Texture2D.whiteTexture); }
-            }
-
-            GUI.color = selected ? Color.yellow : Color.gray;
-            GUI.Label(new Rect(sx, sy + slotSize, slotSize, 18), inst.GetDisplayName(), new GUIStyle(GUI.skin.label) { fontSize = 8, alignment = TextAnchor.MiddleCenter, wordWrap = true });
-
+            bool isSel = isMultiSellMode ? multiSellSelectedIdxs.Contains(i) : (sellSelectedIdx == i);
+            GUI.color = isSel ? Color.green : new Color(0.15f, 0.12f, 0.1f);
+            GUI.DrawTexture(new Rect(sx, sy, slotSize, slotSize + 20), Texture2D.whiteTexture);
+            
+            if (inst.data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx + 3, sy + 3, slotSize - 6, slotSize - 6), inst.data.icon.texture); }
+            GUI.color = Color.white;
+            GUI.Label(new Rect(sx, sy + slotSize, slotSize, 20), inst.GetDisplayName(), new GUIStyle(GUI.skin.label) { fontSize = 8, alignment = TextAnchor.MiddleCenter, wordWrap = true });
+            
             GUI.color = Color.clear;
-            if (GUI.Button(new Rect(sx, sy, slotSize, slotSize + 18), ""))
-            {
-                if (isMultiSellMode) {
-                    if (multiSellSelectedIdxs.Contains(i)) multiSellSelectedIdxs.Remove(i);
-                    else multiSellSelectedIdxs.Add(i);
-                } else {
-                    sellSelectedIdx = i;
-                    targetItem = inst;
-                }
+            if (GUI.Button(new Rect(sx, sy, slotSize, slotSize + 20), "")) {
+                if (isMultiSellMode) { if (multiSellSelectedIdxs.Contains(i)) multiSellSelectedIdxs.Remove(i); else multiSellSelectedIdxs.Add(i); }
+                else { sellSelectedIdx = i; }
             }
         }
         GUI.EndScrollView();
 
-        // PREVIEW
-        Rect pv = new Rect(r.xMax - previewW - 5, contentY, previewW, r.height - (contentY - r.y) - 10);
-        GUI.color = new Color(0.12f, 0.12f, 0.12f);
-        GUI.DrawTexture(pv, Texture2D.whiteTexture);
-        GUI.color = Color.white;
+        // THÔNG TIN BÁN Ở PHẢI
+        float pvX = rightRect.x + 20;
+        float previewW = rightRect.width - 40;
 
-        GUIStyle bold = new GUIStyle(GUI.skin.label) { fontSize = 12, fontStyle = FontStyle.Bold, wordWrap = true, alignment = TextAnchor.MiddleCenter };
-        GUIStyle sm = new GUIStyle(GUI.skin.label) { fontSize = 10, wordWrap = true };
-
-        if (isMultiSellMode) {
-            float py = pv.y + 10;
-            GUI.color = Color.green;
-            GUI.Label(new Rect(pv.x + 5, py, previewW - 10, 30), "CHẾ ĐỘ BÁN NHIỀU", bold); py += 40;
+        if (isMultiSellMode)
+        {
+            float py = contentY + 100;
+            int totalGold = 0;
+            foreach (int i in multiSellSelectedIdxs) if (i < inv.Count && inv[i] != null && inv[i].data != null) totalGold += inv[i].data.price / 2;
+            
             GUI.color = Color.white;
-            GUI.Label(new Rect(pv.x + 10, py, previewW - 20, 100), "Đã chọn: " + multiSellSelectedIdxs.Count + " món đồ.\nHãy chọn đồ trong danh sách và nhấn nút bên dưới để bán.", sm);
+            GUI.Label(new Rect(pvX, py, previewW, 30), "ĐÃ CHỌN " + multiSellSelectedIdxs.Count + " MÓN", new GUIStyle(GUI.skin.label) { fontSize = 16, alignment = TextAnchor.MiddleCenter }); py+=40;
             
-            int totalValue = 0;
-            foreach(int idx in multiSellSelectedIdxs) if (idx < inv.Count) totalValue += Mathf.Max(1, inv[idx].data.price / 2);
+            GUI.color = new Color(0.8f, 0.7f, 0.4f);
+            GUI.Label(new Rect(pvX, py, previewW, 30), "TỔNG VÀNG: " + totalGold, new GUIStyle(GUI.skin.label) { fontSize = 18, fontStyle=FontStyle.Bold, alignment = TextAnchor.MiddleCenter }); py+=60;
             
-            float btnY = pv.yMax - 60;
-            GUI.color = Color.yellow;
-            GUI.Label(new Rect(pv.x, btnY - 30, previewW, 25), "Tổng cộng: +" + totalValue + " Vàng", bold);
-            
-            GUI.color = (multiSellSelectedIdxs.Count > 0) ? Color.red : Color.gray;
-            if (GUI.Button(new Rect(pv.x + 10, btnY, previewW - 20, 40), "XÁC NHẬN BÁN HẾT") && multiSellSelectedIdxs.Count > 0) {
-                player.gold += totalValue;
-                List<int> sortedIdx = new List<int>(multiSellSelectedIdxs);
-                sortedIdx.Sort((a,b) => b.CompareTo(a)); 
-                foreach(int idx in sortedIdx) inv.RemoveAt(idx);
+            GUI.color = multiSellSelectedIdxs.Count > 0 ? Color.green : Color.gray;
+            if (GUI.Button(new Rect(pvX+10, py, previewW-20, 50), "XÁC NHẬN BÁN HẾT", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold}) && multiSellSelectedIdxs.Count > 0) {
+                player.gold += totalGold;
+                var sortedIdxs = new List<int>(multiSellSelectedIdxs);
+                sortedIdxs.Sort((a,b) => b.CompareTo(a)); // remove from last to first
+                foreach (int idx in sortedIdxs) {
+                    if (idx < player.SharedInventory.Count)
+                        player.SharedInventory.RemoveAt(idx);
+                }
                 multiSellSelectedIdxs.Clear();
             }
         }
         else if (sellSelectedIdx >= 0 && sellSelectedIdx < inv.Count)
         {
-            ItemInstance inst = inv[sellSelectedIdx];
-            ItemData d = inst.data;
-            float py = pv.y + 10;
-            if (d.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(pv.x + previewW / 2 - 40, py, 80, 80), d.icon.texture); }
-            py += 90f;
-
-            GUI.color = Color.yellow; GUI.Label(new Rect(pv.x + 4, py, previewW - 8, 36), inst.GetDisplayName(), bold); py += 36f;
-            GUI.color = Color.gray; GUI.Label(new Rect(pv.x + 4, py, previewW - 8, 40), d.description, sm); py += 42f;
+            var inst = inv[sellSelectedIdx];
+            if (inst == null || inst.data == null) return;
             
-            if (inst.GetBaseAtk() > 0) { GUI.color = Color.red; GUI.Label(new Rect(pv.x + 8, py, previewW - 12, 18), "Tấn Công: " + inst.GetBaseAtk(), sm); py += 18f; }
-            if (inst.GetBaseDef() > 0) { GUI.color = Color.cyan; GUI.Label(new Rect(pv.x + 8, py, previewW - 12, 18), "Phòng Thủ: " + inst.GetBaseDef(), sm); py += 18f; }
-            if (inst.GetBaseHp() > 0) { GUI.color = Color.green; GUI.Label(new Rect(pv.x + 8, py, previewW - 12, 18), "Sinh Mệnh: " + inst.GetBaseHp(), sm); py += 18f; }
-            
-            if (inst.itemRank > 0) {
-                GUI.color = Color.gray; GUI.DrawTexture(new Rect(pv.x + 8, py + 2, previewW - 16, 1), Texture2D.whiteTexture); py += 6f;
-                if (inst.rankBonusAtk > 0) { GUI.color = new Color(1f, 0.4f, 0.4f); GUI.Label(new Rect(pv.x + 20, py, previewW - 32, 18), "+ " + inst.rankBonusAtk + " Tấn Công", sm); py += 18f; }
-                if (inst.rankBonusDef > 0) { GUI.color = new Color(0.4f, 0.8f, 1f); GUI.Label(new Rect(pv.x + 20, py, previewW - 32, 18), "+ " + inst.rankBonusDef + " Phòng Thủ", sm); py += 18f; }
-                if (inst.rankBonusHp > 0)  { GUI.color = new Color(0.4f, 1f, 0.4f);  GUI.Label(new Rect(pv.x + 20, py, previewW - 32, 18), "+ " + inst.rankBonusHp + " Sinh Mệnh", sm); py += 18f; }
-            }
-            
-            if (inst.sockets.Count > 0) {
-                GUI.color = Color.gray; GUI.DrawTexture(new Rect(pv.x + 8, py + 2, previewW - 16, 1), Texture2D.whiteTexture); py += 6f;
-                foreach (var gem in inst.sockets) {
-                    if (gem == null) continue;
-                    if (gem.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(pv.x + 12, py + 2, 14, 14), gem.icon.texture); }
-                    GUI.color = Color.white;
-                    string stat = gem.atkBonus > 0 ? "+" + gem.atkBonus + " Tấn Công" : gem.defBonus > 0 ? "+" + gem.defBonus + " Phòng Thủ" : "+" + gem.hpBonus + " Sinh Mệnh";
-                    GUI.Label(new Rect(pv.x + 30, py, previewW - 40, 18), stat, new GUIStyle(GUI.skin.label){fontSize=9});
-                    py += 18f;
-                }
-            }
+            float py = contentY + 20;
+            GUI.color = Color.white;
+            if (inst.data.icon != null) GUI.DrawTexture(new Rect(rightRect.x + rightRect.width/2 - 40, py, 80, 80), inst.data.icon.texture);
+            py += 90;
 
-            int sellPrice = Mathf.Max(1, d.price / 2);
-            GUI.color = new Color(1f, 0.75f, 0.2f);
-            GUI.Label(new Rect(pv.x + 4, py, previewW - 8, 22), "Giá: +" + sellPrice + " Vàng", bold); py += 28f;
+            GUI.color = inst.GetRankColor();
+            GUI.Label(new Rect(pvX, py, previewW, 30), inst.GetDisplayName(), new GUIStyle(GUI.skin.label) { fontSize = 15, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter }); py += 40;
 
-            GUI.color = Color.red;
-            if (GUI.Button(new Rect(pv.x + 10, py, previewW - 20, 36), "BÁN",
-                new GUIStyle(GUI.skin.button) { fontSize = 13, fontStyle = FontStyle.Bold }))
-            {
-                player.gold += sellPrice;
-                inv.RemoveAt(sellSelectedIdx);
+            GUI.color = Color.white;
+            GUIStyle smLeft = new GUIStyle(GUI.skin.label) { fontSize = 12, alignment = TextAnchor.MiddleLeft };
+            int tatk = inst.GetTotalAtk(), tdef = inst.GetTotalDef(), thp = inst.GetTotalHP();
+            if (tatk > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Tấn Công: " + tatk, smLeft); py += 20;
+            if (tdef > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Phòng Thủ: " + tdef, smLeft); py += 20;
+            if (thp > 0) GUI.Label(new Rect(pvX + 20, py, previewW, 20), "Sinh Mệnh: " + thp, smLeft); py += 30;
+
+            int price = inst.data.price / 2;
+            GUI.color = new Color(0.8f, 0.7f, 0.4f);
+            GUI.Label(new Rect(pvX, py, previewW, 25), "Thu về: " + price + " Vàng", new GUIStyle(GUI.skin.label) { fontSize = 14, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter }); py += 40;
+
+            GUI.color = new Color(0.8f, 0.2f, 0.2f);
+            if (GUI.Button(new Rect(pvX + 20, py, previewW - 40, 45), "BÁN", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold})) {
+                player.gold += price;
+                player.SharedInventory.RemoveAt(sellSelectedIdx);
                 sellSelectedIdx = -1;
             }
         }
     }
 
-    void DrawEnhanceTab(Rect r, float contentY)
+    void DrawEnhanceTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
-        float listW = r.width - 20;
-        float slotAreaH = r.height - (contentY - r.y) - 60;
-        DrawFilteredInvSlots(new Rect(r.x + 5, contentY, listW, slotAreaH), contentY, (inst) => inst.data.type != ItemData.ItemType.Consumable && inst.data.type != ItemData.ItemType.Gem, false);
+        // TRÁI: Dùng DrawFilteredInvSlotsInRect nhưng sửa tọa độ lại khớp
+        Rect listArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
+        DrawFilteredInvSlotsInRect(listArea, ref scrollInv, (i) => i.data.type == ItemData.ItemType.Weapon || i.data.type == ItemData.ItemType.Armor || i.data.type == ItemData.ItemType.Accessory, true, false, false);
 
-        if (targetItem != null)
-        {
+        // PHẢI: Lò rèn nâng cấp
+        float pvX = rightRect.x + 20;
+        float rightW = rightRect.width - 40;
+        
+        GUI.color = Color.white;
+        DrawBigSlot(rightRect.x + rightRect.width/2 - 40, contentY + 20, 80f, targetItem, "Trang bị", true);
+        
+        if (targetItem != null && targetItem.data != null) {
+            float py = contentY + 130;
             int cost = (targetItem.plusLevel + 1) * 200;
-            float rate = Mathf.Max(10f, (0.9f - targetItem.plusLevel * 0.15f) * 100f);
-            GUI.color = Color.yellow;
-            GUI.Label(new Rect(r.x, r.yMax - 45, r.width, 22), "Cường Hóa [" + targetItem.GetDisplayName() + "] | Tỉ lệ: " + (int)rate + "% | Phí: " + cost + " Vàng", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
+            bool canAfford = player.gold >= cost;
 
-            bool can = player.gold >= cost;
-            GUI.color = can ? Color.green : Color.gray;
-            if (GUI.Button(new Rect(r.x + r.width / 2 - 80, r.yMax - 22, 160, 20), can ? "CƯỜNG HÓA" : "KHÔNG ĐỦ VÀNG")) Execute();
+            GUI.color = Color.white;
+            GUI.Label(new Rect(pvX, py, rightW, 30), targetItem.GetDisplayName() + "  ->  +" + (targetItem.plusLevel + 1), new GUIStyle(GUI.skin.label){fontSize=14, fontStyle=FontStyle.Bold, alignment=TextAnchor.MiddleCenter}); py += 40;
+            
+            GUI.color = new Color(0.8f, 0.7f, 0.4f);
+            GUI.Label(new Rect(pvX, py, rightW, 25), "Phí: " + cost + " Vàng", new GUIStyle(GUI.skin.label){fontSize=12, alignment=TextAnchor.MiddleCenter}); py += 40;
+
+            GUI.color = canAfford ? Color.green : Color.gray;
+            if (GUI.Button(new Rect(pvX + 20, py, rightW - 40, 45), canAfford ? "NÂNG CẤP" : "KHÔNG ĐỦ VÀNG", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold}) && canAfford) {
+                Execute();
+            }
         }
     }
 
-        void DrawSocketTab(Rect r, float contentY)
+    void DrawSocketTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
-        float leftW = 340f;
-        float rightW = r.width - leftW - 20f;
-        GUI.color = new Color(0.12f, 0.1f, 0.08f);
-        GUI.DrawTexture(new Rect(r.x + 5, contentY, leftW, 22), Texture2D.whiteTexture);
-        GUI.color = new Color(0.8f, 0.2f, 0.9f);
-        GUI.Label(new Rect(r.x + 8, contentY + 2, leftW - 4, 18), "Kho Đồ (Trang Bị & Ngọc)", new GUIStyle(GUI.skin.label) { fontSize = 10, fontStyle = FontStyle.Bold });
-
-        float slotAreaH = r.height - (contentY - r.y) - 30;
-        DrawFilteredInvSlotsInRect(new Rect(r.x + 5, contentY + 26, leftW, slotAreaH), ref scrollInv, (i) => i.data.type != ItemData.ItemType.Consumable, false, false, true);
-
-        float rx = r.x + 15 + leftW;
-        GUI.color = new Color(0.08f, 0.06f, 0.05f);
-        GUI.DrawTexture(new Rect(rx, contentY, rightW, slotAreaH + 26), Texture2D.whiteTexture);
-        GUI.color = Color.yellow;
-        GUI.Label(new Rect(rx, contentY + 10, rightW, 24), "LÒ RÈN KHẢM NGỌC", new GUIStyle(GUI.skin.label){fontSize = 14, fontStyle=FontStyle.Bold, alignment=TextAnchor.MiddleCenter});
+        Rect listArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
+        DrawFilteredInvSlotsInRect(listArea, ref scrollInv, (i) => true, true, true, true); // CHẾ TẠO DÙNG CẢ 2
+        
+        // PHẢI
+        float pvX = rightRect.x + 20;
+        float rightW = rightRect.width - 40;
 
         float slotDim = 80f;
-        DrawBigSlot(rx + 60f, contentY + 60f, slotDim, (targetItem != null && targetItem.data.type != ItemData.ItemType.Gem) ? targetItem : null, "Trang Bị", true);
-        DrawBigSlot(rx + rightW - 60f - slotDim, contentY + 60f, slotDim, (materialItem != null && materialItem.data.type == ItemData.ItemType.Gem) ? materialItem : null, "Ngọc", false);
+        DrawBigSlot(rightRect.x + rightRect.width/2 - slotDim - 10, contentY + 20, slotDim, targetItem, "Trang bị", true);
+        DrawBigSlot(rightRect.x + rightRect.width/2 + 10, contentY + 20, slotDim, materialItem, "Ngọc Khảm", false);
 
-        GUI.color = Color.white;
-        GUI.Label(new Rect(rx + rightW/2 - 20, contentY + 80, 40, 40), "+", new GUIStyle(GUI.skin.label){fontSize=30, alignment=TextAnchor.MiddleCenter});
+        if (targetItem != null && materialItem != null) {
+            float py = contentY + 130;
+            bool isEquip = targetItem.data.type == ItemData.ItemType.Weapon || targetItem.data.type == ItemData.ItemType.Armor || targetItem.data.type == ItemData.ItemType.Accessory;
+            bool isGem = materialItem.data.type == ItemData.ItemType.Gem;
+            bool space = targetItem.sockets.Count < 5;
+            int cost = 500;
+            bool afford = player.gold >= cost;
+            bool isValid = isEquip && isGem && space && afford;
 
-        float rxInfo = rx + 10; float ryInfo = contentY + 160f;
-        if (targetItem != null && targetItem.data.type != ItemData.ItemType.Gem) {
-            GUIStyle sm = new GUIStyle(GUI.skin.label) { fontSize = 10, wordWrap = true };
-            GUI.color = targetItem.GetRankColor();
-            GUI.Label(new Rect(rxInfo, ryInfo, rightW - 20, 20), targetItem.GetDisplayName(), new GUIStyle(GUI.skin.label){fontStyle=FontStyle.Bold, fontSize=11});
-            ryInfo += 22f;
-            GUI.color = Color.white;
-            GUI.Label(new Rect(rxInfo, ryInfo, rightW - 20, 18), "Tấn Công: " + targetItem.GetBaseAtk() + " | Phòng Thủ: " + targetItem.GetBaseDef(), sm);
-            ryInfo += 20f;
-            if (targetItem.sockets.Count > 0) {
-                // Header row removed
-                ryInfo += 5f;
-                foreach (var gem in targetItem.sockets) {
-                    if (gem == null) continue;
-                    if (gem.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(rxInfo + 5, ryInfo + 2, 12, 12), gem.icon.texture); }
-                    GUI.color = Color.white;
-                    string stat = gem.atkBonus > 0 ? "+" + gem.atkBonus + " Tấn Công" : gem.defBonus > 0 ? "+" + gem.defBonus + " Phòng Thủ" : "+" + gem.hpBonus + " Sinh Mệnh";
-                    GUI.Label(new Rect(rxInfo + 20, ryInfo, rightW - 40, 18), stat, new GUIStyle(GUI.skin.label){fontSize=9});
-                    ryInfo += 16f;
+            if (!space) GUI.Label(new Rect(pvX, py, rightW, 30), "Đã khảm tối đa ngọc!", new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter});
+            else if (!isEquip || !isGem) GUI.Label(new Rect(pvX, py, rightW, 30), "Cần Trang bị và Ngọc!", new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter});
+            else {
+                GUI.color = new Color(0.8f, 0.7f, 0.4f);
+                GUI.Label(new Rect(pvX, py, rightW, 25), "Phí: " + cost + " Vàng", new GUIStyle(GUI.skin.label){fontSize=13, alignment=TextAnchor.MiddleCenter}); py += 40;
+                
+                GUI.color = isValid ? Color.green : Color.gray;
+                if (GUI.Button(new Rect(pvX + 20, py, rightW - 40, 45), isValid ? "KHẢM NGỌC" : "KHÔNG ĐỦ VÀNG", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold}) && isValid) {
+                    Execute();
                 }
             }
         }
-
-        int socketCost = 500;
-        bool canSocket = targetItem != null && targetItem.data.type != ItemData.ItemType.Gem && materialItem != null && materialItem.data.type == ItemData.ItemType.Gem && player.gold >= socketCost && targetItem.sockets.Count < 5;
-        
-        float btnY = r.yMax - 60;
-        GUI.color = Color.yellow;
-        GUI.Label(new Rect(rx, btnY - 25, rightW, 22), "Phí: " + player.gold + " / " + socketCost, new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter, fontSize=11, fontStyle=FontStyle.Bold});
-        
-        GUI.color = canSocket ? Color.magenta : Color.gray;
-        if (GUI.Button(new Rect(rx + 50, btnY, rightW - 100, 40), canSocket ? "KHẢM NGỌC" : "CHƯA ĐỦ ĐIỀU KIỆN", new GUIStyle(GUI.skin.button){fontSize=12, fontStyle=FontStyle.Bold}) && canSocket)
-            Execute();
     }
 
-    void DrawCraftTab(Rect r, float contentY)
+    void DrawCraftTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
-        float leftW = 340f;
-        float rightW = r.width - leftW - 20f;
-        GUI.color = new Color(0.12f, 0.1f, 0.08f);
-        GUI.DrawTexture(new Rect(r.x + 5, contentY, leftW, 22), Texture2D.whiteTexture);
-        GUI.color = Color.orange;
-        GUI.Label(new Rect(r.x + 8, contentY + 2, leftW - 4, 18), "Kho Đồ (Chọn Nguyên Liệu)", new GUIStyle(GUI.skin.label) { fontSize = 10, fontStyle = FontStyle.Bold });
+        Rect listArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
+        DrawFilteredInvSlotsInRect(listArea, ref scrollInv, (i) => i.data.type == ItemData.ItemType.Quest || i.data.itemName.Contains("Mảnh") || i.itemRank < 6, false, true, false);
 
-        float slotAreaH = r.height - (contentY - r.y) - 30;
-        DrawFilteredInvSlotsInRect(new Rect(r.x + 5, contentY + 26, leftW, slotAreaH), ref scrollInv, (_) => true, false, false, true);
+        float pvX = rightRect.x + 20;
+        float rightW = rightRect.width - 40;
 
-        float rx = r.x + 15 + leftW;
-        GUI.color = new Color(0.08f, 0.06f, 0.05f);
-        GUI.DrawTexture(new Rect(rx, contentY, rightW, slotAreaH + 26), Texture2D.whiteTexture);
-        GUI.color = Color.yellow;
-        GUI.Label(new Rect(rx, contentY + 10, rightW, 24), "LÒ RÈN CHẾ TẠO", new GUIStyle(GUI.skin.label){fontSize = 14, fontStyle=FontStyle.Bold, alignment=TextAnchor.MiddleCenter});
+        DrawBigSlot(rightRect.x + rightRect.width/2 - 40, contentY + 20, 80f, materialItem, "Nguyên liệu", false);
 
-        float slotDim = 80f;
-        DrawBigSlot(rx + 60f, contentY + 60f, slotDim, targetItem, "Nguyên Liệu 1", true);
-        DrawBigSlot(rx + rightW - 60f - slotDim, contentY + 60f, slotDim, materialItem, "Nguyên Liệu 2", false);
+        if (materialItem != null && materialItem.data != null) {
+            float py = contentY + 130;
+            int cost = 1000;
+            bool afford = player.gold >= cost;
 
-        GUI.color = Color.white;
-        GUI.Label(new Rect(rx + rightW/2 - 20, contentY + 80, 40, 40), "➡", new GUIStyle(GUI.skin.label){fontSize=30, alignment=TextAnchor.MiddleCenter});
+            GUI.color = new Color(0.8f, 0.7f, 0.4f);
+            GUI.Label(new Rect(pvX, py, rightW, 25), "Chế tạo mất: " + cost + " Vàng", new GUIStyle(GUI.skin.label){fontSize=13, alignment=TextAnchor.MiddleCenter}); py += 40;
 
-        float rxC = rx + rightW/2 - slotDim/2; float ryC = contentY + 160f;
-        ItemData recipe = (targetItem!=null && materialItem!=null) ? RPG_BlacksmithLogic.CheckRecipe(targetItem, materialItem) : null;
-        GUI.color = new Color(0.15f, 0.2f, 0.15f);
-        GUI.DrawTexture(new Rect(rxC, ryC, slotDim, slotDim), Texture2D.whiteTexture);
-
-        if (recipe != null) {
-            if (recipe.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(rxC+5, ryC+5, slotDim-10, slotDim-10), recipe.icon.texture); }
-            GUI.color = Color.green;
-            GUI.Label(new Rect(rxC - 40, ryC + slotDim + 5, slotDim + 80, 20), recipe.itemName, new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter, fontStyle=FontStyle.Bold, fontSize=11});
-            GUI.color = Color.yellow;
-            if (GUI.Button(new Rect(rx + 50, ryC + slotDim + 40, rightW - 100, 40), "CHẾ TẠO NGAY", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold})) Execute();
+            GUI.color = afford ? new Color(1f, 0.5f, 0f) : Color.gray;
+            if (GUI.Button(new Rect(pvX + 20, py, rightW - 40, 45), afford ? "CHẾ TẠO ĐỒ MỚI" : "KHÔNG ĐỦ VÀNG", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold}) && afford) {
+                Execute();
+            }
         }
     }
 
-    void DrawMergeTab(Rect r, float contentY)
+    void DrawMergeTabDF(Rect leftRect, Rect rightRect, float contentY)
     {
-        float leftW = 340f;
-        float rightW = r.width - leftW - 20f;
+        Rect listArea = new Rect(leftRect.x + 10, leftRect.y + 50, leftRect.width - 20, leftRect.height - 60);
+        DrawFilteredInvSlotsInRect(listArea, ref scrollInv, (i) => i.itemRank < 6 && i.data.type != ItemData.ItemType.Gem && i.data.type != ItemData.ItemType.Consumable, false, false, true);
 
-        GUI.color = new Color(0.12f, 0.1f, 0.08f);
-        GUI.DrawTexture(new Rect(r.x + 5, contentY, leftW, 22), Texture2D.whiteTexture);
-        GUI.color = new Color(1f, 0.4f, 0.4f);
-        GUI.Label(new Rect(r.x + 8, contentY + 2, leftW - 4, 18), "Kho Đồ (Ghép Đồ)", new GUIStyle(GUI.skin.label) { fontSize = 10, fontStyle = FontStyle.Bold });
-
-        float slotAreaH = r.height - (contentY - r.y) - 30;
-        DrawFilteredInvSlotsInRect(new Rect(r.x + 5, contentY + 26, leftW, slotAreaH), ref scrollInv, (i) => i.itemRank < 6 && i.data.type != ItemData.ItemType.Gem && i.data.type != ItemData.ItemType.Consumable, false, false, true);
-
-        float rx = r.x + 15 + leftW;
-        GUI.color = new Color(0.08f, 0.06f, 0.05f);
-        GUI.DrawTexture(new Rect(rx, contentY, rightW, slotAreaH + 26), Texture2D.whiteTexture);
-        
-        GUI.color = Color.yellow;
-        GUI.Label(new Rect(rx, contentY + 10, rightW, 24), "LÒ RÈN NÂNG HẠNG", new GUIStyle(GUI.skin.label){fontSize = 14, fontStyle=FontStyle.Bold, alignment=TextAnchor.MiddleCenter});
-
+        float pvX = rightRect.x + 20;
+        float rightW = rightRect.width - 40;
         float slotDim = 80f;
-        DrawBigSlot(rx + 60f, contentY + 60f, slotDim, targetItem, "Vật Phẩm", true);
-        DrawBigSlot(rx + rightW - 60f - slotDim, contentY + 60f, slotDim, materialItem, "Phôi (Giống hệt)", false);
 
-        GUI.color = Color.white;
-        GUI.Label(new Rect(rx + rightW/2 - 20, contentY + 80, 40, 40), "+", new GUIStyle(GUI.skin.label){fontSize=30, alignment=TextAnchor.MiddleCenter});
+        DrawBigSlot(rightRect.x + rightRect.width/2 - slotDim - 10, contentY + 20, slotDim, targetItem, "Vật phẩm 1", true);
+        DrawBigSlot(rightRect.x + rightRect.width/2 + 10, contentY + 20, slotDim, materialItem, "Vật phẩm 2", false);
 
         if (targetItem != null && materialItem != null) {
-            bool matches = targetItem.data.itemName == materialItem.data.itemName && targetItem.itemRank == materialItem.itemRank;
-            int mergeCost = (targetItem.itemRank + 1) * 1000;
-            bool enoughGold = player.gold >= mergeCost;
-            bool canMerge = matches && enoughGold;
+            float py = contentY + 130;
+            bool matches = (targetItem.data.itemName == materialItem.data.itemName) && (targetItem.itemRank == materialItem.itemRank);
+            int cost = (targetItem.itemRank + 1) * 1000;
+            bool afford = player.gold >= cost;
 
-            float infoY = contentY + 160f;
             if (matches) {
                 string nextRank = "F";
                 string[] ranks = {"F", "E", "D", "C", "B", "A", "S"};
                 if (targetItem.itemRank + 1 < ranks.Length) nextRank = ranks[targetItem.itemRank + 1];
 
-                GUI.color = Color.yellow;
-                GUI.Label(new Rect(rx, infoY, rightW, 22), "Lên Hạng: [" + nextRank + "]", new GUIStyle(GUI.skin.label) { fontSize = 14, alignment = TextAnchor.MiddleCenter, fontStyle=FontStyle.Bold });
-                GUI.Label(new Rect(rx, infoY + 25, rightW, 22), "Phí: " + player.gold + " / " + mergeCost, new GUIStyle(GUI.skin.label) { fontSize = 11, alignment = TextAnchor.MiddleCenter, fontStyle=FontStyle.Bold });
-                
-                GUI.color = canMerge ? Color.red : Color.gray;
-                if (GUI.Button(new Rect(rx + 50, infoY + 60, rightW - 100, 40), canMerge ? "GHÉP NÂNG HẠNG" : (enoughGold ? "NGUYÊN LIỆU SAI" : "KHÔNG ĐỦ VÀNG"), new GUIStyle(GUI.skin.button) { fontSize = 12, fontStyle = FontStyle.Bold }) && canMerge)
+                GUI.color = new Color(0.8f, 0.7f, 0.4f);
+                GUI.Label(new Rect(pvX, py, rightW, 25), "Lên hạng: [" + nextRank + "]", new GUIStyle(GUI.skin.label){fontSize=14, fontStyle=FontStyle.Bold, alignment=TextAnchor.MiddleCenter}); py += 30;
+                GUI.Label(new Rect(pvX, py, rightW, 25), "Phí: " + cost + " Vàng", new GUIStyle(GUI.skin.label){fontSize=12, alignment=TextAnchor.MiddleCenter}); py += 40;
+
+                GUI.color = afford ? Color.red : Color.gray;
+                if (GUI.Button(new Rect(pvX + 20, py, rightW - 40, 45), afford ? "GHÉP NÂNG HẠNG" : "KHÔNG ĐỦ VÀNG", new GUIStyle(GUI.skin.button){fontSize=14, fontStyle=FontStyle.Bold}) && afford) {
                     Execute();
+                }
             } else {
-                GUI.color = Color.gray;
-                GUI.Label(new Rect(rx, infoY, rightW, 60), "❌ Sai nguyên liệu!\nPhải giống hệt tên và Hạng mục.", new GUIStyle(GUI.skin.label) { fontSize = 12, alignment = TextAnchor.MiddleCenter });
+                GUI.color = Color.white;
+                GUI.Label(new Rect(pvX, py, rightW, 60), "KHÔNG HỢP LỆ!\nPhải giống hệt tên và Hạng.", new GUIStyle(GUI.skin.label){fontSize=12, alignment=TextAnchor.MiddleCenter}); 
             }
         }
-        GUI.color = Color.white;
     }
 
     void DrawBigSlot(float x, float y, float dim, ItemInstance inst, string title, bool isTarget) {
@@ -560,7 +498,8 @@ public class BlacksmithUI : MonoBehaviour
         GUI.color = Color.gray;
         GUI.Label(new Rect(x - 20, y - 20, dim + 40, 20), title, new GUIStyle(GUI.skin.label){fontSize=10, alignment=TextAnchor.MiddleCenter});
         if (inst != null) {
-            if (inst.data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(x+5, y+5, dim-10, dim-10), inst.data.icon.texture); }
+            Sprite s = inst.GetIcon();
+            if (s != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(x+5, y+5, dim-10, dim-10), s.texture); }
             GUI.color = Color.red;
             if (GUI.Button(new Rect(x+dim-20, y, 20, 20), "X")) { if (isTarget) { targetItem = null; targetIdx = -1; } else { materialItem = null; materialIdx = -1; } }
         }
@@ -591,7 +530,8 @@ public class BlacksmithUI : MonoBehaviour
             bool isT = (targetIdx == realIdx), isM = (materialIdx == realIdx);
             GUI.color = isT ? Color.orange : isM ? Color.magenta : new Color(0.2f, 0.18f, 0.14f);
             GUI.DrawTexture(new Rect(sx, sy, slotSz, slotSz), Texture2D.whiteTexture);
-            if (inst.data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx+3, sy+3, slotSz-6, slotSz-6), inst.data.icon.texture); }
+            Sprite sIcon = inst.GetIcon();
+            if (sIcon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx+3, sy+3, slotSz-6, slotSz-6), sIcon.texture); }
             GUI.color = Color.clear;
             if (GUI.Button(new Rect(sx, sy, slotSz, slotSz), "")) {
                 if (forCraft) {
@@ -614,7 +554,8 @@ public class BlacksmithUI : MonoBehaviour
             bool isT = (targetIdx == realIdx), isM = (materialIdx == realIdx);
             GUI.color = isT ? Color.orange : isM ? Color.magenta : new Color(0.2f, 0.18f, 0.14f);
             GUI.DrawTexture(new Rect(sx, sy, slotSz, slotSz), Texture2D.whiteTexture);
-            if (inst.data.icon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx+3, sy+3, slotSz-6, slotSz-6), inst.data.icon.texture); }
+            Sprite scIcon = inst.GetIcon();
+            if (scIcon != null) { GUI.color = Color.white; GUI.DrawTexture(new Rect(sx+3, sy+3, slotSz-6, slotSz-6), scIcon.texture); }
             GUI.color = Color.clear;
             if (GUI.Button(new Rect(sx, sy, slotSz, slotSz), "")) {
                 if (!forMaterial) { targetItem = inst; targetIdx = realIdx; }

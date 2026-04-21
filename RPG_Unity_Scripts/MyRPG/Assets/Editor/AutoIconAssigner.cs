@@ -50,6 +50,8 @@ public class AutoIconAssigner : EditorWindow
         // --- WEAPON ---
         if (item.type == ItemData.ItemType.Weapon)
         {
+            if (itemName.Contains("Tre") || itemName.Contains("Gậy"))
+                return LoadSprite("Gay_Tre_Gay");
             if (itemName.Contains("Kiem") || itemName.Contains("kiếm") || itemName.Contains("Dao") || itemName.Contains("Phay"))
                 return LoadSprite("Huyet_Kiem");
             if (itemName.Contains("Cung") || itemName.Contains("No") || itemName.Contains("Nỏ"))
@@ -62,10 +64,16 @@ public class AutoIconAssigner : EditorWindow
         // --- ARMOR ---
         if (item.type == ItemData.ItemType.Armor)
         {
+            if (itemName.Contains("Rổ") || itemName.Contains("Thủng"))
+                return LoadSprite("Ro_Thung");
             if (itemName.Contains("Mu") || itemName.Contains("Noi") || itemName.Contains("Nồi") || itemName.Contains("Nap") || itemName.Contains("Nắp"))
                 return LoadSprite("Mu_Sat");
+            if (itemName.Contains("Ủng") || itemName.Contains("Cao Su"))
+                return LoadSprite("Ung_Cao_Su_Thung");
             if (itemName.Contains("Giay") || itemName.Contains("Giày") || itemName.Contains("Dep") || itemName.Contains("Dép"))
                 return LoadSprite("Giay_Chien_Than");
+            if (itemName.Contains("Tơi") || itemName.Contains("Tơi"))
+                return LoadSprite("Ao_Toi_Cu");
             if (itemName.Contains("Ao") || itemName.Contains("Áo") || itemName.Contains("Bao") || itemName.Contains("Giap") || itemName.Contains("Giáp"))
                 return LoadSprite("Ao_Giap");
             return LoadSprite("Ao_Giap"); // Mac dinh giap
@@ -74,6 +82,8 @@ public class AutoIconAssigner : EditorWindow
         // --- ACCESSORY ---
         if (item.type == ItemData.ItemType.Accessory)
         {
+            if (itemName.Contains("Kẽm") || itemName.Contains("Vòng Tay"))
+                return LoadSprite("Vong_Tay_Day_Kem");
             if (itemName.Contains("Day") || itemName.Contains("Dây") || itemName.Contains("Soi") || itemName.Contains("Sợi"))
                 return LoadSprite("Day_Chuyen");
             return LoadSprite("Nhan_Vang"); // Mac dinh phu kien

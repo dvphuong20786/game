@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Vong_Tay_Day_Kem
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "V\xF2ng Tay D\xE2y K\u1EBDm"
+  icon: {fileID: 5265597441193856656, guid: 030cdcb8eb1866444998d895adcab4cc, type: 3}
+  description: "S\u1EE3i d\xE2y th\xE9p xo\u1EAFn l\u1EA1i l\xE0m trang s\u1EE9c."
+  price: 60
+  requiredLevel: 0
+  type: 3
+  atkBonus: 5
+  defBonus: 5
+  hpBonus: 10
+  isTwoHanded: 0
+  healAmount: 0

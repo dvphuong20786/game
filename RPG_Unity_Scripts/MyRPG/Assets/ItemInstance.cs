@@ -56,6 +56,24 @@ public class ItemInstance
         return n;
     }
 
+    public Sprite GetIcon() {
+        if (data == null) return null;
+        if (data.icon != null) return data.icon;
+        
+        string n = data.itemName.ToLower();
+        if (n.Contains("kiếm")) return Resources.Load<Sprite>("Sprites/rusty_blood_sword");
+        if (n.Contains("giáp")) return Resources.Load<Sprite>("Sprites/worn_armor");
+        if (n.Contains("dây thép") || n.Contains("vòng cổ")) return Resources.Load<Sprite>("Sprites/wire_necklace");
+        if (n.Contains("bánh mì")) return Resources.Load<Sprite>("Sprites/moldy_bread");
+        if (n.Contains("bình máu")) return Resources.Load<Sprite>("Sprites/dirty_potion");
+        if (n.Contains("ngọc")) {
+            if (n.Contains("công") || n.Contains("tấn")) return Resources.Load<Sprite>("Sprites/gem_red");
+            if (n.Contains("thủ") || n.Contains("phòng")) return Resources.Load<Sprite>("Sprites/gem_blue");
+            if (n.Contains("lực") || n.Contains("sinh")) return Resources.Load<Sprite>("Sprites/gem_purple");
+        }
+        return null;
+    }
+
     public void GenerateRankBonus() {
         // Reset chi so
         rankBonusAtk = 0; rankBonusDef = 0; rankBonusHp = 0;

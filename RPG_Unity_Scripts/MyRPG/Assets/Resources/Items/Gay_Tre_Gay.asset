@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536bd13cd9c786e41beac15217094c6c, type: 3}
+  m_Name: Gay_Tre_Gay
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: "G\u1EADy Tre G\xE3y"
+  icon: {fileID: -8486624974228265490, guid: e552e87e5c5b2624aab644d90c9becad, type: 3}
+  description: "Kh\xFAc tre gi\xE0 n\u1EE9t to\xE1c d\xF9ng \u0111\u1EC3 t\u1EF1
+    v\u1EC7."
+  price: 40
+  requiredLevel: 0
+  type: 0
+  atkBonus: 10
+  defBonus: 0
+  hpBonus: 0
+  isTwoHanded: 0
+  healAmount: 0
